@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="ProjektPSIO/ProjektPSIO.vcxproj" Id="bc7af929-d489-4fb6-ab4e-d6a8979b59a1" />
+</Solution>
