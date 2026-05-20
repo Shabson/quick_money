@@ -54,6 +54,16 @@ int main()
 
         player2.handleInput();
 
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::F))
+        {
+            player1.attack(player2);
+        }
+
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::RControl))
+        {
+            player2.attack(player1);
+        }
+
 
         // UPDATE
         player1.update(map.getPlatforms());

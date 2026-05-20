@@ -12,6 +12,7 @@ private:
     float velocityY;
 
     bool isGrounded;
+    bool facingRight;
 
     sf::Keyboard::Key leftKey;
     sf::Keyboard::Key rightKey;
@@ -37,4 +38,5 @@ public:
     void update(std::vector<Platform>& platforms);
     void draw(sf::RenderWindow& window);
     void resolveCollision(Player& otherPlayer);
+    void attack(Player& otherPlayer);
 };

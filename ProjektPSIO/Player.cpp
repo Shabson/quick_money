@@ -14,6 +14,7 @@ Player::Player(float x, float y,
     velocityY = 0.f;
 
     isGrounded = false;
+    facingRight = true;
 
     leftKey = left;
     rightKey = right;
@@ -26,11 +27,15 @@ void Player::handleInput()
     if (sf::Keyboard::isKeyPressed(leftKey))
     {
         body.move(-speed, 0.f);
+
+        facingRight = false;
     }
 
     if (sf::Keyboard::isKeyPressed(rightKey))
     {
         body.move(speed, 0.f);
+
+        facingRight = true;
     }
 
     if (
@@ -172,6 +177,46 @@ void Player::resolveCollision(Player& otherPlayer)
             body.move(pushAmount, 0.f);
 
             otherPlayer.body.move(-pushAmount, 0.f);
+        }
+    }
+}
+
+void Player::attack(Player& otherPlayer)
+{
+    sf::RectangleShape attackHitbox;
+
+    attackHitbox.setSize(sf::Vector2f(60.f, 40.f));
+
+    if (facingRight)
+    {
+        attackHitbox.setPosition(
+            body.getPosition().x
+            + body.getSize().x,
+
+            body.getPosition().y + 30.f
+        );
+    }
+    else
+    {
+        attackHitbox.setPosition(
+            body.getPosition().x - 60.f,
+
+            body.getPosition().y + 30.f
+        );
+    }
+
+    if (
+        attackHitbox.getGlobalBounds().intersects(
+            otherPlayer.getBounds())
+        )
+    {
+        if (facingRight)
+        {
+            otherPlayer.body.move(40.f, -20.f);
+        }
+        else
+        {
+            otherPlayer.body.move(-40.f, -20.f);
         }
     }
 }
