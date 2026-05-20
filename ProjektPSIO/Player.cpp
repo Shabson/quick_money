@@ -12,9 +12,12 @@ Player::Player(float x, float y,
 
     speed = 8.f;
     velocityY = 0.f;
+    velocityX = 0.f;
 
     isGrounded = false;
     facingRight = true;
+
+    attackCooldown = 0.f;
 
     leftKey = left;
     rightKey = right;
@@ -26,14 +29,14 @@ void Player::handleInput()
 {
     if (sf::Keyboard::isKeyPressed(leftKey))
     {
-        body.move(-speed, 0.f);
+        velocityX = -speed;
 
         facingRight = false;
     }
 
     if (sf::Keyboard::isKeyPressed(rightKey))
     {
-        body.move(speed, 0.f);
+        velocityX = speed;
 
         facingRight = true;
     }
@@ -53,6 +56,8 @@ void Player::handleInput()
     {
         velocityY += 1.f;
     }
+
+
 }
 
 void Player::draw(sf::RenderWindow& window)
@@ -73,11 +78,17 @@ sf::FloatRect Player::getBounds() const
 
 void Player::update(std::vector<Platform>& platforms)
 {
+
+    if (attackCooldown > 0.f)
+    {
+        attackCooldown -= 1.f;
+    }
+
     previousY = body.getPosition().y;
 
     velocityY += 0.5f;
 
-    body.move(0.f, velocityY);
+    body.move(velocityX, velocityY);
 
     isGrounded = false;
 
@@ -149,6 +160,8 @@ void Player::update(std::vector<Platform>& platforms)
             }
         }
     }
+    velocityX *= 0.85f;
+
 
 }
 void Player::resolveCollision(Player& otherPlayer)
@@ -183,6 +196,11 @@ void Player::resolveCollision(Player& otherPlayer)
 
 void Player::attack(Player& otherPlayer)
 {
+    if (attackCooldown > 0.f)
+    {
+        return;
+    }
+
     sf::RectangleShape attackHitbox;
 
     attackHitbox.setSize(sf::Vector2f(60.f, 40.f));
@@ -212,11 +230,15 @@ void Player::attack(Player& otherPlayer)
     {
         if (facingRight)
         {
-            otherPlayer.body.move(40.f, -20.f);
+            otherPlayer.velocityX = 15.f;
+            otherPlayer.velocityY = -10.f;
         }
         else
         {
-            otherPlayer.body.move(-40.f, -20.f);
+            otherPlayer.velocityX = -15.f;
+            otherPlayer.velocityY = -10.f;
         }
+
+        attackCooldown = 30.f;
     }
 }

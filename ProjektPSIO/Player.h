@@ -11,8 +11,12 @@ private:
     float previousY;
     float velocityY;
 
+    float velocityX;
+
     bool isGrounded;
     bool facingRight;
+
+    float attackCooldown;
 
     sf::Keyboard::Key leftKey;
     sf::Keyboard::Key rightKey;
