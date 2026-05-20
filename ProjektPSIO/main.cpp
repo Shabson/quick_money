@@ -60,7 +60,13 @@ int main()
 
         player2.update(map.getPlatforms());
 
-        map.update(player1.getPosition().x);
+        float middleX =
+            (
+                player1.getPosition().x +
+                player2.getPosition().x
+                ) / 2.f;
+
+        map.update(middleX);
 
         // DRAW
         window.clear();
