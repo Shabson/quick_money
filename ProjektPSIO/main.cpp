@@ -34,7 +34,7 @@ int main()
         player1.handleInput();
 
         // UPDATE
-        player1.update();
+        player1.update(map.getPlatforms());
 
         map.update(player1.getPosition().x);
 

@@ -12,4 +12,5 @@ public:
     void draw(sf::RenderWindow& window);
 
     sf::RectangleShape& getBody();
+    sf::FloatRect getBounds() const;
 };

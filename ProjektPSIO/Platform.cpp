@@ -16,3 +16,8 @@ sf::RectangleShape& Platform::getBody()
 {
     return body;
 }
+
+sf::FloatRect Platform::getBounds() const
+{
+    return body.getGlobalBounds();
+}

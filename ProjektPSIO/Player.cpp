@@ -7,6 +7,10 @@ Player::Player(float x, float y)
     body.setPosition(x, y);
 
     speed = 8.f;
+    velocityY = 0.f;
+
+    isGrounded = false;
+
 }
 
 void Player::handleInput()
@@ -31,10 +35,6 @@ void Player::handleInput()
         body.move(0.f, speed);
     }
 }
-void Player::update()
-{
-
-}
 
 void Player::draw(sf::RenderWindow& window)
 {
@@ -44,4 +44,37 @@ void Player::draw(sf::RenderWindow& window)
 sf::Vector2f Player::getPosition() const
 {
     return body.getPosition();
+}
+
+sf::FloatRect Player::getBounds() const
+{
+    return body.getGlobalBounds();
+}
+
+void Player::update(std::vector<Platform>& platforms)
+{
+    // gravity
+    velocityY += 0.5f;
+
+    body.move(0.f, velocityY);
+
+    isGrounded = false;
+
+    for (auto& platform : platforms)
+    {
+        if (body.getGlobalBounds().intersects(
+            platform.getBounds()))
+        {
+            // gracz stoi na platformie
+            body.setPosition(
+                body.getPosition().x,
+                platform.getBounds().top
+                - body.getSize().y
+            );
+
+            velocityY = 0.f;
+
+            isGrounded = true;
+        }
+    }
 }
