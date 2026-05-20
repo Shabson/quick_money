@@ -14,7 +14,26 @@ int main()
 
     window.setFramerateLimit(60);
 
-    Player player1(300.f, 500.f);
+
+    Player player1(
+        300.f,
+        500.f,
+
+        sf::Keyboard::A,
+        sf::Keyboard::D,
+        sf::Keyboard::W,
+        sf::Keyboard::S
+    );
+
+    Player player2(
+        700.f,
+        500.f,
+
+        sf::Keyboard::Left,
+        sf::Keyboard::Right,
+        sf::Keyboard::Up,
+        sf::Keyboard::Down
+    );
 
     Map map(windowSize);
 
@@ -33,8 +52,13 @@ int main()
         // INPUT
         player1.handleInput();
 
+        player2.handleInput();
+
+
         // UPDATE
         player1.update(map.getPlatforms());
+
+        player2.update(map.getPlatforms());
 
         map.update(player1.getPosition().x);
 
@@ -44,6 +68,8 @@ int main()
         map.draw(window);
 
         player1.draw(window);
+
+        player2.draw(window);
 
         window.display();
     }

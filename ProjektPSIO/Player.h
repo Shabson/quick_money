@@ -12,8 +12,21 @@ private:
 
     bool isGrounded;
 
+    sf::Keyboard::Key leftKey;
+    sf::Keyboard::Key rightKey;
+    sf::Keyboard::Key upKey;
+    sf::Keyboard::Key downKey;
+
 public:
-    Player(float x, float y);
+    Player(
+        float x,
+        float y,
+
+        sf::Keyboard::Key left,
+        sf::Keyboard::Key right,
+        sf::Keyboard::Key up,
+        sf::Keyboard::Key down
+    );
 
     sf::Vector2f getPosition() const;
 

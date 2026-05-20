@@ -1,6 +1,10 @@
 #include "Player.h"
 
-Player::Player(float x, float y)
+Player::Player(float x, float y,
+    sf::Keyboard::Key left,
+    sf::Keyboard::Key right,
+    sf::Keyboard::Key up,
+    sf::Keyboard::Key down)
 {
     body.setSize(sf::Vector2f(80.f, 120.f));
     body.setFillColor(sf::Color::Green);
@@ -11,26 +15,30 @@ Player::Player(float x, float y)
 
     isGrounded = false;
 
+    leftKey = left;
+    rightKey = right;
+    upKey = up;
+    downKey = down;
 }
 
 void Player::handleInput()
 {
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+    if (sf::Keyboard::isKeyPressed(leftKey))
     {
         body.move(-speed, 0.f);
     }
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+    if (sf::Keyboard::isKeyPressed(rightKey))
     {
         body.move(speed, 0.f);
     }
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+    if (sf::Keyboard::isKeyPressed(upKey))
     {
         body.move(0.f, -speed);
     }
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+    if (sf::Keyboard::isKeyPressed(downKey))
     {
         body.move(0.f, speed);
     }
