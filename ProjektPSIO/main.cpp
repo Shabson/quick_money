@@ -1,7 +1,8 @@
 #include <SFML/Graphics.hpp>
-
+#include <iostream>
 #include "Player.h"
 #include "Map.h"
+using namespace std;
 int main()
 {
 
@@ -69,6 +70,16 @@ int main()
         player1.update(map.getPlatforms());
 
         player2.update(map.getPlatforms());
+
+        cout
+            << "P1 HP: "
+            << player1.getHp()
+
+            << " | P2 HP: "
+
+            << player2.getHp()
+            << std::endl;
+
 
         player1.resolveCollision(player2);
 

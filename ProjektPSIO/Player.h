@@ -18,6 +18,8 @@ private:
 
     float attackCooldown;
 
+    int hp;
+
     sf::Keyboard::Key leftKey;
     sf::Keyboard::Key rightKey;
     sf::Keyboard::Key upKey;
@@ -43,4 +45,5 @@ public:
     void draw(sf::RenderWindow& window);
     void resolveCollision(Player& otherPlayer);
     void attack(Player& otherPlayer);
+    int getHp() const;
 };

@@ -13,6 +13,7 @@ Player::Player(float x, float y,
     speed = 8.f;
     velocityY = 0.f;
     velocityX = 0.f;
+    hp = 5;
 
     isGrounded = false;
     facingRight = true;
@@ -75,6 +76,10 @@ sf::FloatRect Player::getBounds() const
     return body.getGlobalBounds();
 }
 
+int Player::getHp() const
+{
+    return hp;
+}
 
 void Player::update(std::vector<Platform>& platforms)
 {
@@ -228,6 +233,8 @@ void Player::attack(Player& otherPlayer)
             otherPlayer.getBounds())
         )
     {
+        otherPlayer.hp--;
+
         if (facingRight)
         {
             otherPlayer.velocityX = 15.f;
