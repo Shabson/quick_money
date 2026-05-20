@@ -35,4 +35,5 @@ public:
     void handleInput();
     void update(std::vector<Platform>& platforms);
     void draw(sf::RenderWindow& window);
+    void resolveCollision(Player& otherPlayer);
 };

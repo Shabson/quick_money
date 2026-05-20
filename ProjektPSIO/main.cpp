@@ -60,6 +60,10 @@ int main()
 
         player2.update(map.getPlatforms());
 
+        player1.resolveCollision(player2);
+
+
+
         float middleX =
             (
                 player1.getPosition().x +

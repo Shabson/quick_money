@@ -35,7 +35,7 @@ void Player::handleInput()
 
     if (sf::Keyboard::isKeyPressed(upKey))
     {
-        body.move(0.f, -speed);
+        body.move(0.f, -2*speed);
     }
 
     if (sf::Keyboard::isKeyPressed(downKey))
@@ -59,9 +59,9 @@ sf::FloatRect Player::getBounds() const
     return body.getGlobalBounds();
 }
 
+
 void Player::update(std::vector<Platform>& platforms)
 {
-    // gravity
     velocityY += 0.5f;
 
     body.move(0.f, velocityY);
@@ -73,7 +73,6 @@ void Player::update(std::vector<Platform>& platforms)
         if (body.getGlobalBounds().intersects(
             platform.getBounds()))
         {
-            // gracz stoi na platformie
             body.setPosition(
                 body.getPosition().x,
                 platform.getBounds().top
@@ -83,6 +82,36 @@ void Player::update(std::vector<Platform>& platforms)
             velocityY = 0.f;
 
             isGrounded = true;
+        }
+    }
+
+}
+void Player::resolveCollision(Player& otherPlayer)
+{
+    sf::FloatRect playerBounds =
+        body.getGlobalBounds();
+
+    sf::FloatRect otherBounds =
+        otherPlayer.getBounds();
+
+    sf::FloatRect overlap;
+
+    if (playerBounds.intersects(otherBounds, overlap))
+    {
+        float pushAmount = overlap.width / 2.f;
+
+        if (body.getPosition().x <
+            otherPlayer.getPosition().x)
+        {
+            body.move(-pushAmount, 0.f);
+
+            otherPlayer.body.move(pushAmount, 0.f);
+        }
+        else
+        {
+            body.move(pushAmount, 0.f);
+
+            otherPlayer.body.move(-pushAmount, 0.f);
         }
     }
 }
