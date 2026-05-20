@@ -20,6 +20,11 @@ void Map::loadMap1()
 
 void Map::draw(sf::RenderWindow& window)
 {
+    for (auto& layer : backgroundLayers)
+    {
+        layer.draw(window);
+    }
+
     for (auto& platform : platforms)
     {
         platform.draw(window);
@@ -29,4 +34,12 @@ void Map::draw(sf::RenderWindow& window)
 std::vector<Platform>& Map::getPlatforms()
 {
     return platforms;
+}
+
+void Map::update(float cameraX)
+{
+    for (auto& layer : backgroundLayers)
+    {
+        layer.update(cameraX);
+    }
 }

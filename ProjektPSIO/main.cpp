@@ -1,6 +1,8 @@
 #include <SFML/Graphics.hpp>
 #include "Player.h"
 #include "Map.h"
+#include "ParallaxLayer.h"
+
 int main()
 {
     Map map;
@@ -18,7 +20,7 @@ int main()
             if (event.type == sf::Event::Closed)
                 window.close();
         }
-
+        map.update(player1.getPosition().x);
         player1.handleInput();
         player1.update();
         map.draw(window);

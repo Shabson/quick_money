@@ -31,3 +31,8 @@ void Player::draw(sf::RenderWindow& window)
 {
     window.draw(body);
 }
+
+sf::Vector2f Player::getPosition() const
+{
+    return body.getPosition();
+}
