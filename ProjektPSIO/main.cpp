@@ -1,15 +1,22 @@
 #include <SFML/Graphics.hpp>
+
 #include "Player.h"
 #include "Map.h"
-#include "ParallaxLayer.h"
-
 int main()
 {
-    Map map;
-    sf::RenderWindow window(sf::VideoMode(1920, 1080), "Knur Fight");
+
+    sf::Vector2u windowSize(1920, 1080);
+
+    sf::RenderWindow window(
+        sf::VideoMode(windowSize.x, windowSize.y),
+        "Knur Fight"
+    );
+
     window.setFramerateLimit(60);
 
     Player player1(300.f, 500.f);
+
+    Map map(windowSize);
 
     while (window.isOpen())
     {
@@ -18,14 +25,26 @@ int main()
         while (window.pollEvent(event))
         {
             if (event.type == sf::Event::Closed)
+            {
                 window.close();
+            }
         }
-        map.update(player1.getPosition().x);
+
+        // INPUT
         player1.handleInput();
+
+        // UPDATE
         player1.update();
-        map.draw(window);
+
+        map.update(player1.getPosition().x);
+
+        // DRAW
         window.clear();
+
+        map.draw(window);
+
         player1.draw(window);
+
         window.display();
     }
 

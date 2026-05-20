@@ -14,8 +14,10 @@ private:
 public:
     ParallaxLayer(
         const std::string& texturePath,
-        float multiplier
+        float multiplier,
+        sf::Vector2u windowSize
     );
+
 
     void update(float cameraX);
 

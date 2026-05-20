@@ -20,8 +20,17 @@ void Player::handleInput()
     {
         body.move(speed, 0.f);
     }
-}
 
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+    {
+        body.move(0.f, -speed);
+    }
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+    {
+        body.move(0.f, speed);
+    }
+}
 void Player::update()
 {
 
