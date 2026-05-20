@@ -33,14 +33,20 @@ void Player::handleInput()
         body.move(speed, 0.f);
     }
 
-    if (sf::Keyboard::isKeyPressed(upKey))
+    if (
+        sf::Keyboard::isKeyPressed(upKey)
+        &&
+        isGrounded
+        )
     {
-        body.move(0.f, -2*speed);
+        velocityY = -15.f;
+
+        isGrounded = false;
     }
 
     if (sf::Keyboard::isKeyPressed(downKey))
     {
-        body.move(0.f, speed);
+        velocityY += 1.f;
     }
 }
 
@@ -62,6 +68,8 @@ sf::FloatRect Player::getBounds() const
 
 void Player::update(std::vector<Platform>& platforms)
 {
+    previousY = body.getPosition().y;
+
     velocityY += 0.5f;
 
     body.move(0.f, velocityY);
@@ -70,18 +78,70 @@ void Player::update(std::vector<Platform>& platforms)
 
     for (auto& platform : platforms)
     {
-        if (body.getGlobalBounds().intersects(
-            platform.getBounds()))
+        sf::FloatRect playerBounds =
+            body.getGlobalBounds();
+
+        sf::FloatRect platformBounds =
+            platform.getBounds();
+
+        if (playerBounds.intersects(platformBounds))
         {
-            body.setPosition(
-                body.getPosition().x,
-                platform.getBounds().top
-                - body.getSize().y
-            );
+            // landing collision
+            if (
+                previousY + body.getSize().y
+                <= platformBounds.top
+                )
+            {
+                body.setPosition(
+                    body.getPosition().x,
+                    platformBounds.top
+                    - body.getSize().y
+                );
 
-            velocityY = 0.f;
+                velocityY = 0.f;
 
-            isGrounded = true;
+                isGrounded = true;
+            }
+
+            // head collision
+            else if (
+                previousY
+                >= platformBounds.top
+                + platformBounds.height
+                )
+            {
+                body.setPosition(
+                    body.getPosition().x,
+                    platformBounds.top
+                    + platformBounds.height
+                );
+
+                velocityY = 0.f;
+            }
+
+            // left collision
+            else if (
+                body.getPosition().x
+                <
+                platformBounds.left
+                )
+            {
+                body.setPosition(
+                    platformBounds.left
+                    - body.getSize().x,
+                    body.getPosition().y
+                );
+            }
+
+            // right collision
+            else
+            {
+                body.setPosition(
+                    platformBounds.left
+                    + platformBounds.width,
+                    body.getPosition().y
+                );
+            }
         }
     }
 

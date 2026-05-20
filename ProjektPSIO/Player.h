@@ -8,6 +8,7 @@ private:
     sf::RectangleShape body;
     float speed;
 
+    float previousY;
     float velocityY;
 
     bool isGrounded;
