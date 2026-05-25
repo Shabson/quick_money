@@ -12,11 +12,14 @@ private:
 
     float moveMultiplier;
 
+    bool repeat;
+
 public:
     ParallaxLayer(
         const std::string& texturePath,
         float multiplier,
-        sf::Vector2u windowSize
+        sf::Vector2u windowSize,
+        bool repeat = true
     );
 
     void draw(
