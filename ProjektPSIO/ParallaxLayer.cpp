@@ -28,15 +28,23 @@ ParallaxLayer::ParallaxLayer(
     sprite.setPosition(0.f, 0.f);
 }
 
-void ParallaxLayer::update(float cameraX)
+void ParallaxLayer::draw(
+    sf::RenderWindow& window,
+    const sf::View& camera
+)
 {
-    sprite.setPosition(
-        -(cameraX - 300.f) * moveMultiplier,
-        0.f
-    );
-}
+    sf::View parallaxView = camera;
 
-void ParallaxLayer::draw(sf::RenderWindow& window)
-{
+    sf::Vector2f cameraCenter =
+        camera.getCenter();
+
+    parallaxView.setCenter(
+        cameraCenter.x * moveMultiplier
+        + (1.f - moveMultiplier) * 640.f,
+        cameraCenter.y
+    );
+
+    window.setView(parallaxView);
+
     window.draw(sprite);
 }

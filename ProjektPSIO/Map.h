@@ -20,9 +20,12 @@ public:
 
     void loadMap1();
 
-    void draw(sf::RenderWindow& window);
+    void draw(
+        sf::RenderWindow& window,
+        const sf::View& camera
+    );
 
     std::vector<Platform>& getPlatforms();
 
-    void update(float cameraX);
+   
 };

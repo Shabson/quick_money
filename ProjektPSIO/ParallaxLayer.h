@@ -21,5 +21,8 @@ public:
 
     void update(float cameraX);
 
-    void draw(sf::RenderWindow& window);
+    void draw(
+        sf::RenderWindow& window,
+        const sf::View& camera
+    );
 };

@@ -14,6 +14,12 @@ int main()
     );
 
     window.setFramerateLimit(60);
+   
+    sf::View camera;
+
+    camera.setSize(windowSize.x, windowSize.y);
+    camera.setCenter(windowSize.x / 2.f, windowSize.y / 2.f);
+
 
 
     Player player1(
@@ -86,17 +92,20 @@ int main()
 
 
         float middleX =
-            (
-                player1.getPosition().x +
-                player2.getPosition().x
-                ) / 2.f;
+            (player1.getPosition().x +
+                player2.getPosition().x) / 2.f;
 
-        map.update(middleX);
+        camera.setCenter(
+            middleX,
+            windowSize.y / 2.f
+        );
 
         // DRAW
         window.clear();
 
-        map.draw(window);
+        window.setView(camera);
+
+        map.draw(window, camera);
 
         player1.draw(window);
 
