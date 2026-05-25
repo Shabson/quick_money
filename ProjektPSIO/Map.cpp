@@ -15,30 +15,15 @@ void Map::loadMap1()
     backgroundLayers.push_back(
         std::make_unique<ParallaxLayer>(
             "assets/textures/parallax-mountain-bg.png",
-            0.02f,
-            windowSize
+            0.05f,
+            windowSize,
+            false
         )
     );
 
     backgroundLayers.push_back(
         std::make_unique<ParallaxLayer>(
             "assets/textures/parallax-mountain-montain-far.png",
-            0.05f,
-            windowSize
-        )
-    );
-
-    backgroundLayers.push_back(
-        std::make_unique<ParallaxLayer>(
-            "assets/textures/parallax-mountain-mountains.png",
-            0.1f,
-            windowSize
-        )
-    );
-
-    backgroundLayers.push_back(
-        std::make_unique<ParallaxLayer>(
-            "assets/textures/parallax-mountain-trees.png",
             0.2f,
             windowSize
         )
@@ -46,8 +31,24 @@ void Map::loadMap1()
 
     backgroundLayers.push_back(
         std::make_unique<ParallaxLayer>(
-            "assets/textures/parallax-mountain-foreground-trees.png",
+            "assets/textures/parallax-mountain-mountains.png",
             0.3f,
+            windowSize
+        )
+    );
+
+    backgroundLayers.push_back(
+        std::make_unique<ParallaxLayer>(
+            "assets/textures/parallax-mountain-trees.png",
+            0.5f,
+            windowSize
+        )
+    );
+
+    backgroundLayers.push_back(
+        std::make_unique<ParallaxLayer>(
+            "assets/textures/parallax-mountain-foreground-trees.png",
+            0.6f,
             windowSize
         )
     );
@@ -75,12 +76,18 @@ void Map::loadMap1()
     );
 }
 
-void Map::draw(sf::RenderWindow& window)
+
+void Map::draw(
+    sf::RenderWindow& window,
+    const sf::View& camera
+)
 {
     for (auto& layer : backgroundLayers)
     {
-        layer->draw(window);
+        layer->draw(window, camera);
     }
+
+    window.setView(camera);
 
     for (auto& platform : platforms)
     {
@@ -99,15 +106,3 @@ std::vector<Platform>& Map::getPlatforms()
     return platforms;
 }
 
-void Map::update(float cameraX)
-{
-    for (auto& layer : backgroundLayers)
-    {
-        layer->update(cameraX);
-    }
-}
-
-std::vector<Weapon>& Map::getWeapons()
-{
-    return weapons;
-}

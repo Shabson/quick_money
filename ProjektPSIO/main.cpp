@@ -16,6 +16,13 @@ int main()
 
     window.setFramerateLimit(60);
 
+    float currentZoom = 1.f;
+
+    sf::View camera;
+
+    camera.setCenter(windowSize.x / 2.f, windowSize.y / 2.f);
+
+
 
     Player player1(
         300.f,
@@ -106,17 +113,43 @@ int main()
 
 
         float middleX =
-            (
-                player1.getPosition().x +
-                player2.getPosition().x
-                ) / 2.f;
+            (player1.getPosition().x +
+                player2.getPosition().x) / 2.f;
 
-        map.update(middleX);
+        float distance =
+            abs(
+                player1.getPosition().x
+                - player2.getPosition().x
+            );
+        float targetZoom =
+            1.f + distance / 2000.f;
+
+        targetZoom = std::clamp(
+            targetZoom,
+            1.f,
+            1.8f
+        );
+        currentZoom +=
+            (targetZoom - currentZoom)
+            * 0.05f;
+
+        camera.setSize(
+            windowSize.x * currentZoom,
+            windowSize.y * currentZoom
+        );
+
+
+        camera.setCenter(
+            middleX,
+            windowSize.y / 2.f
+        );
 
         // DRAW
         window.clear();
 
-        map.draw(window);
+        window.setView(camera);
+
+        map.draw(window, camera);
 
         player1.draw(window);
 

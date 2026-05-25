@@ -7,19 +7,23 @@ class ParallaxLayer
 {
 private:
     sf::Texture texture;
+
     sf::Sprite sprite;
 
     float moveMultiplier;
+
+    bool repeat;
 
 public:
     ParallaxLayer(
         const std::string& texturePath,
         float multiplier,
-        sf::Vector2u windowSize
+        sf::Vector2u windowSize,
+        bool repeat = true
     );
 
-
-    void update(float cameraX);
-
-    void draw(sf::RenderWindow& window);
+    void draw(
+        sf::RenderWindow& window,
+        const sf::View& camera
+    );
 };
