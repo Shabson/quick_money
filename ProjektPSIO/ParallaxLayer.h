@@ -7,6 +7,7 @@ class ParallaxLayer
 {
 private:
     sf::Texture texture;
+
     sf::Sprite sprite;
 
     float moveMultiplier;
@@ -17,9 +18,6 @@ public:
         float multiplier,
         sf::Vector2u windowSize
     );
-
-
-    void update(float cameraX);
 
     void draw(
         sf::RenderWindow& window,

@@ -70,12 +70,18 @@ void Map::loadMap1()
     );
 }
 
-void Map::draw(sf::RenderWindow& window, const sf::View& camera)
+
+void Map::draw(
+    sf::RenderWindow& window,
+    const sf::View& camera
+)
 {
     for (auto& layer : backgroundLayers)
     {
         layer->draw(window, camera);
     }
+
+    window.setView(camera);
 
     for (auto& platform : platforms)
     {

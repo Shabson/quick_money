@@ -1,5 +1,4 @@
 #include "ParallaxLayer.h"
-#include <iostream>
 
 ParallaxLayer::ParallaxLayer(
     const std::string& texturePath,
@@ -8,24 +7,25 @@ ParallaxLayer::ParallaxLayer(
 {
     texture.loadFromFile(texturePath);
 
+    texture.setSmooth(false);
+
     sprite.setTexture(texture);
 
     moveMultiplier = multiplier;
 
-    sf::Vector2u textureSize = texture.getSize();
-
+    sf::Vector2u textureSize =
+        texture.getSize();
 
     float scale = 7.f;
 
     if (textureSize.y != 0)
     {
         scale =
-            (float)windowSize.y / textureSize.y;
+            static_cast<float>(windowSize.y)
+            / textureSize.y;
     }
 
     sprite.setScale(scale, scale);
-
-    sprite.setPosition(0.f, 0.f);
 }
 
 void ParallaxLayer::draw(
@@ -38,13 +38,32 @@ void ParallaxLayer::draw(
     sf::Vector2f cameraCenter =
         camera.getCenter();
 
+    float baseCenterX =
+        camera.getSize().x / 2.f;
+
+    float parallaxX =
+        baseCenterX
+        + (cameraCenter.x - baseCenterX)
+        * moveMultiplier;
+
     parallaxView.setCenter(
-        cameraCenter.x * moveMultiplier
-        + (1.f - moveMultiplier) * 640.f,
+        parallaxX,
         cameraCenter.y
     );
 
     window.setView(parallaxView);
 
-    window.draw(sprite);
+    float spriteWidth =
+        texture.getSize().x
+        * sprite.getScale().x;
+
+    for (int i = -2; i < 8; i++)
+    {
+        sprite.setPosition(
+            i * spriteWidth,
+            0.f
+        );
+
+        window.draw(sprite);
+    }
 }
