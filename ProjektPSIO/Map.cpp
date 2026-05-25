@@ -1,4 +1,5 @@
 #include "Map.h"
+#include "Weapon.h"
 
 Map::Map(sf::Vector2u windowSize)
 {   
@@ -68,6 +69,10 @@ void Map::loadMap1()
     platforms.push_back(
         Platform(750.f, 500.f, 400.f, 40.f)
     );
+
+    weapons.push_back(
+        Weapon(900.f, 300.f)
+    );
 }
 
 void Map::draw(sf::RenderWindow& window)
@@ -81,6 +86,12 @@ void Map::draw(sf::RenderWindow& window)
     {
         platform.draw(window);
     }
+
+    for (auto& weapon : weapons)
+    {
+        weapon.draw(window);
+    }
+
 }
 
 std::vector<Platform>& Map::getPlatforms()
@@ -95,3 +106,4 @@ void Map::update(float cameraX)
         layer->update(cameraX);
     }
 }
+

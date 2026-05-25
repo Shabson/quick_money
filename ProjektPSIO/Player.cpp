@@ -181,7 +181,7 @@ void Player::resolveCollision(Player& otherPlayer)
 
     if (playerBounds.intersects(otherBounds, overlap))
     {
-        // tylko collision pozioma
+        
         if (overlap.width < overlap.height)
         {
             float pushAmount =

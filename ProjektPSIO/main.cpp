@@ -2,6 +2,7 @@
 #include <iostream>
 #include "Player.h"
 #include "Map.h"
+#include "Weapon.h"
 using namespace std;
 int main()
 {
