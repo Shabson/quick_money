@@ -14,11 +14,6 @@ ParallaxLayer::ParallaxLayer(
 
     sf::Vector2u textureSize = texture.getSize();
 
-    std::cout
-        << textureSize.x
-        << " "
-        << textureSize.y
-        << std::endl;
 
     float scale = 7.f;
 
