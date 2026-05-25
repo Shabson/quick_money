@@ -341,3 +341,14 @@ void Player::attack(Player& otherPlayer)
         attackCooldown = 30.f;
     }
 }
+
+void Player::respawn(float x, float y)
+{
+    body.setPosition(x, y);
+
+    velocityX = 0.f;
+    velocityY = 0.f;
+
+    hp = 5;
+    hasWeapon = false;
+}

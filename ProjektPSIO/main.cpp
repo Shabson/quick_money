@@ -91,6 +91,28 @@ int main()
 
         player1.resolveCollision(player2);
 
+
+        if (player1.getHp() <= 0)
+        {
+            player1.respawn(300.f, 500.f);
+        }
+
+        if (player2.getHp() <= 0)
+        {
+            player2.respawn(700.f, 500.f);
+        }
+
+        if (player1.getPosition().y > 1400.f)
+        {
+            player1.respawn(300.f, 500.f);
+        }
+
+        if (player2.getPosition().y > 1400.f)
+        {
+            player2.respawn(700.f, 500.f);
+        }
+
+
         for (auto it = map.getWeapons().begin();
             it != map.getWeapons().end();)
         {

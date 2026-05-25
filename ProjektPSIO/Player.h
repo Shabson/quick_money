@@ -52,4 +52,5 @@ public:
     int getHp() const;
     bool getHasWeapon() const;
     void setHasWeapon(bool value);
+    void respawn(float x, float y);
 };
