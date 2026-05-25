@@ -20,10 +20,14 @@ private:
 
     int hp;
 
+    bool hasWeapon;
+
     sf::Keyboard::Key leftKey;
     sf::Keyboard::Key rightKey;
     sf::Keyboard::Key upKey;
     sf::Keyboard::Key downKey;
+
+    sf::RectangleShape weaponVisual;
 
 public:
     Player(
@@ -46,4 +50,6 @@ public:
     void resolveCollision(Player& otherPlayer);
     void attack(Player& otherPlayer);
     int getHp() const;
+    bool getHasWeapon() const;
+    void setHasWeapon(bool value);
 };

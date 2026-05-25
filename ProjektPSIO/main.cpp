@@ -84,6 +84,25 @@ int main()
 
         player1.resolveCollision(player2);
 
+        for (auto it = map.getWeapons().begin();
+            it != map.getWeapons().end();)
+        {
+            if (
+                player1.getBounds().intersects(
+                    it->getBounds())
+                )
+            {
+                player1.setHasWeapon(true);
+
+                it =
+                    map.getWeapons().erase(it);
+            }
+            else
+            {
+                ++it;
+            }
+        }
+
 
 
         float middleX =

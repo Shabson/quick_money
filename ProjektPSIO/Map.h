@@ -17,6 +17,7 @@ private:
     std::vector<std::unique_ptr<ParallaxLayer>> backgroundLayers;
     sf::Vector2u windowSize;
 
+
 public:
     Map(sf::Vector2u windowSize);
 
@@ -27,4 +28,6 @@ public:
     std::vector<Platform>& getPlatforms();
 
     void update(float cameraX);
+
+    std::vector<Weapon>& getWeapons();
 };

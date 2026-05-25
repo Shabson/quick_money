@@ -107,3 +107,7 @@ void Map::update(float cameraX)
     }
 }
 
+std::vector<Weapon>& Map::getWeapons()
+{
+    return weapons;
+}

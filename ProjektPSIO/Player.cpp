@@ -17,6 +17,7 @@ Player::Player(float x, float y,
 
     isGrounded = false;
     facingRight = true;
+    hasWeapon = false;
 
     attackCooldown = 0.f;
 
@@ -24,6 +25,14 @@ Player::Player(float x, float y,
     rightKey = right;
     upKey = up;
     downKey = down;
+
+    weaponVisual.setSize(
+        sf::Vector2f(60.f, 15.f)
+    );
+
+    weaponVisual.setFillColor(
+        sf::Color::Red
+    );
 }
 
 void Player::handleInput()
@@ -64,6 +73,11 @@ void Player::handleInput()
 void Player::draw(sf::RenderWindow& window)
 {
     window.draw(body);
+
+    if (hasWeapon)
+    {
+        window.draw(weaponVisual);
+    }
 }
 
 sf::Vector2f Player::getPosition() const
@@ -79,6 +93,16 @@ sf::FloatRect Player::getBounds() const
 int Player::getHp() const
 {
     return hp;
+}
+
+bool Player::getHasWeapon() const
+{
+    return hasWeapon;
+}
+
+void Player::setHasWeapon(bool value)
+{
+    hasWeapon = value;
 }
 
 void Player::update(std::vector<Platform>& platforms)
@@ -167,6 +191,27 @@ void Player::update(std::vector<Platform>& platforms)
     }
     velocityX *= 0.85f;
 
+    if (hasWeapon)
+    {
+        if (facingRight)
+        {
+            weaponVisual.setPosition(
+                body.getPosition().x
+                + body.getSize().x,
+
+                body.getPosition().y + 40.f
+            );
+        }
+        else
+        {
+            weaponVisual.setPosition(
+                body.getPosition().x - 60.f,
+
+                body.getPosition().y + 40.f
+            );
+        }
+    }
+
 
 }
 void Player::resolveCollision(Player& otherPlayer)
@@ -222,7 +267,18 @@ void Player::attack(Player& otherPlayer)
 
     sf::RectangleShape attackHitbox;
 
-    attackHitbox.setSize(sf::Vector2f(60.f, 40.f));
+    if (hasWeapon)
+    {
+        attackHitbox.setSize(
+            sf::Vector2f(120.f, 50.f)
+        );
+    }
+    else
+    {
+        attackHitbox.setSize(
+            sf::Vector2f(60.f, 40.f)
+        );
+    }
 
     if (facingRight)
     {
@@ -247,16 +303,38 @@ void Player::attack(Player& otherPlayer)
             otherPlayer.getBounds())
         )
     {
-        otherPlayer.hp--;
+        if (hasWeapon)
+        {
+            otherPlayer.hp -= 3;
+        }
+        else
+        {
+            otherPlayer.hp--;
+        }
 
         if (facingRight)
         {
-            otherPlayer.velocityX = 15.f;
+            if (hasWeapon)
+            {
+                otherPlayer.velocityX = 25.f;
+            }
+            else
+            {
+                otherPlayer.velocityX = 15.f;
+            }
+
             otherPlayer.velocityY = -10.f;
         }
         else
         {
-            otherPlayer.velocityX = -15.f;
+            if (hasWeapon)
+            {
+                otherPlayer.velocityX = -25.f;
+            }
+            else
+            {
+                otherPlayer.velocityX = -15.f;
+            }
             otherPlayer.velocityY = -10.f;
         }
 
