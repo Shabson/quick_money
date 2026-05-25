@@ -106,3 +106,7 @@ std::vector<Platform>& Map::getPlatforms()
     return platforms;
 }
 
+std::vector<Weapon>& Map::getWeapons()
+{
+    return weapons;
+}

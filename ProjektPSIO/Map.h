@@ -29,4 +29,6 @@ public:
     );
 
     std::vector<Platform>& getPlatforms();
+    std::vector<Weapon>& getWeapons();
 
+};
