@@ -181,20 +181,34 @@ void Player::resolveCollision(Player& otherPlayer)
 
     if (playerBounds.intersects(otherBounds, overlap))
     {
-        float pushAmount = overlap.width / 2.f;
-
-        if (body.getPosition().x <
-            otherPlayer.getPosition().x)
+        // tylko collision pozioma
+        if (overlap.width < overlap.height)
         {
-            body.move(-pushAmount, 0.f);
+            float pushAmount =
+                overlap.width / 2.f;
 
-            otherPlayer.body.move(pushAmount, 0.f);
-        }
-        else
-        {
-            body.move(pushAmount, 0.f);
+            if (
+                body.getPosition().x
+                <
+                otherPlayer.getPosition().x
+                )
+            {
+                body.move(-pushAmount, 0.f);
 
-            otherPlayer.body.move(-pushAmount, 0.f);
+                otherPlayer.body.move(
+                    pushAmount,
+                    0.f
+                );
+            }
+            else
+            {
+                body.move(pushAmount, 0.f);
+
+                otherPlayer.body.move(
+                    -pushAmount,
+                    0.f
+                );
+            }
         }
     }
 }
