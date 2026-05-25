@@ -10,38 +10,44 @@ Map::Map(sf::Vector2u windowSize)
 void Map::loadMap1()
 {
     backgroundLayers.clear();
-    backgroundLayers.push_back(
-        std::make_unique<ParallaxLayer>(
-            "assets/textures/parallax-mountain-bg.png",
-            0.05f, windowSize
-        )
-    );
-     
-    backgroundLayers.push_back(
-        std::make_unique<ParallaxLayer>(
-            "assets/textures/parallax-mountain-trees.png",
-            0.1f, windowSize
-        )
-    );
 
     backgroundLayers.push_back(
         std::make_unique<ParallaxLayer>(
-            "assets/textures/parallax-mountain-foreground-trees.png",
-            0.2f, windowSize
+            "assets/textures/parallax-mountain-bg.png",
+            0.02f,
+            windowSize
         )
     );
 
     backgroundLayers.push_back(
         std::make_unique<ParallaxLayer>(
             "assets/textures/parallax-mountain-montain-far.png",
-            0.35f, windowSize
+            0.05f,
+            windowSize
         )
     );
 
     backgroundLayers.push_back(
         std::make_unique<ParallaxLayer>(
             "assets/textures/parallax-mountain-mountains.png",
-            0.5f, windowSize
+            0.1f,
+            windowSize
+        )
+    );
+
+    backgroundLayers.push_back(
+        std::make_unique<ParallaxLayer>(
+            "assets/textures/parallax-mountain-trees.png",
+            0.2f,
+            windowSize
+        )
+    );
+
+    backgroundLayers.push_back(
+        std::make_unique<ParallaxLayer>(
+            "assets/textures/parallax-mountain-foreground-trees.png",
+            0.3f,
+            windowSize
         )
     );
 
