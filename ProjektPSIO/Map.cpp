@@ -72,7 +72,19 @@ void Map::loadMap1()
     );
 
     weapons.push_back(
-        Weapon(900.f, 300.f)
+        Weapon(WeaponType::Sword, 600.f, 400.f)
+    );
+
+    weapons.push_back(
+        Weapon(WeaponType::Katana, 900.f, 300.f)
+    );
+
+    weapons.push_back(
+        Weapon(WeaponType::Bat, 1200.f, 400.f)
+    );
+
+    weapons.push_back(
+        Weapon(WeaponType::Spear, 1500.f, 350.f)
     );
 }
 

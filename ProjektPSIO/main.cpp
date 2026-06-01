@@ -83,10 +83,35 @@ int main()
             << "P1 HP: "
             << player1.getHp()
 
-            << " | P2 HP: "
+            << " | Weapon: ";
 
+        if (player1.getCurrentWeapon() != nullptr)
+        {
+            cout
+                << player1.getCurrentWeapon()->getName();
+        }
+        else
+        {
+            cout << "Fists";
+        }
+
+        cout
+            << " | P2 HP: "
             << player2.getHp()
-            << std::endl;
+
+            << " | Weapon: ";
+
+        if (player2.getCurrentWeapon() != nullptr)
+        {
+            cout
+                << player2.getCurrentWeapon()->getName();
+        }
+        else
+        {
+            cout << "Fists";
+        }
+
+        cout << endl;
 
 
         player1.resolveCollision(player2);
@@ -121,7 +146,7 @@ int main()
                     it->getBounds())
                 )
             {
-                player1.setHasWeapon(true);
+                player1.setCurrentWeapon(&(*it));
 
                 it =
                     map.getWeapons().erase(it);
@@ -176,6 +201,9 @@ int main()
         player1.draw(window);
 
         player2.draw(window);
+
+        player1.drawCooldownBar(window);
+        player2.drawCooldownBar(window);
 
         window.display();
     }

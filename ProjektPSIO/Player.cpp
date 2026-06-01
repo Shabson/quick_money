@@ -1,354 +1,441 @@
-#include "Player.h"
+    #include "Player.h"
 
-Player::Player(float x, float y,
-    sf::Keyboard::Key left,
-    sf::Keyboard::Key right,
-    sf::Keyboard::Key up,
-    sf::Keyboard::Key down)
-{
-    body.setSize(sf::Vector2f(80.f, 120.f));
-    body.setFillColor(sf::Color::Green);
-    body.setPosition(x, y);
-
-    speed = 8.f;
-    velocityY = 0.f;
-    velocityX = 0.f;
-    hp = 5;
-
-    isGrounded = false;
-    facingRight = true;
-    hasWeapon = false;
-
-    attackCooldown = 0.f;
-
-    leftKey = left;
-    rightKey = right;
-    upKey = up;
-    downKey = down;
-
-    weaponVisual.setSize(
-        sf::Vector2f(60.f, 15.f)
-    );
-
-    weaponVisual.setFillColor(
-        sf::Color::Red
-    );
-}
-
-void Player::handleInput()
-{
-    if (sf::Keyboard::isKeyPressed(leftKey))
+    Player::Player(float x, float y,
+        sf::Keyboard::Key left,
+        sf::Keyboard::Key right,
+        sf::Keyboard::Key up,
+        sf::Keyboard::Key down)
     {
-        velocityX = -speed;
+        body.setSize(sf::Vector2f(80.f, 120.f));
+        body.setFillColor(sf::Color::Green);
+        body.setPosition(x, y);
 
-        facingRight = false;
-    }
-
-    if (sf::Keyboard::isKeyPressed(rightKey))
-    {
-        velocityX = speed;
-
-        facingRight = true;
-    }
-
-    if (
-        sf::Keyboard::isKeyPressed(upKey)
-        &&
-        isGrounded
-        )
-    {
-        velocityY = -15.f;
+        speed = 8.f;
+        velocityY = 0.f;
+        velocityX = 0.f;
+        hp = 5;
+        currentWeapon = nullptr;
 
         isGrounded = false;
+        facingRight = true;
+    
+   
+
+        attackCooldown = 0.f;
+
+        leftKey = left;
+        rightKey = right;
+        upKey = up;
+        downKey = down;
+
+        weaponVisual.setSize(
+            sf::Vector2f(60.f, 15.f)
+        );
+
+        weaponVisual.setFillColor(
+            sf::Color::Red
+        );
     }
 
-    if (sf::Keyboard::isKeyPressed(downKey))
+    void Player::handleInput()
     {
-        velocityY += 1.f;
+        if (sf::Keyboard::isKeyPressed(leftKey))
+        {
+            velocityX = -speed;
+
+            facingRight = false;
+        }
+
+        if (sf::Keyboard::isKeyPressed(rightKey))
+        {
+            velocityX = speed;
+
+            facingRight = true;
+        }
+
+        if (
+            sf::Keyboard::isKeyPressed(upKey)
+            &&
+            isGrounded
+            )
+        {
+            velocityY = -15.f;
+
+            isGrounded = false;
+        }
+
+        if (sf::Keyboard::isKeyPressed(downKey))
+        {
+            velocityY += 1.f;
+        }
+
+
     }
 
-
-}
-
-void Player::draw(sf::RenderWindow& window)
-{
-    window.draw(body);
-
-    if (hasWeapon)
+    void Player::draw(sf::RenderWindow& window)
     {
-        window.draw(weaponVisual);
+        window.draw(body);
+
+        if (currentWeapon != nullptr)
+        {
+            window.draw(weaponVisual);
+        }
     }
-}
 
-sf::Vector2f Player::getPosition() const
-{
-    return body.getPosition();
-}
-
-sf::FloatRect Player::getBounds() const
-{
-    return body.getGlobalBounds();
-}
-
-int Player::getHp() const
-{
-    return hp;
-}
-
-bool Player::getHasWeapon() const
-{
-    return hasWeapon;
-}
-
-void Player::setHasWeapon(bool value)
-{
-    hasWeapon = value;
-}
-
-void Player::update(std::vector<Platform>& platforms)
-{
-
-    if (attackCooldown > 0.f)
+    void Player::drawCooldownBar(sf::RenderWindow& window)
     {
-        attackCooldown -= 1.f;
+        float width = 50.f;
+        float height = 6.f;
+
+        float maxCooldown;
+
+        if (currentWeapon != nullptr)
+        {
+            maxCooldown =
+                currentWeapon->getAttackCooldown();
+        }
+        else
+        {
+            maxCooldown = 15.f;
+        }
+
+        float ratio = attackCooldown / maxCooldown;
+
+        if (ratio < 0.f)
+        {
+            ratio = 0.f;
+        }
+
+        sf::RectangleShape background;
+
+        background.setSize(
+            sf::Vector2f(width, height)
+        );
+
+        background.setFillColor(
+            sf::Color(70, 70, 70)
+        );
+
+        background.setPosition(
+            body.getPosition().x
+            + body.getSize().x / 2.f
+            - width / 2.f,
+
+            body.getPosition().y
+            + body.getSize().y
+            + 10.f
+        );
+
+        sf::RectangleShape bar;
+
+        bar.setSize(
+            sf::Vector2f(width * ratio, height)
+        );
+
+        bar.setFillColor(
+            sf::Color(210, 210, 210)
+        );
+
+        bar.setPosition(
+            body.getPosition().x
+            + body.getSize().x / 2.f
+            - width / 2.f,
+
+            body.getPosition().y
+            + body.getSize().y
+            + 10.f
+        );
+
+        window.draw(background);
+        window.draw(bar);
     }
 
-    previousY = body.getPosition().y;
+    sf::Vector2f Player::getPosition() const
+    {
+        return body.getPosition();
+    }
 
-    velocityY += 0.5f;
+    sf::FloatRect Player::getBounds() const
+    {
+        return body.getGlobalBounds();
+    }
 
-    body.move(velocityX, velocityY);
+    int Player::getHp() const
+    {
+        return hp;
+    }
 
-    isGrounded = false;
+    bool Player::getHasWeapon() const
+    {
+        return currentWeapon != nullptr;
+    }
 
-    for (auto& platform : platforms)
+    Weapon* Player::getCurrentWeapon() const
+    {
+        return currentWeapon;
+    }
+
+    void Player::setCurrentWeapon(Weapon* weapon)
+    {
+        currentWeapon = weapon;
+    }
+
+
+
+    void Player::update(std::vector<Platform>& platforms)
+    {
+
+        if (attackCooldown > 0.f)
+        {
+            attackCooldown -= 1.f;
+        }
+
+        previousY = body.getPosition().y;
+
+        velocityY += 0.5f;
+
+        body.move(velocityX, velocityY);
+
+        isGrounded = false;
+
+        for (auto& platform : platforms)
+        {
+            sf::FloatRect playerBounds =
+                body.getGlobalBounds();
+
+            sf::FloatRect platformBounds =
+                platform.getBounds();
+
+            if (playerBounds.intersects(platformBounds))
+            {
+                // landing collision
+                if (
+                    previousY + body.getSize().y
+                    <= platformBounds.top
+                    )
+                {
+                    body.setPosition(
+                        body.getPosition().x,
+                        platformBounds.top
+                        - body.getSize().y
+                    );
+
+                    velocityY = 0.f;
+
+                    isGrounded = true;
+                }
+
+                // head collision
+                else if (
+                    previousY
+                    >= platformBounds.top
+                    + platformBounds.height
+                    )
+                {
+                    body.setPosition(
+                        body.getPosition().x,
+                        platformBounds.top
+                        + platformBounds.height
+                    );
+
+                    velocityY = 0.f;
+                }
+
+                // left collision
+                else if (
+                    body.getPosition().x
+                    <
+                    platformBounds.left
+                    )
+                {
+                    body.setPosition(
+                        platformBounds.left
+                        - body.getSize().x,
+                        body.getPosition().y
+                    );
+                }
+
+                // right collision
+                else
+                {
+                    body.setPosition(
+                        platformBounds.left
+                        + platformBounds.width,
+                        body.getPosition().y
+                    );
+                }
+            }
+        }
+        velocityX *= 0.85f;
+
+        if (currentWeapon != nullptr)
+        {
+            if (facingRight)
+            {
+                weaponVisual.setPosition(
+                    body.getPosition().x
+                    + body.getSize().x,
+
+                    body.getPosition().y + 40.f
+                );
+            }
+            else
+            {
+                weaponVisual.setPosition(
+                    body.getPosition().x - 60.f,
+
+                    body.getPosition().y + 40.f
+                );
+            }
+        }
+
+
+    }
+    void Player::resolveCollision(Player& otherPlayer)
     {
         sf::FloatRect playerBounds =
             body.getGlobalBounds();
 
-        sf::FloatRect platformBounds =
-            platform.getBounds();
+        sf::FloatRect otherBounds =
+            otherPlayer.getBounds();
 
-        if (playerBounds.intersects(platformBounds))
+        sf::FloatRect overlap;
+
+        if (playerBounds.intersects(otherBounds, overlap))
         {
-            // landing collision
-            if (
-                previousY + body.getSize().y
-                <= platformBounds.top
-                )
+        
+            if (overlap.width < overlap.height)
             {
-                body.setPosition(
-                    body.getPosition().x,
-                    platformBounds.top
-                    - body.getSize().y
-                );
+                float pushAmount =
+                    overlap.width / 2.f;
 
-                velocityY = 0.f;
+                if (
+                    body.getPosition().x
+                    <
+                    otherPlayer.getPosition().x
+                    )
+                {
+                    body.move(-pushAmount, 0.f);
 
-                isGrounded = true;
-            }
+                    otherPlayer.body.move(
+                        pushAmount,
+                        0.f
+                    );
+                }
+                else
+                {
+                    body.move(pushAmount, 0.f);
 
-            // head collision
-            else if (
-                previousY
-                >= platformBounds.top
-                + platformBounds.height
-                )
-            {
-                body.setPosition(
-                    body.getPosition().x,
-                    platformBounds.top
-                    + platformBounds.height
-                );
-
-                velocityY = 0.f;
-            }
-
-            // left collision
-            else if (
-                body.getPosition().x
-                <
-                platformBounds.left
-                )
-            {
-                body.setPosition(
-                    platformBounds.left
-                    - body.getSize().x,
-                    body.getPosition().y
-                );
-            }
-
-            // right collision
-            else
-            {
-                body.setPosition(
-                    platformBounds.left
-                    + platformBounds.width,
-                    body.getPosition().y
-                );
+                    otherPlayer.body.move(
+                        -pushAmount,
+                        0.f
+                    );
+                }
             }
         }
     }
-    velocityX *= 0.85f;
 
-    if (hasWeapon)
+    void Player::attack(Player& otherPlayer)
     {
+        if (attackCooldown > 0.f)
+        {
+            return;
+        }
+
+        sf::RectangleShape attackHitbox;
+
+        if (currentWeapon != nullptr)
+        {
+            attackHitbox.setSize(
+                sf::Vector2f(120.f, 50.f)
+            );
+        }
+        else
+        {
+            attackHitbox.setSize(
+                sf::Vector2f(60.f, 40.f)
+            );
+        }
+
         if (facingRight)
         {
-            weaponVisual.setPosition(
+            attackHitbox.setPosition(
                 body.getPosition().x
                 + body.getSize().x,
 
-                body.getPosition().y + 40.f
+                body.getPosition().y + 30.f
             );
         }
         else
         {
-            weaponVisual.setPosition(
+            attackHitbox.setPosition(
                 body.getPosition().x - 60.f,
 
-                body.getPosition().y + 40.f
+                body.getPosition().y + 30.f
             );
         }
-    }
 
-
-}
-void Player::resolveCollision(Player& otherPlayer)
-{
-    sf::FloatRect playerBounds =
-        body.getGlobalBounds();
-
-    sf::FloatRect otherBounds =
-        otherPlayer.getBounds();
-
-    sf::FloatRect overlap;
-
-    if (playerBounds.intersects(otherBounds, overlap))
-    {
-        
-        if (overlap.width < overlap.height)
+        if (currentWeapon != nullptr)
         {
-            float pushAmount =
-                overlap.width / 2.f;
-
-            if (
-                body.getPosition().x
-                <
-                otherPlayer.getPosition().x
-                )
-            {
-                body.move(-pushAmount, 0.f);
-
-                otherPlayer.body.move(
-                    pushAmount,
-                    0.f
-                );
-            }
-            else
-            {
-                body.move(pushAmount, 0.f);
-
-                otherPlayer.body.move(
-                    -pushAmount,
-                    0.f
-                );
-            }
-        }
-    }
-}
-
-void Player::attack(Player& otherPlayer)
-{
-    if (attackCooldown > 0.f)
-    {
-        return;
-    }
-
-    sf::RectangleShape attackHitbox;
-
-    if (hasWeapon)
-    {
-        attackHitbox.setSize(
-            sf::Vector2f(120.f, 50.f)
-        );
-    }
-    else
-    {
-        attackHitbox.setSize(
-            sf::Vector2f(60.f, 40.f)
-        );
-    }
-
-    if (facingRight)
-    {
-        attackHitbox.setPosition(
-            body.getPosition().x
-            + body.getSize().x,
-
-            body.getPosition().y + 30.f
-        );
-    }
-    else
-    {
-        attackHitbox.setPosition(
-            body.getPosition().x - 60.f,
-
-            body.getPosition().y + 30.f
-        );
-    }
-
-    if (
-        attackHitbox.getGlobalBounds().intersects(
-            otherPlayer.getBounds())
-        )
-    {
-        if (hasWeapon)
-        {
-            otherPlayer.hp -= 3;
+            attackCooldown =
+                currentWeapon->getAttackCooldown();
         }
         else
         {
-            otherPlayer.hp--;
+            attackCooldown = 15.f;
         }
 
-        if (facingRight)
+        if (
+            attackHitbox.getGlobalBounds().intersects(
+                otherPlayer.getBounds())
+            )
         {
-            if (hasWeapon)
+            if (currentWeapon != nullptr)
             {
-                otherPlayer.velocityX = 25.f;
+                otherPlayer.hp -= 3;
             }
             else
             {
-                otherPlayer.velocityX = 15.f;
+                otherPlayer.hp--;
             }
 
-            otherPlayer.velocityY = -10.f;
-        }
-        else
-        {
-            if (hasWeapon)
+            if (facingRight)
             {
-                otherPlayer.velocityX = -25.f;
+                if (currentWeapon != nullptr)
+                {
+                    otherPlayer.velocityX = 25.f;
+                }
+                else
+                {
+                    otherPlayer.velocityX = 15.f;
+                }
+
+                otherPlayer.velocityY = -10.f;
             }
             else
             {
-                otherPlayer.velocityX = -15.f;
+                if (currentWeapon != nullptr)
+                {
+                    otherPlayer.velocityX = -25.f;
+                }
+                else
+                {
+                    otherPlayer.velocityX = -15.f;
+                }
+                otherPlayer.velocityY = -10.f;
             }
-            otherPlayer.velocityY = -10.f;
-        }
 
-        attackCooldown = 30.f;
+       
+        }
     }
-}
 
-void Player::respawn(float x, float y)
-{
-    body.setPosition(x, y);
+    void Player::respawn(float x, float y)
+    {
+        body.setPosition(x, y);
 
-    velocityX = 0.f;
-    velocityY = 0.f;
+        velocityX = 0.f;
+        velocityY = 0.f;
 
-    hp = 5;
-    hasWeapon = false;
-}
+        hp = 5;
+        currentWeapon = nullptr;
+    }

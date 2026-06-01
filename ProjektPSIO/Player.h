@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "Platform.h"
+#include "Weapon.h"
 
 class Player
 {
@@ -20,7 +21,7 @@ private:
 
     int hp;
 
-    bool hasWeapon;
+    Weapon* currentWeapon;
 
     sf::Keyboard::Key leftKey;
     sf::Keyboard::Key rightKey;
@@ -51,6 +52,8 @@ public:
     void attack(Player& otherPlayer);
     int getHp() const;
     bool getHasWeapon() const;
-    void setHasWeapon(bool value);
     void respawn(float x, float y);
+    void drawCooldownBar(sf::RenderWindow& window);
+    Weapon* getCurrentWeapon() const;
+    void setCurrentWeapon(Weapon* weapon);
 };
