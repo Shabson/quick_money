@@ -19,7 +19,10 @@ private:
 
 
 public:
-    Map(sf::Vector2u windowSize);
+    Map(
+        sf::Vector2u windowSize,
+        int mapType
+    );
 
     void loadMap1();
 

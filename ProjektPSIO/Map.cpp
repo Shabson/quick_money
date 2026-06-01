@@ -1,11 +1,19 @@
 #include "Map.h"
 #include "Weapon.h"
 
-Map::Map(sf::Vector2u windowSize)
+Map::Map(sf::Vector2u windowSize, int mapType)
 {   
     this->windowSize = windowSize;
 
-    loadMap1();
+    switch (mapType)
+    {
+    case 1:
+        loadMap1();
+        break;
+    default:
+        loadMap1();
+        break;
+    }
 }
 
 void Map::loadMap1()

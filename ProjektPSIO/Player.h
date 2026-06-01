@@ -3,6 +3,14 @@
 #include "Platform.h"
 #include "Weapon.h"
 
+enum class CharacterClass
+{
+    Warrior,
+    GlassCannon,
+    Thug,
+    Ranger
+};
+
 class Player
 {
 private:
@@ -30,10 +38,21 @@ private:
 
     sf::RectangleShape weaponVisual;
 
+    CharacterClass playerClass;
+
+    float damageMultiplier;
+    float speedMultiplier;
+    float cooldownMultiplier;
+    float hpMultiplier;
+
+    float dodgeChance;
+
 public:
     Player(
         float x,
         float y,
+
+        CharacterClass chosenClass,
 
         sf::Keyboard::Key left,
         sf::Keyboard::Key right,

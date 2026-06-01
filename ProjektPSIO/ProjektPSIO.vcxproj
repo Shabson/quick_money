@@ -19,15 +19,22 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Game.cpp" />
+    <ClCompile Include="Gameplay.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Map.cpp" />
+    <ClCompile Include="Menus.cpp" />
     <ClCompile Include="ParallaxLayer.cpp" />
     <ClCompile Include="Platform.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Weapon.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Game.h" />
+    <ClInclude Include="Gameplay.h" />
+    <ClInclude Include="GameState.h" />
     <ClInclude Include="Map.h" />
+    <ClInclude Include="Menus.h" />
     <ClInclude Include="ParallaxLayer.h" />
     <ClInclude Include="Platform.h" />
     <ClInclude Include="Player.h" />

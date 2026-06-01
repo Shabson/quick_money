@@ -1,6 +1,6 @@
     #include "Player.h"
 
-    Player::Player(float x, float y,
+Player::Player(float x, float y, CharacterClass chosenClass,
         sf::Keyboard::Key left,
         sf::Keyboard::Key right,
         sf::Keyboard::Key up,
@@ -10,16 +10,15 @@
         body.setFillColor(sf::Color::Green);
         body.setPosition(x, y);
 
-        speed = 8.f;
+      
         velocityY = 0.f;
         velocityX = 0.f;
-        hp = 5;
+     
         currentWeapon = nullptr;
+        playerClass = chosenClass;
 
         isGrounded = false;
         facingRight = true;
-    
-   
 
         attackCooldown = 0.f;
 
@@ -35,6 +34,56 @@
         weaponVisual.setFillColor(
             sf::Color::Red
         );
+
+        switch (playerClass)
+        {
+        case CharacterClass::Warrior:
+
+            hpMultiplier = 1.2f;
+            damageMultiplier = 1.1f;
+            speedMultiplier = 0.95f;
+            cooldownMultiplier = 1.f;
+
+            dodgeChance = 0.f;
+
+            break;
+
+        case CharacterClass::GlassCannon:
+
+            hpMultiplier = 0.7f;
+            damageMultiplier = 1.25f;
+            speedMultiplier = 1.05f;
+            cooldownMultiplier = 0.9f;
+
+            dodgeChance = 0.f;
+
+            break;
+
+        case CharacterClass::Thug:
+
+            hpMultiplier = 1.f;
+            damageMultiplier = 1.f;
+            speedMultiplier = 1.15f;
+            cooldownMultiplier = 1.f;
+
+            dodgeChance = 0.15f;
+
+            break;
+
+        case CharacterClass::Ranger:
+
+            hpMultiplier = 0.9f;
+            damageMultiplier = 1.f;
+            speedMultiplier = 1.08f;
+            cooldownMultiplier = 0.95f;
+
+            dodgeChance = 0.05f;
+
+            break;
+        }
+        speed = 8.f * speedMultiplier;
+
+        hp = 50 * hpMultiplier;
     }
 
     void Player::handleInput()
@@ -392,11 +441,11 @@
         {
             if (currentWeapon != nullptr)
             {
-                otherPlayer.hp -= 3;
+                otherPlayer.hp -= 3 * damageMultiplier;
             }
             else
             {
-                otherPlayer.hp--;
+                otherPlayer.hp -= 1 * damageMultiplier;
             }
 
             if (facingRight)
