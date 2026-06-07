@@ -14,7 +14,7 @@ Player::Player(float x, float y, CharacterClass chosenClass,
         velocityY = 0.f;
         velocityX = 0.f;
      
-        currentWeapon = nullptr;
+        hasWeapon = false;
         playerClass = chosenClass;
 
         isGrounded = false;
@@ -125,7 +125,7 @@ Player::Player(float x, float y, CharacterClass chosenClass,
     {
         window.draw(body);
 
-        if (currentWeapon != nullptr)
+        if (hasWeapon)
         {
             window.draw(weaponVisual);
         }
@@ -138,10 +138,10 @@ Player::Player(float x, float y, CharacterClass chosenClass,
 
         float maxCooldown;
 
-        if (currentWeapon != nullptr)
+        if (hasWeapon)
         {
             maxCooldown =
-                currentWeapon->getAttackCooldown();
+                currentWeapon.getAttackCooldown();
         }
         else
         {
@@ -216,18 +216,23 @@ Player::Player(float x, float y, CharacterClass chosenClass,
 
     bool Player::getHasWeapon() const
     {
-        return currentWeapon != nullptr;
+        return hasWeapon;
     }
 
-    Weapon* Player::getCurrentWeapon() const
+    Weapon Player::getCurrentWeapon() const
     {
         return currentWeapon;
     }
 
-    void Player::setCurrentWeapon(Weapon* weapon)
+    void Player::setCurrentWeapon(
+        const Weapon& weapon
+    )
     {
         currentWeapon = weapon;
+
+        hasWeapon = true;
     }
+
 
 
 
@@ -317,7 +322,7 @@ Player::Player(float x, float y, CharacterClass chosenClass,
         }
         velocityX *= 0.85f;
 
-        if (currentWeapon != nullptr)
+        if (hasWeapon)
         {
             if (facingRight)
             {
@@ -393,7 +398,7 @@ Player::Player(float x, float y, CharacterClass chosenClass,
 
         sf::RectangleShape attackHitbox;
 
-        if (currentWeapon != nullptr)
+        if (hasWeapon)
         {
             attackHitbox.setSize(
                 sf::Vector2f(120.f, 50.f)
@@ -424,10 +429,10 @@ Player::Player(float x, float y, CharacterClass chosenClass,
             );
         }
 
-        if (currentWeapon != nullptr)
+        if (hasWeapon)
         {
             attackCooldown =
-                currentWeapon->getAttackCooldown();
+                currentWeapon.getAttackCooldown();
         }
         else
         {
@@ -439,7 +444,7 @@ Player::Player(float x, float y, CharacterClass chosenClass,
                 otherPlayer.getBounds())
             )
         {
-            if (currentWeapon != nullptr)
+            if (hasWeapon)
             {
                 otherPlayer.hp -= 3 * damageMultiplier;
             }
@@ -450,7 +455,7 @@ Player::Player(float x, float y, CharacterClass chosenClass,
 
             if (facingRight)
             {
-                if (currentWeapon != nullptr)
+                if (hasWeapon)
                 {
                     otherPlayer.velocityX = 25.f;
                 }
@@ -463,7 +468,7 @@ Player::Player(float x, float y, CharacterClass chosenClass,
             }
             else
             {
-                if (currentWeapon != nullptr)
+                if (hasWeapon)
                 {
                     otherPlayer.velocityX = -25.f;
                 }
@@ -486,5 +491,15 @@ Player::Player(float x, float y, CharacterClass chosenClass,
         velocityY = 0.f;
 
         hp = 5;
-        currentWeapon = nullptr;
+
+        hasWeapon = false;
+
+        currentWeapon = Weapon();
+    }
+
+    void Player::dropWeapon()
+    {
+        hasWeapon = false;
+
+        currentWeapon = Weapon();
     }

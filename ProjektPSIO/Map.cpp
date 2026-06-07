@@ -130,3 +130,8 @@ std::vector<Weapon>& Map::getWeapons()
 {
     return weapons;
 }
+
+void Map::addWeapon(const Weapon& weapon)
+{
+    weapons.push_back(weapon);
+}

@@ -132,6 +132,63 @@ void Game::run()
         );
     }
 
+    if (
+        sf::Keyboard::isKeyPressed(
+            sf::Keyboard::Q
+        )
+        &&
+        player1->getHasWeapon()
+        )
+    {
+        Weapon droppedWeapon =
+            player1->getCurrentWeapon();
+
+        if (player1->getPosition().x < player2->getPosition().x)
+        {
+            droppedWeapon.setPosition(
+                player1->getPosition().x - 150.f,
+                player1->getPosition().y
+            );
+        }
+        else
+        {
+            droppedWeapon.setPosition(
+                player1->getPosition().x + 150.f,
+                player1->getPosition().y
+            );
+        }
+
+        map->addWeapon(
+            droppedWeapon
+        );
+
+        player1->dropWeapon();
+    }
+
+    if (
+        sf::Keyboard::isKeyPressed(
+            sf::Keyboard::RShift
+        )
+        &&
+        player2->getHasWeapon()
+        )
+    {
+        Weapon droppedWeapon =
+            player2->getCurrentWeapon();
+
+        droppedWeapon.setPosition(
+            player2->getPosition().x - 150.f,
+            player2->getPosition().y
+        );
+
+        map->addWeapon(
+            droppedWeapon
+        );
+
+        player2->dropWeapon();
+    }
+
+
     // UPDATE
 
     player1->update(
@@ -200,10 +257,29 @@ void Game::run()
             .intersects(
                 it->getBounds()
             )
+            &&
+            !player1->getHasWeapon()
             )
         {
             player1->setCurrentWeapon(
-                &(*it)
+                *it
+            );
+
+            it =
+                map->getWeapons()
+                .erase(it);
+        }
+        else if (
+            player2->getBounds()
+            .intersects(
+                it->getBounds()
+            )
+            &&
+            !player2->getHasWeapon()
+            )
+        {
+            player2->setCurrentWeapon(
+                *it
             );
 
             it =

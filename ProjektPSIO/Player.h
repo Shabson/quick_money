@@ -29,7 +29,8 @@ private:
 
     int hp;
 
-    Weapon* currentWeapon;
+    Weapon currentWeapon;
+    bool hasWeapon;
 
     sf::Keyboard::Key leftKey;
     sf::Keyboard::Key rightKey;
@@ -73,6 +74,7 @@ public:
     bool getHasWeapon() const;
     void respawn(float x, float y);
     void drawCooldownBar(sf::RenderWindow& window);
-    Weapon* getCurrentWeapon() const;
-    void setCurrentWeapon(Weapon* weapon);
+    Weapon getCurrentWeapon() const;
+    void setCurrentWeapon(const Weapon& weapon);
+    void dropWeapon();
 };
