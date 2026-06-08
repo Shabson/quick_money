@@ -6,7 +6,7 @@
 #include "Map.h"
 #include "Menus.h"
 #include "GameState.h"
-
+#include "pocisk.h"
 
 class Game
 {
@@ -29,6 +29,7 @@ private:
     Player* player2;
 
     Map* map;
+    std::vector<Pocisk> pociski;
 
 public:
 

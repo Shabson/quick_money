@@ -210,15 +210,39 @@ void Game::run()
         map->getPlatforms()
     );
 
+    for (auto& pocisk : pociski)
+    {
+        pocisk.update();
+    }
+
     player1->resolveCollision(
         *player2
     );
+
+
 
     // RESPAWN
 
     if (player1->getHp() <= 0)
     {
         player1->addDeath();
+
+        if (player1->getHasWeapon())
+        {
+            Weapon droppedWeapon =
+                player1->getCurrentWeapon();
+
+            droppedWeapon.setPosition(
+                player1->getPosition().x,
+                player1->getPosition().y
+            );
+
+            map->addWeapon(
+                droppedWeapon
+            );
+
+            player1->dropWeapon();
+        }
 
         player1->respawn(
             300.f,
@@ -229,6 +253,23 @@ void Game::run()
     if (player2->getHp() <= 0)
     {
         player2->addDeath();
+
+        if (player2->getHasWeapon())
+        {
+            Weapon droppedWeapon =
+                player2->getCurrentWeapon();
+
+            droppedWeapon.setPosition(
+                player2->getPosition().x,
+                player2->getPosition().y
+            );
+
+            map->addWeapon(
+                droppedWeapon
+            );
+
+            player2->dropWeapon();
+        }
 
         player2->respawn(
             700.f,
@@ -243,6 +284,23 @@ void Game::run()
     {
         player1->addDeath();
 
+        if (player1->getHasWeapon())
+        {
+            Weapon droppedWeapon =
+                player1->getCurrentWeapon();
+
+            droppedWeapon.setPosition(
+                player1->getPosition().x,
+                player1->getPosition().y
+            );
+
+            map->addWeapon(
+                droppedWeapon
+            );
+
+            player1->dropWeapon();
+        }
+
         player1->respawn(
             300.f,
             500.f
@@ -255,6 +313,24 @@ void Game::run()
         )
     {
         player2->addDeath();
+
+
+        if (player2->getHasWeapon())
+        {
+            Weapon droppedWeapon =
+                player2->getCurrentWeapon();
+
+            droppedWeapon.setPosition(
+                player2->getPosition().x,
+                player2->getPosition().y
+            );
+
+            map->addWeapon(
+                droppedWeapon
+            );
+
+            player2->dropWeapon();
+        }
 
         player2->respawn(
             300.f,
@@ -363,6 +439,11 @@ void Game::run()
         window,
         camera
     );
+
+    for (auto& pocisk : pociski)
+    {
+        pocisk.draw(window);
+    }
 
     player1->draw(window);
 
