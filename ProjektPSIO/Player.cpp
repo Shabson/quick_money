@@ -27,6 +27,13 @@ Player::Player(float x, float y, CharacterClass chosenClass,
         upKey = up;
         downKey = down;
 
+        speedMultiplier = 1.f;
+        damageMultiplier = 1.f;
+        cooldownMultiplier = 1.f;
+        hpMultiplier = 1.f;
+
+        dodgeChance = 0.f;
+
         weaponVisual.setSize(
             sf::Vector2f(60.f, 15.f)
         );
@@ -81,9 +88,9 @@ Player::Player(float x, float y, CharacterClass chosenClass,
 
             break;
         }
-        speed = 8.f * speedMultiplier;
+        speed = 8.0f * speedMultiplier;
 
-        hp = 50 * hpMultiplier;
+        hp = 50.0f * hpMultiplier;
     }
 
     void Player::handleInput()
@@ -441,11 +448,11 @@ Player::Player(float x, float y, CharacterClass chosenClass,
         {
             if (currentWeapon != nullptr)
             {
-                otherPlayer.hp -= 3 * damageMultiplier;
+                otherPlayer.hp -= 3.0f * damageMultiplier;
             }
             else
             {
-                otherPlayer.hp -= 1 * damageMultiplier;
+                otherPlayer.hp -= 1.0 * damageMultiplier;
             }
 
             if (facingRight)
