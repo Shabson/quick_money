@@ -7,7 +7,8 @@ enum class WeaponType
     Sword,
     Katana,
     Bat,
-    Spear
+    Spear,
+    Pistol
 };
 
 class Weapon
@@ -25,6 +26,8 @@ private:
 
 public:
 
+    Weapon();
+
     void draw(sf::RenderWindow& window);
 
     sf::FloatRect getBounds() const;
@@ -37,4 +40,7 @@ public:
 
     Weapon(WeaponType weaponType, float x, float y);
     std::string getName() const;
+    void setPosition(float x, float y);
+
+    sf::Vector2f getPosition() const;
 };

@@ -14,7 +14,7 @@ Player::Player(float x, float y, CharacterClass chosenClass,
         velocityY = 0.f;
         velocityX = 0.f;
      
-        currentWeapon = nullptr;
+        hasWeapon = false;
         playerClass = chosenClass;
 
         isGrounded = false;
@@ -90,8 +90,10 @@ Player::Player(float x, float y, CharacterClass chosenClass,
         }
         speed = 8.0f * speedMultiplier;
 
-        hp = 50.0f * hpMultiplier;
+        hp = 50 * hpMultiplier;
+        deaths = 0;
     }
+
 
     void Player::handleInput()
     {
@@ -132,7 +134,7 @@ Player::Player(float x, float y, CharacterClass chosenClass,
     {
         window.draw(body);
 
-        if (currentWeapon != nullptr)
+        if (hasWeapon)
         {
             window.draw(weaponVisual);
         }
@@ -145,10 +147,10 @@ Player::Player(float x, float y, CharacterClass chosenClass,
 
         float maxCooldown;
 
-        if (currentWeapon != nullptr)
+        if (hasWeapon)
         {
             maxCooldown =
-                currentWeapon->getAttackCooldown();
+                currentWeapon.getAttackCooldown();
         }
         else
         {
@@ -216,6 +218,11 @@ Player::Player(float x, float y, CharacterClass chosenClass,
         return body.getGlobalBounds();
     }
 
+    bool Player::isFacingRight() const
+    {
+        return facingRight;
+    }
+
     int Player::getHp() const
     {
         return hp;
@@ -223,19 +230,32 @@ Player::Player(float x, float y, CharacterClass chosenClass,
 
     bool Player::getHasWeapon() const
     {
-        return currentWeapon != nullptr;
+        return hasWeapon;
     }
 
-    Weapon* Player::getCurrentWeapon() const
+    Weapon Player::getCurrentWeapon() const
     {
         return currentWeapon;
     }
 
-    void Player::setCurrentWeapon(Weapon* weapon)
+    void Player::setCurrentWeapon(
+        const Weapon& weapon
+    )
     {
         currentWeapon = weapon;
+
+        hasWeapon = true;
     }
 
+    int Player::getDeaths() const
+    {
+        return deaths;
+    }
+
+    void Player::addDeath()
+    {
+        deaths++;
+    }
 
 
     void Player::update(std::vector<Platform>& platforms)
@@ -324,7 +344,7 @@ Player::Player(float x, float y, CharacterClass chosenClass,
         }
         velocityX *= 0.85f;
 
-        if (currentWeapon != nullptr)
+        if (hasWeapon)
         {
             if (facingRight)
             {
@@ -400,10 +420,10 @@ Player::Player(float x, float y, CharacterClass chosenClass,
 
         sf::RectangleShape attackHitbox;
 
-        if (currentWeapon != nullptr)
+        if (hasWeapon)
         {
             attackHitbox.setSize(
-                sf::Vector2f(120.f, 50.f)
+                currentWeapon.getHitboxSize()
             );
         }
         else
@@ -425,16 +445,18 @@ Player::Player(float x, float y, CharacterClass chosenClass,
         else
         {
             attackHitbox.setPosition(
-                body.getPosition().x - 60.f,
+                body.getPosition().x
+                - attackHitbox.getSize().x,
 
                 body.getPosition().y + 30.f
             );
+        
         }
 
-        if (currentWeapon != nullptr)
+        if (hasWeapon)
         {
             attackCooldown =
-                currentWeapon->getAttackCooldown();
+                currentWeapon.getAttackCooldown();
         }
         else
         {
@@ -446,9 +468,11 @@ Player::Player(float x, float y, CharacterClass chosenClass,
                 otherPlayer.getBounds())
             )
         {
-            if (currentWeapon != nullptr)
+            if (hasWeapon)
             {
-                otherPlayer.hp -= 3.0f * damageMultiplier;
+                otherPlayer.hp -=
+                    currentWeapon.getDamage()
+                    * damageMultiplier;
             }
             else
             {
@@ -457,9 +481,10 @@ Player::Player(float x, float y, CharacterClass chosenClass,
 
             if (facingRight)
             {
-                if (currentWeapon != nullptr)
+                if (hasWeapon)
                 {
-                    otherPlayer.velocityX = 25.f;
+                    otherPlayer.velocityX =
+                        currentWeapon.getKnockback();
                 }
                 else
                 {
@@ -470,9 +495,10 @@ Player::Player(float x, float y, CharacterClass chosenClass,
             }
             else
             {
-                if (currentWeapon != nullptr)
+                if (hasWeapon)
                 {
-                    otherPlayer.velocityX = -25.f;
+                    otherPlayer.velocityX =
+                        -currentWeapon.getKnockback();
                 }
                 else
                 {
@@ -492,6 +518,16 @@ Player::Player(float x, float y, CharacterClass chosenClass,
         velocityX = 0.f;
         velocityY = 0.f;
 
-        hp = 5;
-        currentWeapon = nullptr;
+        hp = 50 * hpMultiplier;
+
+        hasWeapon = false;
+
+        currentWeapon = Weapon();
+    }
+
+    void Player::dropWeapon()
+    {
+        hasWeapon = false;
+
+        currentWeapon = Weapon();
     }

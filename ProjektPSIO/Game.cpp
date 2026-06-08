@@ -132,6 +132,74 @@ void Game::run()
         );
     }
 
+    if (
+        sf::Keyboard::isKeyPressed(
+            sf::Keyboard::Q
+        )
+        &&
+        player1->getHasWeapon()
+        )
+    {
+        Weapon droppedWeapon =
+            player1->getCurrentWeapon();
+
+        if (player1->isFacingRight())
+        {
+            droppedWeapon.setPosition(
+                player1->getPosition().x + 150.f,
+                player1->getPosition().y
+            );
+        }
+        else
+        {
+            droppedWeapon.setPosition(
+                player1->getPosition().x - 150.f,
+                player1->getPosition().y
+            );
+        }
+
+        map->addWeapon(
+            droppedWeapon
+        );
+
+        player1->dropWeapon();
+    }
+
+    if (
+        sf::Keyboard::isKeyPressed(
+            sf::Keyboard::RShift
+        )
+        &&
+        player2->getHasWeapon()
+        )
+    {
+        Weapon droppedWeapon =
+            player2->getCurrentWeapon();
+
+        if (player2->isFacingRight())
+        {
+            droppedWeapon.setPosition(
+                player2->getPosition().x + 150.f,
+                player2->getPosition().y
+            );
+        }
+        else
+        {
+            droppedWeapon.setPosition(
+                player2->getPosition().x - 150.f,
+                player2->getPosition().y
+            );
+        }
+  
+
+        map->addWeapon(
+            droppedWeapon
+        );
+
+        player2->dropWeapon();
+    }
+
+
     // UPDATE
 
     player1->update(
@@ -150,6 +218,8 @@ void Game::run()
 
     if (player1->getHp() <= 0)
     {
+        player1->addDeath();
+
         player1->respawn(
             300.f,
             500.f
@@ -158,6 +228,8 @@ void Game::run()
 
     if (player2->getHp() <= 0)
     {
+        player2->addDeath();
+
         player2->respawn(
             700.f,
             500.f
@@ -166,9 +238,11 @@ void Game::run()
 
     if (
         player1->getPosition().y
-        > 1400.f
+    > 1400.f
         )
     {
+        player1->addDeath();
+
         player1->respawn(
             300.f,
             500.f
@@ -177,11 +251,13 @@ void Game::run()
 
     if (
         player2->getPosition().y
-        > 1400.f
+    > 1400.f
         )
     {
+        player2->addDeath();
+
         player2->respawn(
-            700.f,
+            300.f,
             500.f
         );
     }
@@ -200,10 +276,29 @@ void Game::run()
             .intersects(
                 it->getBounds()
             )
+            &&
+            !player1->getHasWeapon()
             )
         {
             player1->setCurrentWeapon(
-                &(*it)
+                *it
+            );
+
+            it =
+                map->getWeapons()
+                .erase(it);
+        }
+        else if (
+            player2->getBounds()
+            .intersects(
+                it->getBounds()
+            )
+            &&
+            !player2->getHasWeapon()
+            )
+        {
+            player2->setCurrentWeapon(
+                *it
             );
 
             it =

@@ -27,9 +27,11 @@ private:
 
     float attackCooldown;
 
+    int deaths;
     int hp;
 
-    Weapon* currentWeapon;
+    Weapon currentWeapon;
+    bool hasWeapon;
 
     sf::Keyboard::Key leftKey;
     sf::Keyboard::Key rightKey;
@@ -64,6 +66,8 @@ public:
 
     sf::FloatRect getBounds() const;
 
+    bool isFacingRight() const;
+
     void handleInput();
     void update(std::vector<Platform>& platforms);
     void draw(sf::RenderWindow& window);
@@ -73,6 +77,10 @@ public:
     bool getHasWeapon() const;
     void respawn(float x, float y);
     void drawCooldownBar(sf::RenderWindow& window);
-    Weapon* getCurrentWeapon() const;
-    void setCurrentWeapon(Weapon* weapon);
+    Weapon getCurrentWeapon() const;
+    void setCurrentWeapon(const Weapon& weapon);
+    void dropWeapon();
+    int getDeaths() const;
+    void addDeath();
+
 };

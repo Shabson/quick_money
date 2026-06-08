@@ -10,6 +10,20 @@ sf::FloatRect Weapon::getBounds() const
 {
     return body.getGlobalBounds();
 }
+Weapon::Weapon()
+{
+    type = WeaponType::Sword;
+
+    damage = 0.f;
+    attackCooldown = 15.f;
+    knockback = 0.f;
+
+    hitboxSize = sf::Vector2f(0.f, 0.f);
+
+    body.setSize(
+        sf::Vector2f(0.f, 0.f)
+    );
+}
 
 Weapon::Weapon(WeaponType weaponType, float x, float y)
 {
@@ -63,6 +77,18 @@ Weapon::Weapon(WeaponType weaponType, float x, float y)
         body.setFillColor(sf::Color::Yellow);
 
         break;
+
+    case WeaponType::Pistol:
+
+        damage = 2.f;
+        attackCooldown = 20.f;
+        knockback = 5.f;
+
+        hitboxSize = sf::Vector2f(0.f, 0.f);
+
+        body.setFillColor(sf::Color::Magenta);
+
+        break;
     }
 }
 
@@ -106,7 +132,26 @@ std::string Weapon::getName() const
 
     case WeaponType::Spear:
         return "Spear";
+
+    case WeaponType::Pistol:
+        return "Pistol";
     }
 
+    
+
+
     return "Unknown";
+}
+
+void Weapon::setPosition(
+    float x,
+    float y
+)
+{
+    body.setPosition(x, y);
+}
+
+sf::Vector2f Weapon::getPosition() const
+{
+    return body.getPosition();
 }
