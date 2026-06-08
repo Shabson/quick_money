@@ -7,7 +7,8 @@ enum class WeaponType
     Sword,
     Katana,
     Bat,
-    Spear
+    Spear,
+    Pistol
 };
 
 class Weapon

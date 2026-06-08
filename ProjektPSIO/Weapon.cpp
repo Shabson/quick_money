@@ -77,6 +77,18 @@ Weapon::Weapon(WeaponType weaponType, float x, float y)
         body.setFillColor(sf::Color::Yellow);
 
         break;
+
+    case WeaponType::Pistol:
+
+        damage = 2.f;
+        attackCooldown = 20.f;
+        knockback = 5.f;
+
+        hitboxSize = sf::Vector2f(0.f, 0.f);
+
+        body.setFillColor(sf::Color::Magenta);
+
+        break;
     }
 }
 
@@ -120,7 +132,13 @@ std::string Weapon::getName() const
 
     case WeaponType::Spear:
         return "Spear";
+
+    case WeaponType::Pistol:
+        return "Pistol";
     }
+
+    
+
 
     return "Unknown";
 }

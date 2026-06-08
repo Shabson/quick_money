@@ -251,8 +251,6 @@ Player::Player(float x, float y, CharacterClass chosenClass,
     }
 
 
-
-
     void Player::update(std::vector<Platform>& platforms)
     {
 
@@ -465,7 +463,9 @@ Player::Player(float x, float y, CharacterClass chosenClass,
         {
             if (hasWeapon)
             {
-                otherPlayer.hp -= 3 * damageMultiplier;
+                otherPlayer.hp -=
+                    currentWeapon.getDamage()
+                    * damageMultiplier;
             }
             else
             {
@@ -476,7 +476,8 @@ Player::Player(float x, float y, CharacterClass chosenClass,
             {
                 if (hasWeapon)
                 {
-                    otherPlayer.velocityX = 25.f;
+                    otherPlayer.velocityX =
+                        currentWeapon.getKnockback();
                 }
                 else
                 {
@@ -489,7 +490,8 @@ Player::Player(float x, float y, CharacterClass chosenClass,
             {
                 if (hasWeapon)
                 {
-                    otherPlayer.velocityX = -25.f;
+                    otherPlayer.velocityX =
+                        -currentWeapon.getKnockback();
                 }
                 else
                 {
@@ -509,7 +511,7 @@ Player::Player(float x, float y, CharacterClass chosenClass,
         velocityX = 0.f;
         velocityY = 0.f;
 
-        hp = 5;
+        hp = 50 * hpMultiplier;
 
         hasWeapon = false;
 

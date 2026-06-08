@@ -82,4 +82,5 @@ public:
     void dropWeapon();
     int getDeaths() const;
     void addDeath();
+
 };
