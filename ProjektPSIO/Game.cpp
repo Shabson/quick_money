@@ -143,17 +143,17 @@ void Game::run()
         Weapon droppedWeapon =
             player1->getCurrentWeapon();
 
-        if (player1->getPosition().x < player2->getPosition().x)
+        if (player1->isFacingRight())
         {
             droppedWeapon.setPosition(
-                player1->getPosition().x - 150.f,
+                player1->getPosition().x + 150.f,
                 player1->getPosition().y
             );
         }
         else
         {
             droppedWeapon.setPosition(
-                player1->getPosition().x + 150.f,
+                player1->getPosition().x - 150.f,
                 player1->getPosition().y
             );
         }
@@ -176,10 +176,21 @@ void Game::run()
         Weapon droppedWeapon =
             player2->getCurrentWeapon();
 
-        droppedWeapon.setPosition(
-            player2->getPosition().x - 150.f,
-            player2->getPosition().y
-        );
+        if (player2->isFacingRight())
+        {
+            droppedWeapon.setPosition(
+                player2->getPosition().x + 150.f,
+                player2->getPosition().y
+            );
+        }
+        else
+        {
+            droppedWeapon.setPosition(
+                player2->getPosition().x - 150.f,
+                player2->getPosition().y
+            );
+        }
+  
 
         map->addWeapon(
             droppedWeapon
@@ -207,6 +218,8 @@ void Game::run()
 
     if (player1->getHp() <= 0)
     {
+        player1->addDeath();
+
         player1->respawn(
             300.f,
             500.f
@@ -215,6 +228,8 @@ void Game::run()
 
     if (player2->getHp() <= 0)
     {
+        player2->addDeath();
+
         player2->respawn(
             700.f,
             500.f
@@ -223,9 +238,11 @@ void Game::run()
 
     if (
         player1->getPosition().y
-        > 1400.f
+    > 1400.f
         )
     {
+        player1->addDeath();
+
         player1->respawn(
             300.f,
             500.f
@@ -234,11 +251,13 @@ void Game::run()
 
     if (
         player2->getPosition().y
-        > 1400.f
+    > 1400.f
         )
     {
+        player2->addDeath();
+
         player2->respawn(
-            700.f,
+            300.f,
             500.f
         );
     }

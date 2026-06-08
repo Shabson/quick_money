@@ -84,7 +84,9 @@ Player::Player(float x, float y, CharacterClass chosenClass,
         speed = 8.f * speedMultiplier;
 
         hp = 50 * hpMultiplier;
+        deaths = 0;
     }
+
 
     void Player::handleInput()
     {
@@ -209,6 +211,11 @@ Player::Player(float x, float y, CharacterClass chosenClass,
         return body.getGlobalBounds();
     }
 
+    bool Player::isFacingRight() const
+    {
+        return facingRight;
+    }
+
     int Player::getHp() const
     {
         return hp;
@@ -231,6 +238,16 @@ Player::Player(float x, float y, CharacterClass chosenClass,
         currentWeapon = weapon;
 
         hasWeapon = true;
+    }
+
+    int Player::getDeaths() const
+    {
+        return deaths;
+    }
+
+    void Player::addDeath()
+    {
+        deaths++;
     }
 
 
@@ -401,7 +418,7 @@ Player::Player(float x, float y, CharacterClass chosenClass,
         if (hasWeapon)
         {
             attackHitbox.setSize(
-                sf::Vector2f(120.f, 50.f)
+                currentWeapon.getHitboxSize()
             );
         }
         else
@@ -423,10 +440,12 @@ Player::Player(float x, float y, CharacterClass chosenClass,
         else
         {
             attackHitbox.setPosition(
-                body.getPosition().x - 60.f,
+                body.getPosition().x
+                - attackHitbox.getSize().x,
 
                 body.getPosition().y + 30.f
             );
+        
         }
 
         if (hasWeapon)

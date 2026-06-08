@@ -68,15 +68,15 @@ void Map::loadMap1()
     );
 
     platforms.push_back(
-        Platform(300.f, 700.f, 300.f, 40.f)
+        Platform(300.f, 760.f, 300.f, 40.f)
     );
 
     platforms.push_back(
-        Platform(1200.f, 700.f, 300.f, 40.f)
+        Platform(1200.f, 760.f, 300.f, 40.f)
     );
 
     platforms.push_back(
-        Platform(750.f, 500.f, 400.f, 40.f)
+        Platform(750.f, 600.f, 400.f, 40.f)
     );
 
     weapons.push_back(

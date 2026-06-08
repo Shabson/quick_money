@@ -27,6 +27,7 @@ private:
 
     float attackCooldown;
 
+    int deaths;
     int hp;
 
     Weapon currentWeapon;
@@ -65,6 +66,8 @@ public:
 
     sf::FloatRect getBounds() const;
 
+    bool isFacingRight() const;
+
     void handleInput();
     void update(std::vector<Platform>& platforms);
     void draw(sf::RenderWindow& window);
@@ -77,4 +80,6 @@ public:
     Weapon getCurrentWeapon() const;
     void setCurrentWeapon(const Weapon& weapon);
     void dropWeapon();
+    int getDeaths() const;
+    void addDeath();
 };
