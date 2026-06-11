@@ -178,7 +178,7 @@ void CharacterSprites::loadClass(
 
         break;
 
-    case CharacterClass::GlassCannon:
+    case CharacterClass::Berserker:
 
         loadHead("assets/sprites/HEAD_hair_blonde.png");
         loadTorso("assets/sprites/TORSO_chain_armor_jacket_purple.png");

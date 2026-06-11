@@ -3,7 +3,7 @@
 enum class CharacterClass
 {
     Warrior,
-    GlassCannon,
+    Berserker,
     Thug,
     Ranger
 };

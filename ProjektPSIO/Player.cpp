@@ -66,7 +66,7 @@ Player::Player(float x, float y, CharacterClass chosenClass,
 
             break;
 
-        case CharacterClass::GlassCannon:
+        case CharacterClass::Berserker:
 
             hpMultiplier = 0.7f;
             damageMultiplier = 1.25f;

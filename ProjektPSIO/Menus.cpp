@@ -14,7 +14,7 @@ void handleClassSelection(
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2))
     {
-        p1Class = CharacterClass::GlassCannon;
+        p1Class = CharacterClass::Berserker;
     }
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num3))
@@ -34,7 +34,7 @@ void handleClassSelection(
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Numpad2))
     {
-        p2Class = CharacterClass::GlassCannon;
+        p2Class = CharacterClass::Berserker;
     }
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Numpad3))
@@ -121,8 +121,8 @@ std::string getClassName(
     case CharacterClass::Warrior:
         return "Warrior";
 
-    case CharacterClass::GlassCannon:
-        return "Glass Cannon";
+    case CharacterClass::Berserker:
+        return "Berserker";
 
     case CharacterClass::Thug:
         return "Thug";
@@ -172,7 +172,7 @@ void drawClassSelectionMenu(
 
     text.setString(
         "1 Warrior\n"
-        "2 Glass Cannon\n"
+        "2 Berserker\n"
         "3 Thug\n"
         "4 Ranger"
     );
@@ -200,7 +200,7 @@ void drawClassSelectionMenu(
 
     text.setString(
         "Num1 Warrior\n"
-        "Num2 Glass Cannon\n"
+        "Num2 Berserker\n"
         "Num3 Thug\n"
         "Num4 Ranger"
     );
@@ -232,7 +232,7 @@ std::string getClassBonusText(
             "+20% HP\n"
             "+10% Resistance";
 
-    case CharacterClass::GlassCannon:
+    case CharacterClass::Berserker:
         return
             "+25% Damage\n"
             "-20% HP";
