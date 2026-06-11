@@ -1,6 +1,7 @@
 #include "Game.h"
 #include "GameState.h"
 #include <iostream>
+#include "HUD.h"
 
 Game::Game(
     sf::RenderWindow& window
@@ -549,6 +550,18 @@ void Game::run()
     player2->drawCooldownBar(
         window
     );
+
+    window.setView(
+        window.getDefaultView()
+    );
+
+    drawHUD(
+        window,
+        font,
+        player1,
+        player2
+    );
+   
 
     window.display();
 }

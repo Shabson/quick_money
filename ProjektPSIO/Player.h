@@ -2,14 +2,9 @@
 #include <SFML/Graphics.hpp>
 #include "Platform.h"
 #include "Weapon.h"
+#include "CharacterSprites.h"
+#include "CharacterClass.h"
 
-enum class CharacterClass
-{
-    Warrior,
-    GlassCannon,
-    Thug,
-    Ranger
-};
 
 class Player
 {
@@ -29,6 +24,7 @@ private:
 
     int deaths;
     int hp;
+	int maxHp;
 
     Weapon currentWeapon;
     bool hasWeapon;
@@ -49,6 +45,10 @@ private:
 
     float dodgeChance;
 
+    CharacterSprites sprites;
+    int animationFrame;
+    int animationTimer;
+
 public:
     Player(
         float x,
@@ -66,6 +66,8 @@ public:
 
     sf::FloatRect getBounds() const;
 
+ 
+
     bool isFacingRight() const;
 
     void handleInput();
@@ -74,6 +76,7 @@ public:
     void resolveCollision(Player& otherPlayer);
     void attack(Player& otherPlayer);
     int getHp() const;
+	int getMaxHp() const;
     bool getHasWeapon() const;
     void respawn(float x, float y);
     void drawCooldownBar(sf::RenderWindow& window);

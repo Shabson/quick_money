@@ -6,11 +6,19 @@ Player::Player(float x, float y, CharacterClass chosenClass,
         sf::Keyboard::Key up,
         sf::Keyboard::Key down)
     {
-        body.setSize(sf::Vector2f(80.f, 120.f));
-        body.setFillColor(sf::Color::Green);
+        body.setSize(
+            sf::Vector2f(
+                40.f,
+                90.f
+            )
+        );
+
         body.setPosition(x, y);
 
-      
+        body.setFillColor(
+            sf::Color(255, 0, 0, 60)
+        ); // drawing hitboxa
+
         velocityY = 0.f;
         velocityX = 0.f;
      
@@ -33,6 +41,9 @@ Player::Player(float x, float y, CharacterClass chosenClass,
         hpMultiplier = 1.f;
 
         dodgeChance = 0.f;
+
+        animationFrame = 0;
+        animationTimer = 0;
 
         weaponVisual.setSize(
             sf::Vector2f(60.f, 15.f)
@@ -88,9 +99,15 @@ Player::Player(float x, float y, CharacterClass chosenClass,
 
             break;
         }
-        speed = 8.0f * speedMultiplier;
 
-        hp = 50 * hpMultiplier;
+        sprites.loadClass(
+            chosenClass
+        );
+
+        speed = 8.0f * speedMultiplier;
+        hp = 50 * hpMultiplier; 
+        maxHp = hp;
+
         deaths = 0;
     }
 
@@ -132,12 +149,27 @@ Player::Player(float x, float y, CharacterClass chosenClass,
 
     void Player::draw(sf::RenderWindow& window)
     {
-        window.draw(body);
+        sprites.setPosition(
+            body.getPosition().x,
+            body.getPosition().y
+        );
+
+		sprites.setFacingRight(
+			facingRight
+		);
+
+        sprites.setFrame(
+            animationFrame,
+            3
+        );
+
+        sprites.draw(window);
 
         if (hasWeapon)
         {
             window.draw(weaponVisual);
         }
+       // window.draw(body); //drawing hitboxa
     }
 
     void Player::drawCooldownBar(sf::RenderWindow& window)
@@ -365,6 +397,26 @@ Player::Player(float x, float y, CharacterClass chosenClass,
             }
         }
 
+        animationTimer++;
+
+        if (abs(velocityX) > 0.5f)
+        {
+            if (animationTimer > 4)
+            {
+                animationTimer = 0;
+
+                animationFrame++;
+
+                if (animationFrame > 8)
+                {
+                    animationFrame = 1;
+                }
+            }
+        }
+        else
+        {
+            animationFrame = 0;
+        }
 
     }
     void Player::resolveCollision(Player& otherPlayer)
@@ -530,4 +582,9 @@ Player::Player(float x, float y, CharacterClass chosenClass,
         hasWeapon = false;
 
         currentWeapon = Weapon();
+    }
+
+    int Player::getMaxHp() const
+    {
+        return maxHp;
     }
