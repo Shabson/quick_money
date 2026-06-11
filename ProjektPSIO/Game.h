@@ -27,9 +27,14 @@ private:
 
     Player* player1;
     Player* player2;
+    int winner;
+
+    sf::Font font;
 
     Map* map;
     std::vector<Pocisk> pociski;
+
+    bool enterPressedLastFrame;
 
 public:
 
@@ -38,4 +43,5 @@ public:
     );
 
     void run();
+    void resetCamera();
 };

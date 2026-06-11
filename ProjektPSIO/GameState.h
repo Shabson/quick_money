@@ -2,7 +2,8 @@
 
 enum class GameState
 {
-    ClassSelection,
     MapSelection,
-    Playing
+    ClassSelection,
+    Playing,
+    GameOver
 };

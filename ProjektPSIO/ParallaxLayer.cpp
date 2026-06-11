@@ -63,10 +63,10 @@ void ParallaxLayer::draw(
     float viewHeight =
         camera.getSize().y;
 
-    float textureWidth =
+    int textureWidth =
         texture.getSize().x;
 
-    float textureHeight =
+    int textureHeight =
         texture.getSize().y;
 
     float scaleX =

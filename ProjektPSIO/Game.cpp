@@ -1,5 +1,7 @@
 #include "Game.h"
 #include "GameState.h"
+#include <iostream>
+
 Game::Game(
     sf::RenderWindow& window
 )
@@ -13,7 +15,7 @@ Game::Game(
     );
 
     gameState =
-        GameState::ClassSelection;
+        GameState::MapSelection;
 
     p1Class =
         CharacterClass::Warrior;
@@ -22,39 +24,41 @@ Game::Game(
         CharacterClass::Warrior;
 
     selectedMap = 1;
-
+    winner = 0;
     player1 = nullptr;
     player2 = nullptr;
+    
+    enterPressedLastFrame = false;
 
     map = nullptr;
-}
+
+    if (!font.loadFromFile("assets/fonts/arial.ttf"))
+    {
+        std::cout
+            << "FONT LOAD FAILED"
+            << std::endl;
+    }
+}   
+
 
 void Game::run()
 {
+    bool enterJustPressed =
+        sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)
+        &&
+        !enterPressedLastFrame;
+
+    enterPressedLastFrame =
+        sf::Keyboard::isKeyPressed(sf::Keyboard::Enter);
+
     if (gameState ==
         GameState::ClassSelection)
     {
         handleClassSelection(
             p1Class,
             p2Class,
-            gameState
-        );
-
-        window.clear(
-            sf::Color::Black
-        );
-
-        window.display();
-
-        return;
-    }
-
-    if (gameState ==
-        GameState::MapSelection)
-    {
-        handleMapSelection(
-            selectedMap,
-            gameState
+            gameState,
+            enterJustPressed
         );
 
         if (
@@ -93,18 +97,95 @@ void Game::run()
                 ),
                 selectedMap
             );
+
+            pociski.clear();
         }
 
-        window.clear(
-            sf::Color::Blue
+        window.clear(sf::Color::Black);
+
+        window.setView(
+            window.getDefaultView()
         );
+
+        drawClassSelectionMenu(
+            window,
+            font,
+            p1Class,
+            p2Class
+           );
 
         window.display();
 
         return;
     }
 
-    // INPUT
+    if (gameState ==
+        GameState::MapSelection)
+    {
+        handleMapSelection(
+            selectedMap,
+            gameState,
+            enterJustPressed
+        );
+
+        window.clear(
+            sf::Color(20, 30, 60)
+        );
+
+        window.setView(
+            window.getDefaultView()
+        );
+        drawMapSelectionMenu(
+            window,
+            font,
+            selectedMap
+        );
+
+        window.display();
+
+        return;
+    }  
+
+    if (gameState == GameState::GameOver)
+    {
+        if (enterJustPressed)
+        {
+            delete player1;
+            delete player2;
+            delete map;
+
+            player1 = nullptr;
+            player2 = nullptr;
+            map = nullptr;
+
+            pociski.clear();
+
+            winner = 0;
+
+			resetCamera();
+
+            gameState =
+                GameState::MapSelection;
+        }
+
+        window.clear(
+            sf::Color::Black
+        );
+
+        window.setView(
+            window.getDefaultView()
+        );
+
+        drawGameOverMenu(
+            window,
+            font,
+            winner
+        );
+
+        window.display();
+
+        return;
+    }
 
     player1->handleInput();
 
@@ -307,6 +388,18 @@ void Game::run()
         );
     }
 
+    if (player1->getDeaths() >= 5)
+    {
+        winner = 2;
+        gameState = GameState::GameOver;
+    }
+
+    if (player2->getDeaths() >= 5)
+    {
+        winner = 1;
+        gameState = GameState::GameOver;
+    }
+
     if (
         player2->getPosition().y
     > 1400.f
@@ -458,4 +551,19 @@ void Game::run()
     );
 
     window.display();
+}
+
+void Game::resetCamera()
+{
+    currentZoom = 1.f;
+
+    camera.setSize(
+        1920.f,
+        1080.f
+    );
+
+    camera.setCenter(
+        960.f,
+        540.f
+    );
 }
