@@ -485,16 +485,22 @@ void Game::run()
             player1->getPosition().x
             -
             player2->getPosition().x
-        );
+        )+8000.f;
 
-    float targetZoom =
-        1.f + distance / 2000.f;
+    float targetZoom = 1.f;
+
+    if (distance > 1600.f)
+    {
+        targetZoom +=
+            (distance - 600.f)
+            / 2500.f;
+    }
 
     targetZoom =
         std::clamp(
             targetZoom,
             1.f,
-            1.8f
+            3.f
         );
 
     currentZoom +=

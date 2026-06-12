@@ -49,6 +49,9 @@ void drawHUD(
         20.f
     );
 
+    hpFront1.setOutlineColor(sf::Color::Black);
+    hpFront1.setOutlineThickness(2.f);
+
     window.draw(hpFront1);
 
 
@@ -64,13 +67,16 @@ void drawHUD(
     );
 
     hpBack2.setFillColor(
-        sf::Color(60, 60, 60)
+        sf::Color(60, 60, 60)   
     );
 
     hpBack2.setPosition(
         1490.f,
         20.f
     );
+    
+	hpBack2.setOutlineColor(sf::Color::Black);
+    hpBack2.setOutlineThickness(2.f);
 
     window.draw(hpBack2);
 

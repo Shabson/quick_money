@@ -25,6 +25,8 @@ public:
     );
 
     void loadMap1();
+    void loadMap2();
+	void loadMap3();
 
     void draw(
         sf::RenderWindow& window,
