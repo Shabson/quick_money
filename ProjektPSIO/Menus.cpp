@@ -264,15 +264,15 @@ void drawGameOverMenu(
 
     if (winner == 1)
     {
-        winnerText = "PLAYER 1 WINS!";
+        winnerText = "Gracz 1 wygrywa!";
     }
     else
     {
-        winnerText = "PLAYER 2 WINS!";
+        winnerText = "Gracz 2 wygrywa!";
     }
 
     text.setCharacterSize(64);
-    text.setString("VICTORY");
+    text.setString("Koniec Gry");
     text.setPosition(
         700.f,
         150.f
@@ -291,7 +291,7 @@ void drawGameOverMenu(
 
     text.setCharacterSize(32);
     text.setString(
-        "PRESS ENTER TO RETURN TO MAP SELECTION"
+        L"Naciśnij ENTER aby powrócić do wyboru map"
     );
 
     text.setPosition(
