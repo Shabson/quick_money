@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <SFML/Graphics.hpp>
+#include <random>
 #include "Platform.h"
 #include "ParallaxLayer.h"
 #include "Weapon.h"
@@ -16,6 +17,10 @@ private:
     std::vector<std::unique_ptr<Weapon>> weapons;
     std::vector<std::unique_ptr<ParallaxLayer>> backgroundLayers;
     sf::Vector2u windowSize;
+    sf::Clock weaponSpawnClock;
+    std::mt19937 randomGenerator;
+    float deathZoneY;
+    float worldWidth;
 
 
 public:
@@ -36,5 +41,10 @@ public:
     std::vector<Platform>& getPlatforms();
     std::vector<std::unique_ptr<Weapon>>& getWeapons();
     void addWeapon(std::unique_ptr<Weapon> weapon);
+    void updateWeaponSpawner();
+    void spawnRandomWeapon();
+    sf::Vector2f getPlayerSpawn(int playerIndex) const;
+    float getDeathZoneY() const;
+    float getWorldWidth() const;
 
 };

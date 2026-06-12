@@ -1,5 +1,6 @@
 #include "Game.h"
 #include "GameState.h"
+#include <algorithm>
 #include <iostream>
 #include <memory>
 #include <utility>
@@ -69,9 +70,23 @@ void Game::run()
             GameState::Playing
             )
         {
+            map = new Map(
+                sf::Vector2u(
+                    1920,
+                    1080
+                ),
+                selectedMap
+            );
+
+            sf::Vector2f player1Spawn =
+                map->getPlayerSpawn(0);
+
+            sf::Vector2f player2Spawn =
+                map->getPlayerSpawn(1);
+
             player1 = new Player(
-                300.f,
-                500.f,
+                player1Spawn.x,
+                player1Spawn.y,
 
                 p1Class,
 
@@ -82,8 +97,8 @@ void Game::run()
             );
 
             player2 = new Player(
-                700.f,
-                500.f,
+                player2Spawn.x,
+                player2Spawn.y,
 
                 p2Class,
 
@@ -91,14 +106,6 @@ void Game::run()
                 sf::Keyboard::Right,
                 sf::Keyboard::Up,
                 sf::Keyboard::Down
-            );
-
-            map = new Map(
-                sf::Vector2u(
-                    1920,
-                    1080
-                ),
-                selectedMap
             );
 
             pociski.clear();
@@ -282,6 +289,8 @@ void Game::run()
 
     // UPDATE
 
+    map->updateWeaponSpawner();
+
     player1->update(
         map->getPlatforms()
     );
@@ -322,9 +331,12 @@ void Game::run()
             );
         }
 
+        sf::Vector2f player1Spawn =
+            map->getPlayerSpawn(0);
+
         player1->respawn(
-            300.f,
-            500.f
+            player1Spawn.x,
+            player1Spawn.y
         );
     }
 
@@ -347,15 +359,18 @@ void Game::run()
             );
         }
 
+        sf::Vector2f player2Spawn =
+            map->getPlayerSpawn(1);
+
         player2->respawn(
-            700.f,
-            500.f
+            player2Spawn.x,
+            player2Spawn.y
         );
     }
 
     if (
         player1->getPosition().y
-    > 1400.f
+    > map->getDeathZoneY()
         )
     {
         player1->addDeath();
@@ -375,9 +390,12 @@ void Game::run()
             );
         }
 
+        sf::Vector2f player1Spawn =
+            map->getPlayerSpawn(0);
+
         player1->respawn(
-            300.f,
-            500.f
+            player1Spawn.x,
+            player1Spawn.y
         );
     }
 
@@ -395,7 +413,7 @@ void Game::run()
 
     if (
         player2->getPosition().y
-    > 1400.f
+    > map->getDeathZoneY()
         )
     {
         player2->addDeath();
@@ -416,9 +434,12 @@ void Game::run()
             );
         }
 
+        sf::Vector2f player2Spawn =
+            map->getPlayerSpawn(1);
+
         player2->respawn(
-            300.f,
-            500.f
+            player2Spawn.x,
+            player2Spawn.y
         );
     }
 
@@ -485,11 +506,11 @@ void Game::run()
             player1->getPosition().x
             -
             player2->getPosition().x
-        )+8000.f;
+        );
+    const float MIN_ZOOM = 1.2f;
+    float targetZoom = MIN_ZOOM;
 
-    float targetZoom = 1.f;
-
-    if (distance > 1600.f)
+    if (distance > 600.f)
     {
         targetZoom +=
             (distance - 600.f)
@@ -514,11 +535,72 @@ void Game::run()
         1080 * currentZoom
     );
 
-    camera.setCenter(
-        middleX,
-        1080 / 2.f
-    );
+    float middleY =
+        (
+            player1->getPosition().y
+            +
+            player2->getPosition().y
+            ) / 2.f;
 
+    float halfCameraWidth =
+        camera.getSize().x / 2.f;
+
+    float halfCameraHeight =
+        camera.getSize().y / 2.f;
+
+    float cameraX =
+        middleX;
+
+    if (map->getWorldWidth() > camera.getSize().x)
+    {
+        cameraX =
+            std::clamp(
+                middleX,
+                halfCameraWidth - 300.f,
+                map->getWorldWidth()
+                - halfCameraWidth
+                + 500.f
+            );
+    }
+    else
+    {
+        cameraX = map->getWorldWidth() / 2.f;
+    }
+
+    float cameraY =
+        middleY;
+
+    if (map->getDeathZoneY() > camera.getSize().y)
+    {
+        cameraY =
+            std::clamp(
+                middleY,
+                halfCameraHeight,
+                map->getDeathZoneY() - halfCameraHeight
+            );
+    }
+    else
+    {
+        cameraY = map->getDeathZoneY() / 2.f;
+    }
+
+    const float CAMERA_SMOOTHNESS = 0.1f;
+
+    sf::Vector2f currentCenter =
+        camera.getCenter();
+
+    currentCenter.x +=
+        (cameraX - currentCenter.x)
+        * 0.08f;
+
+
+    currentCenter.y +=
+        (cameraY - currentCenter.y)
+        * 0.08f;
+
+    camera.setCenter(
+        currentCenter
+    );
     // DRAW
 
     window.clear();
