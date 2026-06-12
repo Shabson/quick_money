@@ -1,4 +1,4 @@
-#include "Menus.h"
+﻿#include "Menus.h"
 
 void handleClassSelection(
     CharacterClass& p1Class,
@@ -95,13 +95,15 @@ void drawMapSelectionMenu(
     text.setFillColor(sf::Color::White);
 
     text.setString(
-        "MAP SELECTION\n\n"
-        "1 - Mountain Arena\n"
-        "2 - Tower Arena\n"
-        "3 - Long Arena\n\n"
-        "Selected: " +
-        std::to_string(selectedMap) +
-        "\n\nPress ENTER"
+            L"Wybór mapy\n\n"
+            L"1 - Zachód Słońca\n"
+            L"2 - Zimowe Szczyty\n"
+            L"3 - Zamek\n\n"
+            L"Wybrano: "
+        +
+        std::to_wstring(selectedMap)
+        +
+        L"\n\nWciśnij ENTER"
     );
 
     text.setPosition(
@@ -119,16 +121,16 @@ std::string getClassName(
     switch (characterClass)
     {
     case CharacterClass::Warrior:
-        return "Warrior";
+        return "Wojownik";
 
     case CharacterClass::Berserker:
         return "Berserker";
 
     case CharacterClass::Thug:
-        return "Thug";
+        return "Zbir";
 
     case CharacterClass::Ranger:
-        return "Ranger";
+        return "Łowca";
     }
 
     return "Unknown";
@@ -147,14 +149,12 @@ void drawClassSelectionMenu(
     text.setFillColor(sf::Color::White);
 
     text.setCharacterSize(48);
-    text.setString("CLASS SELECTION");
+    text.setString(sf::String(L"Wybór klasy"));
     text.setPosition(650.f, 50.f);
     window.draw(text);
 
-    // PLAYER 1
-
     text.setCharacterSize(36);
-    text.setString("PLAYER 1");
+    text.setString("Gracz 1");
     text.setPosition(150.f, 180.f);
     window.draw(text);
 
@@ -171,18 +171,16 @@ void drawClassSelectionMenu(
     window.draw(text);
 
     text.setString(
-        "1 Warrior\n"
-        "2 Berserker\n"
-        "3 Thug\n"
-        "4 Ranger"
+            L"1 - Wojownik\n"
+            L"2 - Berserker\n"
+            L"3 - Zbir\n"
+            L"4 - Łowca"
     );
     text.setPosition(150.f, 450.f);
     window.draw(text);
 
-    // PLAYER 2
-
     text.setCharacterSize(36);
-    text.setString("PLAYER 2");
+    text.setString("Gracz 2");
     text.setPosition(1100.f, 180.f);
     window.draw(text);
 
@@ -199,19 +197,19 @@ void drawClassSelectionMenu(
     window.draw(text);
 
     text.setString(
-        "Num1 Warrior\n"
-        "Num2 Berserker\n"
-        "Num3 Thug\n"
-        "Num4 Ranger"
+        sf::String(
+            L"Num1 - Wojownik\n"
+            L"Num2 - Berserker\n"
+            L"Num3 - Zbir\n"
+            L"Num4 - Łowca"
+        )
     );
     text.setPosition(1100.f, 450.f);
     window.draw(text);
 
-    // START
-
     text.setCharacterSize(32);
     text.setString(
-        "SPACE - START MATCH"
+        L"Wciśnij ENTER aby rozpocząć grę"
     );
     text.setPosition(
         700.f,
@@ -221,7 +219,7 @@ void drawClassSelectionMenu(
 }
 
 
-std::string getClassBonusText(
+sf::String getClassBonusText(
     CharacterClass characterClass
 )
 {
@@ -229,26 +227,26 @@ std::string getClassBonusText(
     {
     case CharacterClass::Warrior:
         return
-            "+20% HP\n"
-            "+10% Resistance";
+            L"+20% HP\n"
+            L"+10% Odporności na obrażenia";
 
     case CharacterClass::Berserker:
         return
-            "+25% Damage\n"
-            "-20% HP";
+            L"+25% Zadawanych obrażeń\n"
+            L"-20% HP";
 
     case CharacterClass::Thug:
         return
-            "+10% Speed\n"
-            "Dodge Chance";
+            L"+10% Prędkości poruszania się\n"
+            L"+25% Szansy na unik";
 
     case CharacterClass::Ranger:
         return
-            "+10% Speed\n"
-            "+25% Ranged Damage";
+            L"+10% Prędkości poruszania się\n"
+            L"+25% Obrażeń dystansowych";
     }
 
-    return "";
+    return L"";
 }
 
 void drawGameOverMenu(

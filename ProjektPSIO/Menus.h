@@ -34,7 +34,7 @@ std::string getClassName(
     CharacterClass characterClass
 );
 
-std::string getClassBonusText(
+sf::String getClassBonusText(
     CharacterClass characterClass
 );
 
