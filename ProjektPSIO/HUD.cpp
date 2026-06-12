@@ -1,4 +1,4 @@
-#include "HUD.h"
+﻿#include "HUD.h"
 
 void drawHUD(
     sf::RenderWindow& window,
@@ -109,10 +109,12 @@ void drawHUD(
     sf::Text text;
 
     text.setFont(font);
-    text.setCharacterSize(24);
+    text.setCharacterSize(32);
     text.setFillColor(
         sf::Color::White
     );
+    text.setOutlineThickness(2.f);
+    text.setOutlineColor(sf::Color::Black);
 
     text.setString(
         "P1"
@@ -126,7 +128,9 @@ void drawHUD(
     window.draw(text);
 
     text.setString(
-        "Deaths: "
+        sf::String(
+            L"Śmierci: "
+        )
         +
         std::to_string(
             player1->getDeaths()
@@ -137,7 +141,7 @@ void drawHUD(
 
     text.setPosition(
         30.f,
-        90.f
+        100.f
     );
 
     window.draw(text);
@@ -147,14 +151,16 @@ void drawHUD(
     );
 
     text.setPosition(
-        1490.f,
+        1840.f,
         60.f
     );
 
     window.draw(text);
 
     text.setString(
-        "Deaths: "
+        sf::String(
+            L"Śmierci: "
+        )
         +
         std::to_string(
             player2->getDeaths()
@@ -164,8 +170,8 @@ void drawHUD(
     );
 
     text.setPosition(
-        1490.f,
-        90.f
+        1710.f,
+        100.f
     );
 
     window.draw(text);

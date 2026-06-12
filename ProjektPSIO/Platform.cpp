@@ -1,11 +1,22 @@
 #include "Platform.h"
 
-Platform::Platform(float x, float y, float width, float height)
+Platform::Platform(float x, float y, float width, const sf::Texture& texture)
 {
     body.setPosition(x, y);
-    body.setSize(sf::Vector2f(width, height));
-    body.setFillColor(sf::Color::White);
+    body.setSize(sf::Vector2f(width*48.f, 48.f));
+    body.setTexture(&texture);
+
+    body.setTextureRect(
+        sf::IntRect(
+            0,
+            0,
+            static_cast<int>(width * 48.f),
+            static_cast<int>(48.f)
+        )
+    );
 }
+
+
 
 void Platform::draw(sf::RenderWindow& window)
 {

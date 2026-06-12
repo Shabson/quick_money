@@ -22,6 +22,11 @@ private:
     float deathZoneY;
     float worldWidth;
 
+    sf::Texture platformTexture;
+
+    void loadPlatformTexture(
+        const std::string& texturePath
+    );
 
 public:
     Map(
@@ -37,6 +42,8 @@ public:
         sf::RenderWindow& window,
         const sf::View& camera
     );
+
+
 
     std::vector<Platform>& getPlatforms();
     std::vector<std::unique_ptr<Weapon>>& getWeapons();
