@@ -1,5 +1,6 @@
 #include "Map.h"
 #include "Weapon.h"
+#include <utility>
 
 Map::Map(sf::Vector2u windowSize, int mapType)
 {   
@@ -80,19 +81,19 @@ void Map::loadMap1()
     );
 
     weapons.push_back(
-        Weapon(WeaponType::Sword, 600.f, 400.f)
+        std::make_unique<Sword>(600.f, 400.f)
     );
 
     weapons.push_back(
-        Weapon(WeaponType::Katana, 900.f, 300.f)
+        std::make_unique<Katana>(900.f, 300.f)
     );
 
     weapons.push_back(
-        Weapon(WeaponType::Bat, 1200.f, 400.f)
+        std::make_unique<Club>(1200.f, 400.f)
     );
 
     weapons.push_back(
-        Weapon(WeaponType::Spear, 1500.f, 350.f)
+        std::make_unique<Spear>(1500.f, 350.f)
     );
 }
 
@@ -116,7 +117,7 @@ void Map::draw(
 
     for (auto& weapon : weapons)
     {
-        weapon.draw(window);
+        weapon->draw(window);
     }
 
 }
@@ -126,12 +127,12 @@ std::vector<Platform>& Map::getPlatforms()
     return platforms;
 }
 
-std::vector<Weapon>& Map::getWeapons()
+std::vector<std::unique_ptr<Weapon>>& Map::getWeapons()
 {
     return weapons;
 }
 
-void Map::addWeapon(const Weapon& weapon)
+void Map::addWeapon(std::unique_ptr<Weapon> weapon)
 {
-    weapons.push_back(weapon);
+    weapons.push_back(std::move(weapon));
 }

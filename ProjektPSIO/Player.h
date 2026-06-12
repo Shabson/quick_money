@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <memory>
 #include "Platform.h"
 #include "Weapon.h"
 #include "CharacterSprites.h"
@@ -26,7 +27,7 @@ private:
     int hp;
 	int maxHp;
 
-    Weapon currentWeapon;
+    std::unique_ptr<Weapon> currentWeapon;
     bool hasWeapon;
 
     sf::Keyboard::Key leftKey;
@@ -35,6 +36,7 @@ private:
     sf::Keyboard::Key downKey;
 
     sf::RectangleShape weaponVisual;
+    sf::RectangleShape weaponHitboxPreview;
 
     CharacterClass playerClass;
 
@@ -80,8 +82,9 @@ public:
     bool getHasWeapon() const;
     void respawn(float x, float y);
     void drawCooldownBar(sf::RenderWindow& window);
-    Weapon getCurrentWeapon() const;
-    void setCurrentWeapon(const Weapon& weapon);
+    const Weapon* getCurrentWeapon() const;
+    void setCurrentWeapon(std::unique_ptr<Weapon> weapon);
+    std::unique_ptr<Weapon> takeCurrentWeapon();
     void dropWeapon();
     int getDeaths() const;
     void addDeath();

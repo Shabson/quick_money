@@ -13,7 +13,7 @@ private:
     std::vector<Platform> platforms;
     std::vector<sf::Vector2f> playerSpawns;
     std::vector<sf::Vector2f> weaponSpawns;
-    std::vector<Weapon> weapons;
+    std::vector<std::unique_ptr<Weapon>> weapons;
     std::vector<std::unique_ptr<ParallaxLayer>> backgroundLayers;
     sf::Vector2u windowSize;
 
@@ -32,7 +32,7 @@ public:
     );
 
     std::vector<Platform>& getPlatforms();
-    std::vector<Weapon>& getWeapons();
-    void addWeapon(const Weapon& weapon);
+    std::vector<std::unique_ptr<Weapon>>& getWeapons();
+    void addWeapon(std::unique_ptr<Weapon> weapon);
 
 };

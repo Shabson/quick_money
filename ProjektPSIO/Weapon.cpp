@@ -1,5 +1,27 @@
 #include "Weapon.h"
 
+Weapon::Weapon(
+    float x,
+    float y,
+    float damage,
+    float attackCooldown,
+    float knockback,
+    sf::Vector2f hitboxSize,
+    sf::Color color
+)
+{
+    this->damage = damage;
+    this->attackCooldown = attackCooldown;
+    this->knockback = knockback;
+    this->hitboxSize = hitboxSize;
+
+    body.setSize(
+        sf::Vector2f(80.f, 20.f)
+    );
+
+    body.setPosition(x, y);
+    body.setFillColor(color);
+}
 
 void Weapon::draw(sf::RenderWindow& window)
 {
@@ -9,87 +31,6 @@ void Weapon::draw(sf::RenderWindow& window)
 sf::FloatRect Weapon::getBounds() const
 {
     return body.getGlobalBounds();
-}
-Weapon::Weapon()
-{
-    type = WeaponType::Sword;
-
-    damage = 0.f;
-    attackCooldown = 15.f;
-    knockback = 0.f;
-
-    hitboxSize = sf::Vector2f(0.f, 0.f);
-
-    body.setSize(
-        sf::Vector2f(0.f, 0.f)
-    );
-}
-
-Weapon::Weapon(WeaponType weaponType, float x, float y)
-{
-    type = weaponType;
-    body.setSize(sf::Vector2f(80.f, 20.f));
-
-    body.setPosition(x, y);
-
-    switch (type)
-    {
-    case WeaponType::Sword:
-
-        damage = 2.f;
-        attackCooldown = 25.f;
-        knockback = 18.f;
-        hitboxSize = sf::Vector2f(100.f, 40.f);
-
-        body.setFillColor(sf::Color::White);
-
-        break;
-
-    case WeaponType::Katana:
-
-        damage = 1.f;
-        attackCooldown = 10.f;
-        knockback = 12.f;
-        hitboxSize = sf::Vector2f(140.f, 30.f);
-
-        body.setFillColor(sf::Color::Cyan);
-
-        break;
-
-    case WeaponType::Bat:
-
-        damage = 3.f;
-        attackCooldown = 40.f;
-        knockback = 35.f;
-        hitboxSize = sf::Vector2f(90.f, 50.f);
-
-        body.setFillColor(sf::Color(139, 69, 19));
-
-        break;
-
-    case WeaponType::Spear:
-
-        damage = 2.f;
-        attackCooldown = 30.f;
-        knockback = 20.f;
-        hitboxSize = sf::Vector2f(180.f, 25.f);
-
-        body.setFillColor(sf::Color::Yellow);
-
-        break;
-
-    case WeaponType::Pistol:
-
-        damage = 2.f;
-        attackCooldown = 20.f;
-        knockback = 5.f;
-
-        hitboxSize = sf::Vector2f(0.f, 0.f);
-
-        body.setFillColor(sf::Color::Magenta);
-
-        break;
-    }
 }
 
 float Weapon::getDamage() const
@@ -112,37 +53,6 @@ sf::Vector2f Weapon::getHitboxSize() const
     return hitboxSize;
 }
 
-WeaponType Weapon::getType() const
-{
-    return type;
-}
-
-std::string Weapon::getName() const
-{
-    switch (type)
-    {
-    case WeaponType::Sword:
-        return "Sword";
-
-    case WeaponType::Katana:
-        return "Katana";
-
-    case WeaponType::Bat:
-        return "Bat";
-
-    case WeaponType::Spear:
-        return "Spear";
-
-    case WeaponType::Pistol:
-        return "Pistol";
-    }
-
-    
-
-
-    return "Unknown";
-}
-
 void Weapon::setPosition(
     float x,
     float y
@@ -154,4 +64,140 @@ void Weapon::setPosition(
 sf::Vector2f Weapon::getPosition() const
 {
     return body.getPosition();
+}
+
+MeleeWeapon::MeleeWeapon(
+    float x,
+    float y,
+    float damage,
+    float attackCooldown,
+    float knockback,
+    sf::Vector2f hitboxSize,
+    sf::Color color
+)
+    : Weapon(
+        x,
+        y,
+        damage,
+        attackCooldown,
+        knockback,
+        hitboxSize,
+        color
+    )
+{
+}
+
+Sword::Sword(float x, float y)
+    : MeleeWeapon(
+        x,
+        y,
+        2.f,
+        25.f,
+        18.f,
+        sf::Vector2f(100.f, 40.f),
+        sf::Color::White
+    )
+{
+}
+
+std::unique_ptr<Weapon> Sword::clone() const
+{
+    return std::make_unique<Sword>(*this);
+}
+
+std::string Sword::getName() const
+{
+    return "Sword";
+}
+
+Katana::Katana(float x, float y)
+    : MeleeWeapon(
+        x,
+        y,
+        1.f,
+        10.f,
+        12.f,
+        sf::Vector2f(140.f, 30.f),
+        sf::Color::Cyan
+    )
+{
+}
+
+std::unique_ptr<Weapon> Katana::clone() const
+{
+    return std::make_unique<Katana>(*this);
+}
+
+std::string Katana::getName() const
+{
+    return "Katana";
+}
+
+Club::Club(float x, float y)
+    : MeleeWeapon(
+        x,
+        y,
+        3.f,
+        40.f,
+        35.f,
+        sf::Vector2f(90.f, 50.f),
+        sf::Color(139, 69, 19)
+    )
+{
+}
+
+std::unique_ptr<Weapon> Club::clone() const
+{
+    return std::make_unique<Club>(*this);
+}
+
+std::string Club::getName() const
+{
+    return "Club";
+}
+
+Spear::Spear(float x, float y)
+    : MeleeWeapon(
+        x,
+        y,
+        2.f,
+        30.f,
+        20.f,
+        sf::Vector2f(180.f, 25.f),
+        sf::Color::Yellow
+    )
+{
+}
+
+std::unique_ptr<Weapon> Spear::clone() const
+{
+    return std::make_unique<Spear>(*this);
+}
+
+std::string Spear::getName() const
+{
+    return "Spear";
+}
+
+Pistol::Pistol(float x, float y)
+    : Weapon(
+        x,
+        y,
+        2.f,
+        20.f,
+        5.f,
+        sf::Vector2f(0.f, 0.f),
+        sf::Color::Magenta
+    )
+{
+}
+
+std::unique_ptr<Weapon> Pistol::clone() const
+{
+    return std::make_unique<Pistol>(*this);
+}
+
+std::string Pistol::getName() const
+{
+    return "Pistol";
 }

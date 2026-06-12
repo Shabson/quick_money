@@ -1,6 +1,8 @@
 #include "Game.h"
 #include "GameState.h"
 #include <iostream>
+#include <memory>
+#include <utility>
 #include "HUD.h"
 
 Game::Game(
@@ -222,29 +224,27 @@ void Game::run()
         player1->getHasWeapon()
         )
     {
-        Weapon droppedWeapon =
-            player1->getCurrentWeapon();
+        std::unique_ptr<Weapon> droppedWeapon =
+            player1->takeCurrentWeapon();
 
         if (player1->isFacingRight())
         {
-            droppedWeapon.setPosition(
+            droppedWeapon->setPosition(
                 player1->getPosition().x + 150.f,
                 player1->getPosition().y
             );
         }
         else
         {
-            droppedWeapon.setPosition(
+            droppedWeapon->setPosition(
                 player1->getPosition().x - 150.f,
                 player1->getPosition().y
             );
         }
 
         map->addWeapon(
-            droppedWeapon
+            std::move(droppedWeapon)
         );
-
-        player1->dropWeapon();
     }
 
     if (
@@ -255,19 +255,19 @@ void Game::run()
         player2->getHasWeapon()
         )
     {
-        Weapon droppedWeapon =
-            player2->getCurrentWeapon();
+        std::unique_ptr<Weapon> droppedWeapon =
+            player2->takeCurrentWeapon();
 
         if (player2->isFacingRight())
         {
-            droppedWeapon.setPosition(
+            droppedWeapon->setPosition(
                 player2->getPosition().x + 150.f,
                 player2->getPosition().y
             );
         }
         else
         {
-            droppedWeapon.setPosition(
+            droppedWeapon->setPosition(
                 player2->getPosition().x - 150.f,
                 player2->getPosition().y
             );
@@ -275,10 +275,8 @@ void Game::run()
   
 
         map->addWeapon(
-            droppedWeapon
+            std::move(droppedWeapon)
         );
-
-        player2->dropWeapon();
     }
 
 
@@ -311,19 +309,17 @@ void Game::run()
 
         if (player1->getHasWeapon())
         {
-            Weapon droppedWeapon =
-                player1->getCurrentWeapon();
+            std::unique_ptr<Weapon> droppedWeapon =
+                player1->takeCurrentWeapon();
 
-            droppedWeapon.setPosition(
+            droppedWeapon->setPosition(
                 player1->getPosition().x,
                 player1->getPosition().y
             );
 
             map->addWeapon(
-                droppedWeapon
+                std::move(droppedWeapon)
             );
-
-            player1->dropWeapon();
         }
 
         player1->respawn(
@@ -338,19 +334,17 @@ void Game::run()
 
         if (player2->getHasWeapon())
         {
-            Weapon droppedWeapon =
-                player2->getCurrentWeapon();
+            std::unique_ptr<Weapon> droppedWeapon =
+                player2->takeCurrentWeapon();
 
-            droppedWeapon.setPosition(
+            droppedWeapon->setPosition(
                 player2->getPosition().x,
                 player2->getPosition().y
             );
 
             map->addWeapon(
-                droppedWeapon
+                std::move(droppedWeapon)
             );
-
-            player2->dropWeapon();
         }
 
         player2->respawn(
@@ -368,19 +362,17 @@ void Game::run()
 
         if (player1->getHasWeapon())
         {
-            Weapon droppedWeapon =
-                player1->getCurrentWeapon();
+            std::unique_ptr<Weapon> droppedWeapon =
+                player1->takeCurrentWeapon();
 
-            droppedWeapon.setPosition(
+            droppedWeapon->setPosition(
                 player1->getPosition().x,
                 player1->getPosition().y
             );
 
             map->addWeapon(
-                droppedWeapon
+                std::move(droppedWeapon)
             );
-
-            player1->dropWeapon();
         }
 
         player1->respawn(
@@ -411,19 +403,17 @@ void Game::run()
 
         if (player2->getHasWeapon())
         {
-            Weapon droppedWeapon =
-                player2->getCurrentWeapon();
+            std::unique_ptr<Weapon> droppedWeapon =
+                player2->takeCurrentWeapon();
 
-            droppedWeapon.setPosition(
+            droppedWeapon->setPosition(
                 player2->getPosition().x,
                 player2->getPosition().y
             );
 
             map->addWeapon(
-                droppedWeapon
+                std::move(droppedWeapon)
             );
-
-            player2->dropWeapon();
         }
 
         player2->respawn(
@@ -444,14 +434,14 @@ void Game::run()
         if (
             player1->getBounds()
             .intersects(
-                it->getBounds()
+                (*it)->getBounds()
             )
             &&
             !player1->getHasWeapon()
             )
         {
             player1->setCurrentWeapon(
-                *it
+                std::move(*it)
             );
 
             it =
@@ -461,14 +451,14 @@ void Game::run()
         else if (
             player2->getBounds()
             .intersects(
-                it->getBounds()
+                (*it)->getBounds()
             )
             &&
             !player2->getHasWeapon()
             )
         {
             player2->setCurrentWeapon(
-                *it
+                std::move(*it)
             );
 
             it =
