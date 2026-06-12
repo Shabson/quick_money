@@ -1,4 +1,4 @@
-#include "Game.h"
+﻿#include "Game.h"
 #include "GameState.h"
 #include <algorithm>
 #include <iostream>
@@ -36,7 +36,7 @@ Game::Game(
 
     map = nullptr;
 
-    if (!font.loadFromFile("assets/fonts/arial.ttf"))
+    if (!font.loadFromFile("assets/fonts/Tiny5-Regular.ttf"))
     {
         std::cout
             << "FONT LOAD FAILED"

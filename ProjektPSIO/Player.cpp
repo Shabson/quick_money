@@ -116,7 +116,7 @@ Player::Player(float x, float y, CharacterClass chosenClass,
         );
 
         speed = 8.0f * speedMultiplier;
-        hp = 50 * hpMultiplier; 
+        hp = 50.f * hpMultiplier; 
         maxHp = hp;
 
         deaths = 0;
@@ -607,7 +607,7 @@ Player::Player(float x, float y, CharacterClass chosenClass,
         velocityX = 0.f;
         velocityY = 0.f;
 
-        hp = 50 * hpMultiplier;
+        hp = 50.f * hpMultiplier;
 
         hasWeapon = false;
 
