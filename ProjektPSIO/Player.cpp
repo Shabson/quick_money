@@ -334,6 +334,15 @@ Player::Player(float x, float y, CharacterClass chosenClass,
         hp -= damage;
     }
 
+    void Player::addKnockback(
+        float knockbackX,
+        float knockbackY
+    )
+    {
+        velocityX = knockbackX;
+        velocityY = knockbackY;
+    }
+
 
     void Player::update(std::vector<Platform>& platforms)
     {
@@ -665,4 +674,22 @@ Player::Player(float x, float y, CharacterClass chosenClass,
         return hasWeapon
             &&
             weaponTimer > 1200;
+    }
+
+    bool Player::canAttack() const
+    {
+        return attackCooldown <= 0.f;
+    }
+
+    void Player::startAttackCooldown()
+    {
+        if (hasWeapon)
+        {
+            attackCooldown =
+                currentWeapon->getAttackCooldown();
+        }
+        else
+        {
+            attackCooldown = 15.f;
+        }
     }

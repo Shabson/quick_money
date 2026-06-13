@@ -222,44 +222,46 @@ void Game::run()
     player2->handleInput();
 
     if (fJustPressed)
-        
     {
         if (
             player1->getCurrentWeapon()
             &&
-            player1->getCurrentWeapon()->getName()
-            == "Pistol"
+            player1->getCurrentWeapon()->getName() == "Pistol"
             )
         {
-            pociski.push_back(
-                Pocisk(
-                    player1->isFacingRight()
-                    ? player1->getPosition().x + 150.f
-                    : player1->getPosition().x - 150.f,
+            if (player1->canAttack())
+            {
+                pociski.push_back(
+                    Pocisk(
+                        player1->isFacingRight()
+                        ? player1->getPosition().x + 150.f
+                        : player1->getPosition().x - 150.f,
 
-                    player1->getPosition().y + 40.f,
+                        player1->getPosition().y + 40.f,
 
-                    player1->isFacingRight()
-                )
-            );
+                        player1->isFacingRight()
+                    )
+                );
+
+                player1->startAttackCooldown();
+            }
         }
         else
         {
-            player1->attack(
-                *player2
-            );
+            player1->attack(*player2);
         }
     }
 
     if (rCtrlJustPressed)
-
+    {
+        if (
+            player2->getCurrentWeapon()
+            &&
+            player2->getCurrentWeapon()->getName()
+            == "Pistol"
+            )
         {
-            if (
-                player2->getCurrentWeapon()
-                &&
-                player2->getCurrentWeapon()->getName()
-                == "Pistol"
-                )
+            if (player2->canAttack())
             {
                 pociski.push_back(
                     Pocisk(
@@ -272,14 +274,17 @@ void Game::run()
                         player2->isFacingRight()
                     )
                 );
-            }
-            else
-            {
-                player2->attack(
-                    *player1
-                );
+
+                player2->startAttackCooldown();
             }
         }
+        else
+        {
+            player2->attack(
+                *player1
+            );
+        }
+    }
 
     if (
         sf::Keyboard::isKeyPressed(
@@ -431,9 +436,19 @@ void Game::run()
         it != pociski.end();
         )
     {
+        bool removeBullet = false;
+
         it->update();
 
-        bool removeBullet = false;
+        if (
+            it->getX() < -500.f
+            ||
+            it->getX() > map->getWorldWidth() + 500.f
+            )
+        {
+            removeBullet = true;
+        }
+
 
         if (
             it->getBounds().intersects(
@@ -444,6 +459,25 @@ void Game::run()
             player1->takeDamage(
                 2.f
             );
+
+            if (
+                it->getBounds().left
+                <
+                player1->getBounds().left
+                )
+            {
+                player1->addKnockback(
+                    8.f,
+                    -5.f
+                );
+            }
+            else
+            {
+                player1->addKnockback(
+                    -12.f,
+                    -5.f
+                );
+            }
 
             removeBullet = true;
         }
@@ -457,6 +491,25 @@ void Game::run()
             player2->takeDamage(
                 2.f
             );
+
+            if (
+                it->getBounds().left
+                <
+                player2->getBounds().left
+                )
+            {
+                player2->addKnockback(
+                    12.f,
+                    -5.f
+                );
+            }
+            else
+            {
+                player2->addKnockback(
+                    -8.f,
+                    -5.f
+                );
+            }
 
             removeBullet = true;
         }

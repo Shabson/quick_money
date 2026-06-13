@@ -92,9 +92,18 @@ public:
     void dropWeapon();
     int getDeaths() const;
     void addDeath();
+    bool shouldDropWeapon() const;
+    bool canAttack() const;
+    void startAttackCooldown();
+
+    //do pociskow:
     void takeDamage(
         float damage
     );
-    bool shouldDropWeapon() const;
+    void addKnockback(
+        float knockbackX,
+        float knockbackY
+    );
+
 
 };
