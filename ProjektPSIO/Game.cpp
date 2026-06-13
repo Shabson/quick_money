@@ -34,6 +34,9 @@ Game::Game(
     
     enterPressedLastFrame = false;
 
+    fPressedLastFrame = false;
+    rCtrlPressedLastFrame = false;
+
     map = nullptr;
 
     if (!font.loadFromFile("assets/fonts/Tiny5-Regular.ttf"))
@@ -54,6 +57,23 @@ void Game::run()
 
     enterPressedLastFrame =
         sf::Keyboard::isKeyPressed(sf::Keyboard::Enter);
+
+    bool fJustPressed =
+        sf::Keyboard::isKeyPressed(sf::Keyboard::F)
+        &&
+        !fPressedLastFrame;
+
+    fPressedLastFrame =
+        sf::Keyboard::isKeyPressed(sf::Keyboard::F);
+
+    bool rCtrlJustPressed =
+        sf::Keyboard::isKeyPressed(sf::Keyboard::RControl)
+        &&
+        !rCtrlPressedLastFrame;
+
+    rCtrlPressedLastFrame =
+        sf::Keyboard::isKeyPressed(sf::Keyboard::RControl);
+
 
     if (gameState ==
         GameState::ClassSelection)
@@ -201,27 +221,65 @@ void Game::run()
 
     player2->handleInput();
 
-    if (
-        sf::Keyboard::isKeyPressed(
-            sf::Keyboard::F
-        )
-        )
+    if (fJustPressed)
+        
     {
-        player1->attack(
-            *player2
-        );
+        if (
+            player1->getCurrentWeapon()
+            &&
+            player1->getCurrentWeapon()->getName()
+            == "Pistol"
+            )
+        {
+            pociski.push_back(
+                Pocisk(
+                    player1->isFacingRight()
+                    ? player1->getPosition().x + 150.f
+                    : player1->getPosition().x - 150.f,
+
+                    player1->getPosition().y + 40.f,
+
+                    player1->isFacingRight()
+                )
+            );
+        }
+        else
+        {
+            player1->attack(
+                *player2
+            );
+        }
     }
 
-    if (
-        sf::Keyboard::isKeyPressed(
-            sf::Keyboard::RControl
-        )
-        )
-    {
-        player2->attack(
-            *player1
-        );
-    }
+    if (rCtrlJustPressed)
+
+        {
+            if (
+                player2->getCurrentWeapon()
+                &&
+                player2->getCurrentWeapon()->getName()
+                == "Pistol"
+                )
+            {
+                pociski.push_back(
+                    Pocisk(
+                        player2->isFacingRight()
+                        ? player2->getPosition().x + 150.f
+                        : player2->getPosition().x - 150.f,
+
+                        player2->getPosition().y + 40.f,
+
+                        player2->isFacingRight()
+                    )
+                );
+            }
+            else
+            {
+                player2->attack(
+                    *player1
+                );
+            }
+        }
 
     if (
         sf::Keyboard::isKeyPressed(
@@ -307,9 +365,110 @@ void Game::run()
         map->getPlatforms()
     );
 
-    for (auto& pocisk : pociski)
+    if (player1->shouldDropWeapon())
     {
-        pocisk.update();
+
+        std::unique_ptr<Weapon> droppedWeapon =
+            player1->takeCurrentWeapon();
+
+
+        droppedWeapon->setDropped(
+            true
+        );
+
+        if (player1->isFacingRight())
+        {
+            droppedWeapon->setPosition(
+                player1->getPosition().x + 150.f,
+                player1->getPosition().y
+            );
+        }
+        else
+        {
+            droppedWeapon->setPosition(
+                player1->getPosition().x - 150.f,
+                player1->getPosition().y
+            );
+        }
+
+        map->addWeapon(
+            std::move(droppedWeapon)
+        );
+    }
+
+    if (player2->shouldDropWeapon())
+    {
+
+        std::unique_ptr<Weapon> droppedWeapon =
+            player2->takeCurrentWeapon();
+
+        droppedWeapon->setDropped(
+            true
+        );
+
+        if (player2->isFacingRight())
+        {
+            droppedWeapon->setPosition(
+                player2->getPosition().x + 150.f,
+                player2->getPosition().y
+            );
+        }
+        else
+        {
+            droppedWeapon->setPosition(
+                player2->getPosition().x - 150.f,
+                player2->getPosition().y
+            );
+        }
+
+        map->addWeapon(
+            std::move(droppedWeapon)
+        );
+    }
+
+    for (
+        auto it = pociski.begin();
+        it != pociski.end();
+        )
+    {
+        it->update();
+
+        bool removeBullet = false;
+
+        if (
+            it->getBounds().intersects(
+                player1->getBounds()
+            )
+            )
+        {
+            player1->takeDamage(
+                2.f
+            );
+
+            removeBullet = true;
+        }
+
+        if (
+            it->getBounds().intersects(
+                player2->getBounds()
+            )
+            )
+        {
+            player2->takeDamage(
+                2.f
+            );
+
+            removeBullet = true;
+        }
+
+        if (removeBullet)
+        {
+            it = pociski.erase(it);
+        }
+        else
+        {
+            ++it;
+        }
     }
 
     player1->resolveCollision(

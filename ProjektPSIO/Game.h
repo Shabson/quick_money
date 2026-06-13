@@ -36,6 +36,9 @@ private:
 
     bool enterPressedLastFrame;
 
+    bool fPressedLastFrame;
+    bool rCtrlPressedLastFrame;
+
 public:
 
     Game(

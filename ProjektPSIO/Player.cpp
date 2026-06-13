@@ -1,6 +1,7 @@
 #include "Player.h"
 #include <utility>
 
+
 Player::Player(float x, float y, CharacterClass chosenClass,
         sf::Keyboard::Key left,
         sf::Keyboard::Key right,
@@ -22,6 +23,7 @@ Player::Player(float x, float y, CharacterClass chosenClass,
 
         velocityY = 0.f;
         velocityX = 0.f;
+        weaponTimer = 0;
      
         hasWeapon = false;
         playerClass = chosenClass;
@@ -302,11 +304,15 @@ Player::Player(float x, float y, CharacterClass chosenClass,
         currentWeapon = std::move(weapon);
 
         hasWeapon = currentWeapon != nullptr;
+
+        weaponTimer = 0;
     }
 
     std::unique_ptr<Weapon> Player::takeCurrentWeapon()
     {
         hasWeapon = false;
+
+        weaponTimer = 0;
 
         return std::move(currentWeapon);
     }
@@ -319,6 +325,13 @@ Player::Player(float x, float y, CharacterClass chosenClass,
     void Player::addDeath()
     {
         deaths++;
+    }
+
+    void Player::takeDamage(
+        float damage
+    )
+    {
+        hp -= damage;
     }
 
 
@@ -335,6 +348,11 @@ Player::Player(float x, float y, CharacterClass chosenClass,
         if (attackCooldown > 0.f)
         {
             attackCooldown -= 1.f;
+        }
+
+        if (hasWeapon)
+        {
+            weaponTimer++;
         }
 
         previousY = body.getPosition().y;
@@ -639,4 +657,12 @@ Player::Player(float x, float y, CharacterClass chosenClass,
     int Player::getMaxHp() const
     {
         return maxHp;
+    }
+
+    bool Player::shouldDropWeapon() const
+    {
+
+        return hasWeapon
+            &&
+            weaponTimer > 1200;
     }

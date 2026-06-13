@@ -29,6 +29,8 @@ private:
     int hp;
 	int maxHp;
 
+    int weaponTimer;
+
     std::unique_ptr<Weapon> currentWeapon;
     bool hasWeapon;
 
@@ -90,5 +92,9 @@ public:
     void dropWeapon();
     int getDeaths() const;
     void addDeath();
+    void takeDamage(
+        float damage
+    );
+    bool shouldDropWeapon() const;
 
 };
