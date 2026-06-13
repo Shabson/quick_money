@@ -28,6 +28,7 @@ Player::Player(float x, float y, CharacterClass chosenClass,
 
         isGrounded = false;
         facingRight = true;
+        jumpLeft = 2;
 
         attackCooldown = 0.f;
 
@@ -142,13 +143,25 @@ Player::Player(float x, float y, CharacterClass chosenClass,
         if (
             sf::Keyboard::isKeyPressed(upKey)
             &&
-            isGrounded
+            jumpLeft > 0
+            &&
+			!jumpHeld
             )
         {
             velocityY = -15.f;
 
+            jumpLeft--;
+            
+			jumpHeld = true;
+
             isGrounded = false;
-        }
+		}
+		else if (!sf::Keyboard::isKeyPressed(upKey))
+		{
+			jumpHeld = false;
+		}
+
+
 
         if (sf::Keyboard::isKeyPressed(downKey))
         {
@@ -311,6 +324,13 @@ Player::Player(float x, float y, CharacterClass chosenClass,
 
     void Player::update(std::vector<Platform>& platforms)
     {
+        bool wasGrounded = isGrounded;
+        isGrounded = false;
+
+        if (wasGrounded && !isGrounded)
+        {
+            jumpLeft = 1;
+        }
 
         if (attackCooldown > 0.f)
         {
@@ -335,7 +355,6 @@ Player::Player(float x, float y, CharacterClass chosenClass,
 
             if (playerBounds.intersects(platformBounds))
             {
-                // landing collision
                 if (
                     previousY + body.getSize().y
                     <= platformBounds.top
@@ -350,9 +369,8 @@ Player::Player(float x, float y, CharacterClass chosenClass,
                     velocityY = 0.f;
 
                     isGrounded = true;
+                    jumpLeft = 2;
                 }
-
-                // head collision
                 else if (
                     previousY
                     >= platformBounds.top
@@ -367,8 +385,6 @@ Player::Player(float x, float y, CharacterClass chosenClass,
 
                     velocityY = 0.f;
                 }
-
-                // left collision
                 else if (
                     body.getPosition().x
                     <
@@ -381,8 +397,6 @@ Player::Player(float x, float y, CharacterClass chosenClass,
                         body.getPosition().y
                     );
                 }
-
-                // right collision
                 else
                 {
                     body.setPosition(

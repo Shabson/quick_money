@@ -19,6 +19,8 @@ private:
     float velocityX;
 
     bool isGrounded;
+    int jumpLeft;
+    bool jumpHeld;
     bool facingRight;
 
     float attackCooldown;

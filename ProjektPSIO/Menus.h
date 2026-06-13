@@ -43,3 +43,9 @@ void drawGameOverMenu(
     sf::Font& font,
     int winner
 );
+
+void centerText(
+    sf::Text& text,
+    float x,
+    float y
+);

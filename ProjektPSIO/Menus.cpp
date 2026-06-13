@@ -91,25 +91,56 @@ void drawMapSelectionMenu(
     sf::Text text;
 
     text.setFont(font);
+
     text.setCharacterSize(40);
-    text.setFillColor(sf::Color::White);
 
-    text.setString(
-            L"Wybór mapy\n\n"
-            L"1 - Zachód Słońca\n"
-            L"2 - Zimowe Szczyty\n"
-            L"3 - Zamek\n\n"
-            L"Wybrano: "
-        +
-        std::to_wstring(selectedMap)
-        +
-        L"\n\nWciśnij ENTER"
+    text.setFillColor(
+        sf::Color::White
     );
 
-    text.setPosition(
-        400.f,
-        200.f
+    text.setOutlineThickness(2.f);
+
+    text.setOutlineColor(
+        sf::Color::Black
     );
+
+    std::vector<sf::String> lines =
+    {
+        L"Wybór mapy",
+        L"",
+        L"1 - Zachód Słońca",
+        L"2 - Zimowe Szczyty",
+        L"3 - Zamek",
+        L"",
+        L"Wybrano: " + std::to_wstring(selectedMap),
+        L"",
+        L"Wciśnij ENTER, aby przejść do wyboru klas"
+    };
+
+    float y = 300.f;
+
+    for (const auto& line : lines)
+    {
+        text.setString(line);
+
+        sf::FloatRect bounds =
+            text.getLocalBounds();
+
+        text.setOrigin(
+            bounds.left + bounds.width / 2.f,
+            0.f
+        );
+
+        text.setPosition(
+            window.getSize().x / 2.f,
+            y
+        );
+
+        window.draw(text);
+
+        y += 50.f;
+    }
+
 
     window.draw(text);
 }
@@ -147,53 +178,112 @@ void drawClassSelectionMenu(
 
     text.setFont(font);
     text.setFillColor(sf::Color::White);
+    text.setOutlineThickness(2.f);
+    text.setOutlineColor(sf::Color::Black);
 
     text.setCharacterSize(48);
-    text.setString(sf::String(L"Wybór klasy"));
-    text.setPosition(650.f, 50.f);
+    text.setString(
+        sf::String(L"Wybór klasy")
+    );
+
+    centerText(
+        text,
+        window.getSize().x / 2.f,
+        70.f
+    );
+
     window.draw(text);
 
     text.setCharacterSize(36);
     text.setString("Gracz 1");
-    text.setPosition(150.f, 180.f);
+
+    centerText(
+        text,
+        480.f,
+        200.f
+    );
+
     window.draw(text);
 
     text.setCharacterSize(32);
-    text.setString(getClassName(p1Class));
-    text.setPosition(150.f, 240.f);
+    text.setString(
+        getClassName(p1Class)
+    );
+
+    centerText(
+        text,
+        480.f,
+        260.f
+    );
+
     window.draw(text);
 
     text.setCharacterSize(24);
+    text.setOrigin(0.f, 0.f);
+
     text.setString(
         getClassBonusText(p1Class)
     );
-    text.setPosition(150.f, 300.f);
+
+    text.setPosition(
+        350.f,
+        300.f
+    );
+
     window.draw(text);
 
     text.setString(
+        sf::String(
             L"1 - Wojownik\n"
             L"2 - Berserker\n"
             L"3 - Zbir\n"
             L"4 - Łowca"
+        )
     );
-    text.setPosition(150.f, 450.f);
+
+    text.setPosition(
+        350.f,
+        450.f
+    );
+
     window.draw(text);
 
     text.setCharacterSize(36);
     text.setString("Gracz 2");
-    text.setPosition(1100.f, 180.f);
+
+    centerText(
+        text,
+        1440.f,
+        200.f
+    );
+
     window.draw(text);
 
     text.setCharacterSize(32);
-    text.setString(getClassName(p2Class));
-    text.setPosition(1100.f, 240.f);
+    text.setString(
+        getClassName(p2Class)
+    );
+
+    centerText(
+        text,
+        1440.f,
+        260.f
+    );
+
     window.draw(text);
 
     text.setCharacterSize(24);
+    text.setOrigin(0.f, 0.f);
+
     text.setString(
         getClassBonusText(p2Class)
     );
-    text.setPosition(1100.f, 300.f);
+
+    text.setPosition(
+        1300.f,
+        300.f
+    );
+
     window.draw(text);
 
     text.setString(
@@ -204,20 +294,30 @@ void drawClassSelectionMenu(
             L"Num4 - Łowca"
         )
     );
-    text.setPosition(1100.f, 450.f);
+
+    text.setPosition(
+        1300.f,
+        450.f
+    );
+
     window.draw(text);
 
     text.setCharacterSize(32);
+
     text.setString(
-        L"Wciśnij ENTER aby rozpocząć grę"
+        sf::String(
+            L"Wciśnij ENTER aby rozpocząć grę"
+        )
     );
-    text.setPosition(
-        700.f,
-        850.f
+
+    centerText(
+        text,
+        window.getSize().x / 2.f,
+        900.f
     );
+
     window.draw(text);
 }
-
 
 sf::String getClassBonusText(
     CharacterClass characterClass
@@ -259,45 +359,86 @@ void drawGameOverMenu(
 
     text.setFont(font);
     text.setFillColor(sf::Color::White);
+    text.setOutlineThickness(3.f);
+    text.setOutlineColor(sf::Color::Black);
 
-    std::string winnerText;
+    text.setCharacterSize(80);
+    text.setString(
+        sf::String(L"KONIEC GRY")
+    );
 
-    if (winner == 1)
-    {
-        winnerText = "Gracz 1 wygrywa!";
-    }
-    else
-    {
-        winnerText = "Gracz 2 wygrywa!";
-    }
-
-    text.setCharacterSize(64);
-    text.setString("Koniec Gry");
-    text.setPosition(
-        700.f,
-        150.f
+    centerText(
+        text,
+        window.getSize().x / 2.f,
+        180.f
     );
 
     window.draw(text);
 
-    text.setCharacterSize(48);
-    text.setString(winnerText);
-    text.setPosition(
-        600.f,
-        350.f
+    text.setCharacterSize(56);
+
+    if (winner == 1)
+    {
+        text.setString(
+            sf::String(L"Gracz 1 wygrywa!")
+        );
+        text.setFillColor(
+            sf::Color(100, 180, 255)
+        );
+    }
+    else
+    {
+        text.setString(
+            sf::String(L"Gracz 2 wygrywa!")
+        );
+        text.setFillColor(
+            sf::Color(255, 120, 120)
+        );
+    }
+
+    centerText(
+        text,
+        window.getSize().x / 2.f,
+        380.f
     );
 
     window.draw(text);
 
     text.setCharacterSize(32);
-    text.setString(
-        L"Naciśnij ENTER aby powrócić do wyboru map"
+    text.setFillColor(
+        sf::Color::White
     );
 
-    text.setPosition(
-        350.f,
-        600.f
+    text.setString(
+        sf::String(
+            L"Naciśnij ENTER aby wrócić do wyboru map"
+        )
+    );
+
+    centerText(
+        text,
+        window.getSize().x / 2.f,
+        800.f
     );
 
     window.draw(text);
+}
+void centerText(
+    sf::Text& text,
+    float x,
+    float y
+)
+{
+    sf::FloatRect bounds =
+        text.getLocalBounds();
+
+    text.setOrigin(
+        bounds.left + bounds.width / 2.f,
+        bounds.top + bounds.height / 2.f
+    );
+
+    text.setPosition(
+        x,
+        y
+    );
 }
