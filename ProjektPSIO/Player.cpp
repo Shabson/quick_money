@@ -633,6 +633,7 @@ Player::Player(float x, float y, CharacterClass chosenClass,
         hasWeapon = false;
 
         currentWeapon.reset();
+
     }
 
     int Player::getMaxHp() const

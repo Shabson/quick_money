@@ -43,6 +43,19 @@ public:
     void setPosition(float x, float y);
 
     sf::Vector2f getPosition() const;
+
+    bool dropped;
+    int droppedTimer;
+
+    void setDropped(
+        bool value
+    );
+
+    bool isDropped() const;
+
+    void update();
+
+    bool shouldDespawn() const;
 };
 
 class MeleeWeapon : public Weapon

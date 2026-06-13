@@ -234,6 +234,10 @@ void Game::run()
         std::unique_ptr<Weapon> droppedWeapon =
             player1->takeCurrentWeapon();
 
+        droppedWeapon->setDropped(
+            true
+        );
+
         if (player1->isFacingRight())
         {
             droppedWeapon->setPosition(
@@ -264,6 +268,10 @@ void Game::run()
     {
         std::unique_ptr<Weapon> droppedWeapon =
             player2->takeCurrentWeapon();
+
+        droppedWeapon->setDropped(
+            true
+        );
 
         if (player2->isFacingRight())
         {
@@ -321,6 +329,10 @@ void Game::run()
             std::unique_ptr<Weapon> droppedWeapon =
                 player1->takeCurrentWeapon();
 
+            droppedWeapon->setDropped(
+                true
+            );
+
             droppedWeapon->setPosition(
                 player1->getPosition().x,
                 player1->getPosition().y
@@ -348,6 +360,10 @@ void Game::run()
         {
             std::unique_ptr<Weapon> droppedWeapon =
                 player2->takeCurrentWeapon();
+
+            droppedWeapon->setDropped(
+                true
+            );
 
             droppedWeapon->setPosition(
                 player2->getPosition().x,
@@ -379,6 +395,10 @@ void Game::run()
         {
             std::unique_ptr<Weapon> droppedWeapon =
                 player1->takeCurrentWeapon();
+
+            droppedWeapon->setDropped(
+                true
+            );
 
             droppedWeapon->setPosition(
                 player1->getPosition().x,
@@ -423,6 +443,10 @@ void Game::run()
         {
             std::unique_ptr<Weapon> droppedWeapon =
                 player2->takeCurrentWeapon();
+
+            droppedWeapon->setDropped(
+                true
+            );
 
             droppedWeapon->setPosition(
                 player2->getPosition().x,

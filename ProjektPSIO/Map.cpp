@@ -492,6 +492,23 @@ void Map::addWeapon(std::unique_ptr<Weapon> weapon)
 
 void Map::updateWeaponSpawner()
 {
+    for (
+        auto it = weapons.begin();
+        it != weapons.end();
+        )
+    {
+        (*it)->update();
+
+        if ((*it)->shouldDespawn())
+        {
+            it = weapons.erase(it);
+        }
+        else
+        {
+            ++it;
+        }
+    }
+
     if (weaponSpawnClock.getElapsedTime().asSeconds() < 10.f)
     {
         return;

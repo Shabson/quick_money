@@ -21,6 +21,9 @@ Weapon::Weapon(
 
     body.setPosition(x, y);
     body.setFillColor(color);
+
+    dropped = false;
+    droppedTimer = 0;
 }
 
 void Weapon::draw(sf::RenderWindow& window)
@@ -52,6 +55,40 @@ sf::Vector2f Weapon::getHitboxSize() const
 {
     return hitboxSize;
 }
+
+void Weapon::setDropped(
+    bool value
+)
+{
+    dropped = value;
+
+    if (value)
+    {
+        droppedTimer = 0;
+    }
+}
+
+bool Weapon::isDropped() const
+{
+    return dropped;
+}
+
+void Weapon::update()
+{
+    if (dropped)
+    {
+        droppedTimer++;
+    }
+}
+
+bool Weapon::shouldDespawn() const
+{
+    return dropped
+        &&
+        droppedTimer > 900;
+}
+
+
 
 void Weapon::setPosition(
     float x,
@@ -201,3 +238,4 @@ std::string Pistol::getName() const
 {
     return "Pistol";
 }
+
