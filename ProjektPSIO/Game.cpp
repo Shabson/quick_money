@@ -294,6 +294,8 @@ void Game::run()
         )
         &&
         player1->getHasWeapon()
+        &&
+		player1->canDropWeapon()
         )
     {
         std::unique_ptr<Weapon> droppedWeapon =
@@ -330,6 +332,8 @@ void Game::run()
         )
         &&
         player2->getHasWeapon()
+        &&
+        player2->canDropWeapon()
         )
     {
         std::unique_ptr<Weapon> droppedWeapon =

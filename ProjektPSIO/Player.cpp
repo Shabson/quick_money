@@ -875,5 +875,5 @@ Player::Player(float x, float y, CharacterClass chosenClass,
 
     void Player::startDropCooldown()
     {
-        dropCooldown = 120.f;
+        dropCooldown = 30.f;
     }
