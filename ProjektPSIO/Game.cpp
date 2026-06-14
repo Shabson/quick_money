@@ -79,7 +79,7 @@ void Game::run()
         &&
         !rCtrlPressedLastFrame;
     rCtrlPressedLastFrame =
-        sf::Keyboard::isKeyPressed(sf::Keyboard::RControl);
+        sf::Keyboard::isKeyPressed(sf::Keyboard::RControl)  || sf::Keyboard::isKeyPressed(sf::Keyboard::Numpad0);
 
 
     if (gameState ==
@@ -191,10 +191,6 @@ void Game::run()
             player2.reset();
             map.reset();
 
-            player1 = nullptr;
-            player2 = nullptr;
-            map = nullptr;
-
             pociski.clear();
 
             winner = 0;
@@ -227,6 +223,10 @@ void Game::run()
     player1->handleInput();
 
     player2->handleInput();
+
+    updateProjectiles();
+    handleWeaponPickup();
+    updateCamera();
 
     if (fJustPressed)
     {
@@ -385,104 +385,6 @@ void Game::run()
         map->getPlatforms()
     );
 
-    
-
-    for (
-        auto it = pociski.begin();
-        it != pociski.end();
-        )
-    {
-        bool removeBullet = false;
-
-        it->update();
-
-        if (
-            it->getX() < -500.f
-            ||
-            it->getX() > map->getWorldWidth() + 500.f
-            )
-        {
-            removeBullet = true;
-        }
-
-
-        if (
-            it->getBounds().intersects(
-                player1->getBounds()
-            )
-            )
-        {
-            player1->takeDamage(
-                2.f
-            );
-
-            if (
-                it->getBounds().left
-                <
-                player1->getBounds().left
-                )
-            {
-                player1->applyKnockback(
-                    12.f,
-                    -5.f,
-                    false
-                );
-            }
-            else
-            {
-                player1->applyKnockback(
-                    -12.f,
-                    -5.f,
-                    true
-                );
-            }
-
-            removeBullet = true;
-        }
-
-        if (
-            it->getBounds().intersects(
-                player2->getBounds()
-            )
-            )
-        {
-            player2->takeDamage(
-                2.f
-            );
-
-            if (
-                it->getBounds().left
-                <
-                player2->getBounds().left
-                )
-            {
-                player2->applyKnockback(
-                    12.f,
-                    -5.f,
-                    false
-                );
-            }
-            else
-            {
-                player2->applyKnockback(
-                    -8.f,
-                    -5.f,
-                    true
-                );
-            }
-
-            removeBullet = true;
-        }
-
-        if (removeBullet)
-        {
-            it = pociski.erase(it);
-        }
-        else
-        {
-            ++it;
-        }
-    }
 
     player1->resolveCollision(
         *player2
@@ -504,166 +406,7 @@ void Game::run()
         winner = 1;
         gameState = GameState::GameOver;
     }
-
-
-    // WEAPON PICKUP
-
-    for (
-        auto it =
-        map->getWeapons().begin();
-
-        it != map->getWeapons().end();
-        )
-    {
-        if (
-            player1->getBounds()
-            .intersects(
-                (*it)->getBounds()
-            )
-            &&
-            !player1->getHasWeapon()
-            )
-        {
-            player1->setCurrentWeapon(
-                std::move(*it)
-            );
-
-            it =
-                map->getWeapons()
-                .erase(it);
-        }
-        else if (
-            player2->getBounds()
-            .intersects(
-                (*it)->getBounds()
-            )
-            &&
-            !player2->getHasWeapon()
-            )
-        {
-            player2->setCurrentWeapon(
-                std::move(*it)
-            );
-
-            it =
-                map->getWeapons()
-                .erase(it);
-        }
-        else
-        {
-            ++it;
-        }
-    }
-
-    // CAMERA
-
-    float middleX =
-        (
-            player1->getPosition().x
-            +
-            player2->getPosition().x
-            ) / 2.f;
-
-    float distance =
-        abs(
-            player1->getPosition().x
-            -
-            player2->getPosition().x
-        );
-    const float MIN_ZOOM = 1.2f;
-    float targetZoom = MIN_ZOOM;
-
-    if (distance > 600.f)
-    {
-        targetZoom +=
-            (distance - 600.f)
-            / 2500.f;
-    }
-
-    targetZoom =
-        std::clamp(
-            targetZoom,
-            1.f,
-            3.f
-        );
-
-    currentZoom +=
-        (
-            targetZoom
-            - currentZoom
-            ) * 0.05f;
-
-    camera.setSize(
-        1920 * currentZoom,
-        1080 * currentZoom
-    );
-
-    float middleY =
-        (
-            player1->getPosition().y
-            +
-            player2->getPosition().y
-            ) / 2.f;
-
-    float halfCameraWidth =
-        camera.getSize().x / 2.f;
-
-    float halfCameraHeight =
-        camera.getSize().y / 2.f;
-
-    float cameraX =
-        middleX;
-
-    if (map->getWorldWidth() > camera.getSize().x)
-    {
-        cameraX =
-            std::clamp(
-                middleX,
-                halfCameraWidth - 300.f,
-                map->getWorldWidth()
-                - halfCameraWidth
-                + 500.f
-            );
-    }
-    else
-    {
-        cameraX = map->getWorldWidth() / 2.f;
-    }
-
-    float cameraY =
-        middleY;
-
-    if (map->getDeathZoneY() > camera.getSize().y)
-    {
-        cameraY =
-            std::clamp(
-                middleY,
-                halfCameraHeight,
-                map->getDeathZoneY() - halfCameraHeight
-            );
-    }
-    else
-    {
-        cameraY = map->getDeathZoneY() / 2.f;
-    }
-
-    const float CAMERA_SMOOTHNESS = 0.1f;
-
-    sf::Vector2f currentCenter =
-        camera.getCenter();
-
-    currentCenter.x +=
-        (cameraX - currentCenter.x)
-        * 0.08f;
-
-
-    currentCenter.y +=
-        (cameraY - currentCenter.y)
-        * 0.08f;
-
-    camera.setCenter(
-        currentCenter
-    );
+    
     // DRAW
 
     window.clear();
@@ -767,5 +510,269 @@ void Game::handleDeath(Player& player)
     player.respawn(
         spawn.x,
         spawn.y
+    );
+}
+
+void Game::handleWeaponPickup() {
+    for (
+        auto it =
+        map->getWeapons().begin();
+
+        it != map->getWeapons().end();
+        )
+    {
+        if (
+            player1->getBounds()
+            .intersects(
+                (*it)->getBounds()
+            )
+            &&
+            !player1->getHasWeapon()
+            )
+        {
+            player1->setCurrentWeapon(
+                std::move(*it)
+            );
+
+            it =
+                map->getWeapons()
+                .erase(it);
+        }
+        else if (
+            player2->getBounds()
+            .intersects(
+                (*it)->getBounds()
+            )
+            &&
+            !player2->getHasWeapon()
+            )
+        {
+            player2->setCurrentWeapon(
+                std::move(*it)
+            );
+
+            it =
+                map->getWeapons()
+                .erase(it);
+        }
+        else
+        {
+            ++it;
+        }
+    }
+}
+void Game::updateProjectiles()
+{
+    for (
+        auto it = pociski.begin();
+        it != pociski.end();
+        )
+    {
+        bool removeBullet = false;
+
+        it->update();
+
+        if (
+            it->getX() < -500.f
+            ||
+            it->getX() > map->getWorldWidth() + 500.f
+            )
+        {
+            removeBullet = true;
+        }
+
+
+        if (
+            it->getBounds().intersects(
+                player1->getBounds()
+            )
+            )
+        {
+            if (
+                player1->takeDamage(
+                    2.f * player2->getRangedDamageMultiplier()
+                )
+                )
+            {
+                if (
+                    it->getBounds().left
+                    <
+                    player1->getBounds().left
+                    )
+                {
+                    player1->applyKnockback(
+                        12.f,
+                        -5.f,
+                        true
+                    );
+                }
+                else
+                {
+                    player1->applyKnockback(
+                        12.f,
+                        -5.f,
+                        false
+                    );
+                }
+            }
+
+            removeBullet = true;
+        }
+
+        if (
+            it->getBounds().intersects(
+                player2->getBounds()
+            )
+            )
+        {
+            if (
+                player2->takeDamage(
+                    2.f * player1->getRangedDamageMultiplier()
+                )
+                )
+            {
+                if (
+                    it->getBounds().left
+                    <
+                    player2->getBounds().left
+                    )
+                {
+                    player2->applyKnockback(
+                        12.f,
+                        -5.f,
+                        true
+                    );
+                }
+                else
+                {
+                    player2->applyKnockback(
+                        12.f,
+                        -5.f,
+                        false
+                    );
+                }
+            }
+
+            removeBullet = true;
+        }
+
+        if (removeBullet)
+        {
+            it = pociski.erase(it);
+        }
+        else
+        {
+            ++it;
+        }
+    }
+}
+void Game::updateCamera()
+{
+    float middleX =
+        (
+            player1->getPosition().x
+            +
+            player2->getPosition().x
+            ) / 2.f;
+
+    float distance =
+        abs(
+            player1->getPosition().x
+            -
+            player2->getPosition().x
+        );
+    const float MIN_ZOOM = 1.2f;
+    float targetZoom = MIN_ZOOM;
+
+    if (distance > 600.f)
+    {
+        targetZoom +=
+            (distance - 600.f)
+            / 2500.f;
+    }
+
+    targetZoom =
+        std::clamp(
+            targetZoom,
+            1.f,
+            3.f
+        );
+
+    currentZoom +=
+        (
+            targetZoom
+            - currentZoom
+            ) * 0.05f;
+
+    camera.setSize(
+        1920 * currentZoom,
+        1080 * currentZoom
+    );
+
+    float middleY =
+        (
+            player1->getPosition().y
+            +
+            player2->getPosition().y
+            ) / 2.f;
+
+    float halfCameraWidth =
+        camera.getSize().x / 2.f;
+
+    float halfCameraHeight =
+        camera.getSize().y / 2.f;
+
+    float cameraX =
+        middleX;
+
+    if (map->getWorldWidth() > camera.getSize().x)
+    {
+        cameraX =
+            std::clamp(
+                middleX,
+                halfCameraWidth - 300.f,
+                map->getWorldWidth()
+                - halfCameraWidth
+                + 500.f
+            );
+    }
+    else
+    {
+        cameraX = map->getWorldWidth() / 2.f;
+    }
+
+    float cameraY =
+        middleY;
+
+    if (map->getDeathZoneY() > camera.getSize().y)
+    {
+        cameraY =
+            std::clamp(
+                middleY,
+                halfCameraHeight,
+                map->getDeathZoneY() - halfCameraHeight
+            );
+    }
+    else
+    {
+        cameraY = map->getDeathZoneY() / 2.f;
+    }
+
+    const float CAMERA_SMOOTHNESS = 0.08f;
+
+    sf::Vector2f currentCenter =
+        camera.getCenter();
+
+    currentCenter.x +=
+        (cameraX - currentCenter.x)
+        * CAMERA_SMOOTHNESS;
+
+
+    currentCenter.y +=
+        (cameraY - currentCenter.y)
+        * CAMERA_SMOOTHNESS;
+
+    camera.setCenter(
+        currentCenter
     );
 }

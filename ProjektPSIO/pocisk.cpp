@@ -43,11 +43,6 @@ sf::FloatRect Pocisk::getBounds() const
     return body.getGlobalBounds();
 }
 
-float Pocisk::getDamage() const
-{
-    return 2.f;
-}
-
 float Pocisk::getX() const
 {
     return body.getPosition().x;

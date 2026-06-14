@@ -50,5 +50,7 @@ public:
     void run();
     void resetCamera();
     void handleDeath(Player& player);
-
+	void handleWeaponPickup();
+    void updateProjectiles();
+	void updateCamera();
 };

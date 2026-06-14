@@ -3,6 +3,16 @@
 CharacterSprites::CharacterSprites()
 {
     currentFrame = 0;
+
+    sprites =
+    {
+        &bodySprite,
+        &headSprite,
+        &torsoSprite,
+        &armsSprite,
+        &legsSprite,
+        &feetSprite
+    };
 }
 
 const float SPRITE_ORIGIN_X = 22.f;
@@ -215,12 +225,13 @@ void CharacterSprites::setPosition(
     float y
 )
 {
-    bodySprite.setPosition(x, y);
-    headSprite.setPosition(x, y);
-    torsoSprite.setPosition(x, y);
-    legsSprite.setPosition(x, y);
-    feetSprite.setPosition(x, y);
-    armsSprite.setPosition(x, y);
+    for (auto sprite : sprites)
+    {
+        sprite->setPosition(
+            x,
+            y
+        );
+    }
 }
 
 void CharacterSprites::draw(
@@ -251,13 +262,12 @@ void CharacterSprites::setFrame(
         64,
         64
     );
-
-    bodySprite.setTextureRect(frameRect);
-    headSprite.setTextureRect(frameRect);
-    torsoSprite.setTextureRect(frameRect);
-    armsSprite.setTextureRect(frameRect);
-    legsSprite.setTextureRect(frameRect);
-    feetSprite.setTextureRect(frameRect);
+    for (auto sprite : sprites)
+    {
+        sprite->setTextureRect(
+            frameRect
+        );
+    }
 }
 
 void CharacterSprites::setFacingRight(
@@ -271,29 +281,37 @@ void CharacterSprites::setFacingRight(
         scaleX = -2.f;
     }
 
-    bodySprite.setScale(scaleX, 2.f);
-    headSprite.setScale(scaleX, 2.f);
-    torsoSprite.setScale(scaleX, 2.f);
-    armsSprite.setScale(scaleX, 2.f);
-    legsSprite.setScale(scaleX, 2.f);
-    feetSprite.setScale(scaleX, 2.f);
-
-    if (facingRight)
+    for (auto sprite : sprites)
     {
-        bodySprite.setOrigin(SPRITE_ORIGIN_X, SPRITE_ORIGIN_Y);
-        headSprite.setOrigin(SPRITE_ORIGIN_X, SPRITE_ORIGIN_Y);
-        torsoSprite.setOrigin(SPRITE_ORIGIN_X, SPRITE_ORIGIN_Y);
-		armsSprite.setOrigin(SPRITE_ORIGIN_X, SPRITE_ORIGIN_Y);
-		legsSprite.setOrigin(SPRITE_ORIGIN_X, SPRITE_ORIGIN_Y);
-		feetSprite.setOrigin(SPRITE_ORIGIN_X, SPRITE_ORIGIN_Y);
+        sprite->setScale(
+            scaleX,
+            2.f
+        );
     }
-    else
+
+    float originX =
+        facingRight
+        ? SPRITE_ORIGIN_X
+        : SPRITE_ORIGIN_X + 20.f;
+
+    for (auto sprite : sprites)
     {
-        bodySprite.setOrigin(SPRITE_ORIGIN_X+20.f, SPRITE_ORIGIN_Y);
-        headSprite.setOrigin(SPRITE_ORIGIN_X+20.f, SPRITE_ORIGIN_Y);
-		torsoSprite.setOrigin(SPRITE_ORIGIN_X+20.f, SPRITE_ORIGIN_Y);
-		armsSprite.setOrigin(SPRITE_ORIGIN_X+20.f, SPRITE_ORIGIN_Y);
-		legsSprite.setOrigin(SPRITE_ORIGIN_X+20.f, SPRITE_ORIGIN_Y);
-		feetSprite.setOrigin(SPRITE_ORIGIN_X+20.f, SPRITE_ORIGIN_Y);
+        sprite->setOrigin(
+            originX,
+            SPRITE_ORIGIN_Y
+        );
     }
 }
+
+void CharacterSprites::setColor(
+    const sf::Color& color
+)
+{
+    for (auto sprite : sprites)
+    {
+        sprite->setColor(
+            color
+        );
+    }
+}
+

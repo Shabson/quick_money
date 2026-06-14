@@ -6,7 +6,7 @@ int main()
 {
     sf::RenderWindow window(
         sf::VideoMode(1920, 1080),
-        "Knur Fight"
+        "2D Fight"
     );
 
     window.setFramerateLimit(60);

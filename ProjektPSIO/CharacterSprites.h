@@ -1,6 +1,8 @@
 #pragma once
+
 #include "CharacterClass.h"
 #include <SFML/Graphics.hpp>
+#include <vector>
 
 class CharacterSprites
 {
@@ -20,7 +22,9 @@ private:
     sf::Sprite feetSprite;
     sf::Sprite armsSprite;
 
-	int currentFrame;
+    int currentFrame;
+
+    std::vector<sf::Sprite*> sprites;
 
 public:
 
@@ -42,6 +46,10 @@ public:
 
     void setFacingRight(
         bool facingRight
+    );
+
+    void setColor(
+        const sf::Color& color
     );
 
     void loadBody(
@@ -72,4 +80,3 @@ public:
         sf::RenderWindow& window
     );
 };
-

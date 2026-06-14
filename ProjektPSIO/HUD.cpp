@@ -27,6 +27,10 @@ void drawHUD(
         20.f
     );
 
+    hpBack1.setOutlineColor(sf::Color::Black);
+    hpBack1.setOutlineThickness(2.f);
+
+
     window.draw(hpBack1);
     float hpPercent1 =
         static_cast<float>(player1.getHp())/static_cast<float>(player1.getMaxHp());
@@ -49,9 +53,7 @@ void drawHUD(
         20.f
     );
 
-    hpFront1.setOutlineColor(sf::Color::Black);
-    hpFront1.setOutlineThickness(2.f);
-
+  
     window.draw(hpFront1);
 
 

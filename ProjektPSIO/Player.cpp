@@ -17,10 +17,6 @@
 
             body.setPosition(x, y);
 
-            body.setFillColor(
-                sf::Color(255, 0, 0, 60)
-            ); // drawing hitboxa
-
             velocityY = 0.f;
             velocityX = 0.f;
 
@@ -44,6 +40,7 @@
 
             speedMultiplier = 1.f;
             damageMultiplier = 1.f;
+            rangedDamageMultiplier = 1.f;
             cooldownMultiplier = 1.f;
             hpMultiplier = 1.f;
 
@@ -51,30 +48,18 @@
 
             animationFrame = 0;
             animationTimer = 0;
+            dodgeFlashTimer = 0;
 
             attackAnimationPlaying = false;
             attackAnimationTimer = 0;
-
-            weaponHitboxPreview.setFillColor(
-                sf::Color(255, 0, 0, 70)
-            );
-
-            weaponHitboxPreview.setOutlineColor(
-                sf::Color(255, 255, 255, 150)
-            );
-
-            weaponHitboxPreview.setOutlineThickness(1.f);
 
             switch (playerClass)
             {
             case CharacterClass::Warrior:
 
-                hpMultiplier = 1.2f;
-                damageMultiplier = 1.1f;
+                hpMultiplier = 1.35f;
+                damageMultiplier = 0.9f;
                 speedMultiplier = 0.95f;
-                cooldownMultiplier = 1.f;
-
-                dodgeChance = 0.f;
 
                 break;
 
@@ -82,32 +67,22 @@
 
                 hpMultiplier = 0.7f;
                 damageMultiplier = 1.25f;
-                speedMultiplier = 1.05f;
-                cooldownMultiplier = 0.9f;
-
-                dodgeChance = 0.f;
+                cooldownMultiplier = 0.75f;
 
                 break;
 
             case CharacterClass::Thug:
 
-                hpMultiplier = 1.f;
-                damageMultiplier = 1.f;
                 speedMultiplier = 1.15f;
-                cooldownMultiplier = 1.f;
-
-                dodgeChance = 0.15f;
+                dodgeChance = 0.25f;
 
                 break;
 
             case CharacterClass::Ranger:
 
                 hpMultiplier = 0.9f;
-                damageMultiplier = 1.f;
-                speedMultiplier = 1.08f;
-                cooldownMultiplier = 0.95f;
-
-                dodgeChance = 0.05f;
+                rangedDamageMultiplier = 2.0f;
+                cooldownMultiplier = 0.90f;
 
                 break;
             }
@@ -186,14 +161,27 @@
                 animationFrame,
                 3
             );
-
+            if (dodgeFlashTimer > 0)
+            {
+                sprites.setColor(
+                    sf::Color(
+                        255,
+                        255,
+                        100
+                    )
+                );
+            }
+            else
+            {
+                sprites.setColor(
+                    sf::Color::White
+                );
+            }
             sprites.draw(window);
 
             if (hasWeapon)
             {
                 currentWeapon->update();
-                window.draw(weaponHitboxPreview);
-
                 currentWeapon->draw(
                     window
                 );
@@ -210,11 +198,11 @@
             if (hasWeapon)
             {
                 maxCooldown =
-                    currentWeapon->getAttackCooldown();
+                    currentWeapon->getAttackCooldown() * cooldownMultiplier;
             }
             else
             {
-                maxCooldown = 20.f;
+                maxCooldown = 20.f * cooldownMultiplier;
             }
 
             float ratio = attackCooldown / maxCooldown;
@@ -358,11 +346,27 @@
             deaths++;
         }
 
-        void Player::takeDamage(
+        bool Player::takeDamage(
             float damage
         )
         {
+            if (
+                static_cast<float>(rand())
+                / RAND_MAX
+                < dodgeChance
+                )
+            {
+                dodgeFlashTimer = 20;
+                return false;
+            }
+
             hp -= damage;
+
+            hp = std::max(
+                0.f,
+                hp
+            );
+            return true;
         }
 
         void Player::update(std::vector<Platform>& platforms)
@@ -373,10 +377,15 @@
                 dropCooldown--;
             }
 
+            if (dodgeFlashTimer > 0)
+            {
+                dodgeFlashTimer--;
+            }
+
             bool wasGrounded = isGrounded;
             isGrounded = false;
 
-            if (wasGrounded && !isGrounded)
+            if (isGrounded)
             {
                 jumpLeft = 1;
             }
@@ -400,11 +409,6 @@
                     attackAnimationPlaying = false;
                     attackAnimationTimer = 0;
                 }
-            }
-
-            if (hasWeapon)
-            {
-                currentWeapon->update();
             }
 
             previousY = body.getPosition().y;
@@ -599,9 +603,7 @@
                 sf::Vector2f hitboxSize =
                     currentWeapon->getHitboxSize();
 
-                weaponHitboxPreview.setSize(
-                    hitboxSize
-                );
+
 
                 if (facingRight)
                 {
@@ -613,13 +615,6 @@
 
                         body.getPosition().y + 65.f - YOffset
                     );
-
-                    weaponHitboxPreview.setPosition(
-                        body.getPosition().x
-                        + body.getSize().x,
-
-                        body.getPosition().y + 30.f
-                    );
                 }
                 else
                 {
@@ -629,13 +624,6 @@
                         - positionOffset,
 
 					    body.getPosition().y + 65.f - YOffset
-                    );
-
-                    weaponHitboxPreview.setPosition(
-                        body.getPosition().x
-                        - hitboxSize.x,
-
-                        body.getPosition().y + 30.f
                     );
                 }
             }
@@ -742,11 +730,11 @@
 
             if (hasWeapon)
             {
-                attackCooldown = currentWeapon->getAttackCooldown();
+                attackCooldown = currentWeapon->getAttackCooldown() * cooldownMultiplier;
             }
             else
             {
-                attackCooldown = 20.f;
+				attackCooldown = 25.f * cooldownMultiplier;
             }
 
             if (
@@ -755,40 +743,28 @@
                 )
                 )
             {
-                otherPlayer.hp -=
-                    (
-                        hasWeapon
-                        ? currentWeapon->getDamage()
-                        : 1.f
-                        )
-                    * damageMultiplier;
-
-                float hpPercent =
-                    otherPlayer.getHp()
-                    / otherPlayer.getMaxHp();
-
-                float knockback =
-                    (
+                if (
+                    otherPlayer.takeDamage(
+                        (
+                            hasWeapon
+                            ? currentWeapon->getDamage()
+                            : 1.f
+                            )
+                        * damageMultiplier
+                    )
+                    )
+                {
+                    otherPlayer.applyKnockback(
                         hasWeapon
                         ? currentWeapon->getKnockback()
-                        : 15.f
-                        )
-                    / std::max(
-                        0.1f,
-                        hpPercent
+                        : 15.f,
+                        -5.f,
+                        facingRight
                     );
-
-                otherPlayer.applyKnockback(
-                    hasWeapon
-                    ? currentWeapon->getKnockback()
-                    : 15.f,
-
-                    -5.f,
-
-                    facingRight
-                );
+                }
             }
         }
+            
         void Player::respawn(float x, float y)
         {
             body.setPosition(x, y);
@@ -801,14 +777,6 @@
             hasWeapon = false;
 
             currentWeapon.reset();
-        }
-
-        void Player::dropWeapon()
-        {
-            hasWeapon = false;
-
-            currentWeapon.reset();
-
         }
 
         float Player::getMaxHp() const
@@ -826,11 +794,11 @@
             if (hasWeapon)
             {
                 attackCooldown =
-                    currentWeapon->getAttackCooldown();
+                    currentWeapon->getAttackCooldown() * cooldownMultiplier;
             }
             else
             {
-                attackCooldown = 15.f;
+                attackCooldown = 15.f * cooldownMultiplier;
             }
         }
 
@@ -908,3 +876,8 @@
             velocityY =
                 baseKnockbackY * multiplier;
         }
+
+		float Player::getRangedDamageMultiplier() const
+		{
+			return rangedDamageMultiplier;
+		}

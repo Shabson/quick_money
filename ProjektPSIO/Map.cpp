@@ -88,14 +88,6 @@ void Map::loadMap1()
     );
 
     platforms.push_back(
-        Platform(0.f, 1100.f, 40.f, platformTexture)
-    );
-
-    platforms.push_back(
-        Platform(200.f, 850.f, 6.f, platformTexture)
-    );
-
-    platforms.push_back(
         Platform(500.f, 650.f, 6.f, platformTexture)
     );
 
@@ -104,25 +96,19 @@ void Map::loadMap1()
     );
 
     platforms.push_back(
-        Platform(500.f, 250.f, 6.f, platformTexture)
+        Platform(100.f, 250.f, 6.f, platformTexture)
     );
-
-    platforms.push_back(
-        Platform(800.f, 550.f, 8.f, platformTexture)
-    );
-
     platforms.push_back(
         Platform(800.f, 850.f, 8.f, platformTexture)
     );
 
     platforms.push_back(
-        Platform(1350.f, 850.f, 6.f, platformTexture)
-    );
-
-    platforms.push_back(
         Platform(1650.f, 650.f, 6.f, platformTexture)
     );
-
+    
+	platforms.push_back(
+		Platform(1650.f, 1000.f, 6.f, platformTexture)
+	);
     platforms.push_back(
         Platform(1350.f, 450.f, 6.f, platformTexture)
     );
@@ -132,55 +118,44 @@ void Map::loadMap1()
     );
 
     platforms.push_back(
-        Platform(950.f, 250.f, 4.f, platformTexture)
+        Platform(950.f, 250.f, 7.f, platformTexture)
     );
-
-    platforms.push_back(
-        Platform(750.f, 250.f, 3.f, platformTexture)
+    playerSpawns.push_back(
+        sf::Vector2f(992.f, 760.f)
     );
-
-    platforms.push_back(
-        Platform(1150.f, 250.f, 3.f, platformTexture)
-    );
-
-    platforms.push_back(
-        Platform(750.f, 850.f, 3.f, platformTexture)
-    );
-
-    platforms.push_back(
-        Platform(1150.f, 850.f, 3.f, platformTexture)
+    playerSpawns.push_back(
+        sf::Vector2f(344.f, 360.f)
     );
 
     playerSpawns.push_back(
-        sf::Vector2f(250.f, 760.f)
+        sf::Vector2f(1794.f, 760.f)
     );
 
     playerSpawns.push_back(
-        sf::Vector2f(550.f, 360.f)
-    );
+        sf::Vector2f(1794.f, 360.f)
+    ); 
 
-    playerSpawns.push_back(
-        sf::Vector2f(1400.f, 760.f)
-    );
-
-    playerSpawns.push_back(
-        sf::Vector2f(1700.f, 360.f)
+    weaponSpawns.push_back(
+        sf::Vector2f(244.f, 200.f)
     );
 
     weaponSpawns.push_back(
-        sf::Vector2f(650.f, 600.f)
+        sf::Vector2f(1494.f, 400.f)
     );
 
     weaponSpawns.push_back(
-        sf::Vector2f(960.f, 500.f)
+        sf::Vector2f(1794.f, 600.f)
     );
 
     weaponSpawns.push_back(
-        sf::Vector2f(1260.f, 600.f)
+        sf::Vector2f(1118.f, 200.f)
+    );
+    weaponSpawns.push_back(
+        sf::Vector2f(644.f, 600.f)
     );
 
     weaponSpawns.push_back(
-        sf::Vector2f(960.f, 200.f)
+        sf::Vector2f(1794.f, 950.f)
     );
 }
 
@@ -230,68 +205,66 @@ void Map::loadMap2()
         )
     );
 
+        platforms.push_back(
+            Platform(240.f, 1250.f, 6.f, platformTexture)
+        );
+
+        platforms.push_back(
+            Platform(620.f, 1050.f, 7.f, platformTexture)
+        );
+
+        platforms.push_back(
+            Platform(1080.f, 850.f, 6.f, platformTexture)
+        );
+
+        platforms.push_back(
+            Platform(1450.f, 1150.f, 12.f, platformTexture)
+        );
+
+        platforms.push_back(
+            Platform(1650.f, 850.f, 5.f, platformTexture)
+        );
+
+        platforms.push_back(
+            Platform(1450.f, 650.f, 5.f, platformTexture)
+        );
+
+        platforms.push_back(
+            Platform(1850.f, 650.f, 5.f, platformTexture)
+        );
+
+        platforms.push_back(
+            Platform(2450.f, 850.f, 6.f, platformTexture)
+        );
+
+        platforms.push_back(
+            Platform(2850.f, 1050.f, 7.f, platformTexture)
+        );
+
+        platforms.push_back(
+            Platform(3150.f, 1250.f, 6.f, platformTexture)
+        );
+
+        platforms.push_back(
+            Platform(1600.f, 400.f, 8.f, platformTexture)
+        );
+
  
-    platforms.push_back(
-        Platform(0.f, 1500.f, 73.f, platformTexture)
-    );
+        playerSpawns.push_back(sf::Vector2f(300.f, 1160.f));
+        playerSpawns.push_back(sf::Vector2f(3200.f, 1160.f));
+        playerSpawns.push_back(sf::Vector2f(1500.f, 310.f));
+        playerSpawns.push_back(sf::Vector2f(1700.f, 310.f));
 
-    platforms.push_back(
-        Platform(240.f, 1250.f, 6.f, platformTexture)
-    );
-
-    platforms.push_back(
-        Platform(620.f, 1050.f, 7.f, platformTexture)
-    );
-
-    platforms.push_back(
-        Platform(1080.f, 850.f, 6.f, platformTexture)
-    );
-
-    platforms.push_back(
-        Platform(1450.f, 1150.f, 12.f, platformTexture)
-    );
-
-    platforms.push_back(
-        Platform(1650.f, 850.f, 5.f, platformTexture)
-    );
-
-    platforms.push_back(
-        Platform(1450.f, 650.f, 5.f, platformTexture)
-    );
-
-    platforms.push_back(
-        Platform(1850.f, 650.f, 5.f, platformTexture)
-    );
-
-    platforms.push_back(
-        Platform(2450.f, 850.f, 6.f, platformTexture)
-    );
-
-    platforms.push_back(
-        Platform(2850.f, 1050.f, 7.f, platformTexture)
-    );
-
-    platforms.push_back(
-        Platform(3150.f, 1250.f, 6.f, platformTexture)
-    );
-
-    platforms.push_back(
-        Platform(1600.f, 400.f, 8.f, platformTexture)
-    );
-
-    playerSpawns.push_back(sf::Vector2f(300.f, 1160.f));
-    playerSpawns.push_back(sf::Vector2f(3200.f, 1160.f));
-
-    weaponSpawns.push_back(sf::Vector2f(350.f, 1200.f));
-    weaponSpawns.push_back(sf::Vector2f(775.f, 1000.f));
-    weaponSpawns.push_back(sf::Vector2f(1200.f, 800.f));
-    weaponSpawns.push_back(sf::Vector2f(1750.f, 800.f));
-    weaponSpawns.push_back(sf::Vector2f(1550.f, 600.f));
-    weaponSpawns.push_back(sf::Vector2f(1950.f, 600.f));
-    weaponSpawns.push_back(sf::Vector2f(1750.f, 350.f));
-    weaponSpawns.push_back(sf::Vector2f(2600.f, 800.f));
-    weaponSpawns.push_back(sf::Vector2f(3025.f, 1000.f));
-}
+        weaponSpawns.push_back(sf::Vector2f(350.f, 1200.f));
+        weaponSpawns.push_back(sf::Vector2f(775.f, 1000.f));
+        weaponSpawns.push_back(sf::Vector2f(1200.f, 800.f));
+        weaponSpawns.push_back(sf::Vector2f(1750.f, 800.f));
+        weaponSpawns.push_back(sf::Vector2f(1550.f, 600.f));
+        weaponSpawns.push_back(sf::Vector2f(1950.f, 600.f));
+        weaponSpawns.push_back(sf::Vector2f(1750.f, 350.f));
+        weaponSpawns.push_back(sf::Vector2f(2600.f, 800.f));
+        weaponSpawns.push_back(sf::Vector2f(3025.f, 1000.f));
+    }
 
 void Map::loadMap3()
 {
@@ -340,10 +313,6 @@ void Map::loadMap3()
         )
     );
 
-
-    platforms.push_back(
-        Platform(0.f, 1700.f, 88.f, platformTexture)
-    );
 
     platforms.push_back(
         Platform(300.f, 1450.f, 8.f, platformTexture)

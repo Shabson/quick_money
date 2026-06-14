@@ -38,11 +38,10 @@ private:
     sf::Keyboard::Key upKey;
     sf::Keyboard::Key downKey;
 
-    sf::RectangleShape weaponHitboxPreview;
-
     CharacterClass playerClass;
 
     float damageMultiplier;
+    float rangedDamageMultiplier;
     float speedMultiplier;
     float cooldownMultiplier;
     float hpMultiplier;
@@ -52,6 +51,7 @@ private:
     CharacterSprites sprites;
     int animationFrame;
     int animationTimer;
+    int dodgeFlashTimer;
 
     bool attackAnimationPlaying;
     int attackAnimationTimer;
@@ -71,9 +71,7 @@ public:
 
     sf::Vector2f getPosition() const;
 
-    sf::FloatRect getBounds() const;
-
- 
+    sf::FloatRect getBounds() const;    
 
     bool isFacingRight() const;
 
@@ -90,7 +88,6 @@ public:
     const Weapon* getCurrentWeapon() const;
     void setCurrentWeapon(std::unique_ptr<Weapon> weapon);
     std::unique_ptr<Weapon> takeCurrentWeapon();
-    void dropWeapon();
     int getDeaths() const;
     void addDeath();
     bool canAttack() const;
@@ -100,12 +97,15 @@ public:
     void startDropCooldown();
 
     //do pociskow:
-    void takeDamage(
+    bool takeDamage(
         float damage
     );
 
     void useAmmo();
 	int getAmmo() const;
+
+
+	float getRangedDamageMultiplier() const;
 
     void applyKnockback(
         float baseKnockbackX,

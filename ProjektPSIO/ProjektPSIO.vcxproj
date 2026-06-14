@@ -21,7 +21,6 @@
   <ItemGroup>
     <ClCompile Include="CharacterSprites.cpp" />
     <ClCompile Include="Game.cpp" />
-    <ClCompile Include="Gameplay.cpp" />
     <ClCompile Include="HUD.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Map.cpp" />
@@ -36,7 +35,6 @@
     <ClInclude Include="CharacterClass.h" />
     <ClInclude Include="CharacterSprites.h" />
     <ClInclude Include="Game.h" />
-    <ClInclude Include="Gameplay.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="HUD.h" />
     <ClInclude Include="Map.h" />

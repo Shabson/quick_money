@@ -1,5 +1,52 @@
 ﻿#include "Menus.h"
 
+namespace
+{
+    sf::Texture classBackgroundTexture;
+    sf::Sprite classBackgroundSprite;
+
+    sf::Texture mapBackgroundTexture;
+    sf::Sprite mapBackgroundSprite;
+
+    bool backgroundsLoaded = false;
+
+    void loadMenuBackgrounds()
+    {
+        if (backgroundsLoaded)
+        {
+            return;
+        }
+
+        classBackgroundTexture.loadFromFile(
+            "assets/textures/background_2.png"
+        );
+
+        classBackgroundSprite.setTexture(
+            classBackgroundTexture
+        );
+
+        mapBackgroundTexture.loadFromFile(
+            "assets/textures/background_1.jpg"
+        );
+
+        mapBackgroundSprite.setTexture(
+            mapBackgroundTexture
+        );
+
+        classBackgroundSprite.setScale(
+            1920.f / classBackgroundTexture.getSize().x,
+            1080.f / classBackgroundTexture.getSize().y
+        );
+
+        mapBackgroundSprite.setScale(
+            1920.f / mapBackgroundTexture.getSize().x,
+            1080.f / mapBackgroundTexture.getSize().y
+        );
+
+        backgroundsLoaded = true;
+    }
+}
+
 void handleClassSelection(
     CharacterClass& p1Class,
     CharacterClass& p2Class,
@@ -88,6 +135,12 @@ void drawMapSelectionMenu(
     int selectedMap
 )
 {
+    loadMenuBackgrounds();
+
+    window.draw(
+        mapBackgroundSprite
+    );
+
     sf::Text text;
 
     text.setFont(font);
@@ -174,6 +227,12 @@ void drawClassSelectionMenu(
     CharacterClass p2Class
 )
 {
+    loadMenuBackgrounds();
+
+    window.draw(
+        classBackgroundSprite
+    );
+
     sf::Text text;
 
     text.setFont(font);
@@ -327,23 +386,26 @@ sf::String getClassBonusText(
     {
     case CharacterClass::Warrior:
         return
-            L"+20% HP\n"
-            L"+10% Odporności na obrażenia";
+            L"+35% HP\n"
+            L"-10% Zadawanych obrażeń\n"
+			L"-5% Prędkości poruszania się";
 
     case CharacterClass::Berserker:
         return
             L"+25% Zadawanych obrażeń\n"
-            L"-20% HP";
+            L"+25% Prędkości ataku\n"
+            L"-30% HP";
 
     case CharacterClass::Thug:
         return
-            L"+10% Prędkości poruszania się\n"
+            L"+15% Prędkości poruszania się\n"
             L"+25% Szansy na unik";
 
     case CharacterClass::Ranger:
         return
-            L"+10% Prędkości poruszania się\n"
-            L"+25% Obrażeń dystansowych";
+            L"+100% Obrażeń dystansowych\n"
+            L"+10% Prędkości ataku\n"
+            L"-10% HP";
     }
 
     return L"";

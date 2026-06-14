@@ -24,6 +24,5 @@ public:
 
     sf::FloatRect getBounds() const;
     float getX() const;
-    float getDamage() const;
 
 };
