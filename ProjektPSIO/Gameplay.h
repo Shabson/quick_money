@@ -4,7 +4,7 @@
 #include "Map.h"
 
 void updateGameplay(
-    Player*& player1,
-    Player*& player2,
+    const Player*& player1,
+    const Player*& player2,
     Map*& map
 );

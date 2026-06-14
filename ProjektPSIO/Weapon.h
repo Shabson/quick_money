@@ -55,7 +55,7 @@ public:
     sf::Vector2f getPosition() const;
 
     bool dropped;
-    int lifeTimer;
+    float lifeTimer;
 
     bool shouldBlink() const;
 

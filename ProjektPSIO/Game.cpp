@@ -90,7 +90,7 @@ void Game::run()
             GameState::Playing
             )
         {
-            map = new Map(
+            map = std::make_unique<Map>(
                 sf::Vector2u(
                     1920,
                     1080
@@ -104,7 +104,7 @@ void Game::run()
             sf::Vector2f player2Spawn =
                 map->getPlayerSpawn(1);
 
-            player1 = new Player(
+            player1 = std::make_unique<Player>(
                 player1Spawn.x,
                 player1Spawn.y,
 
@@ -116,7 +116,7 @@ void Game::run()
                 sf::Keyboard::S
             );
 
-            player2 = new Player(
+            player2 = std::make_unique<Player>(
                 player2Spawn.x,
                 player2Spawn.y,
 
@@ -180,9 +180,9 @@ void Game::run()
     {
         if (enterJustPressed)
         {
-            delete player1;
-            delete player2;
-            delete map;
+            player1.reset();
+            player2.reset();
+            map.reset();
 
             player1 = nullptr;
             player2 = nullptr;
@@ -694,8 +694,8 @@ void Game::run()
     drawHUD(
         window,
         font,
-        player1,
-        player2
+        *player1,
+        *player2
     );
    
 

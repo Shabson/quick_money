@@ -7,6 +7,7 @@
 #include "Menus.h"
 #include "GameState.h"
 #include "pocisk.h"
+#include <memory>
 
 class Game
 {
@@ -25,13 +26,14 @@ private:
 
     int selectedMap;
 
-    Player* player1;
-    Player* player2;
+    std::unique_ptr<Player> player1;
+    std::unique_ptr<Player> player2;
+    std::unique_ptr<Map> map;
+    
     int winner;
 
     sf::Font font;
 
-    Map* map;
     std::vector<Pocisk> pociski;
 
     bool enterPressedLastFrame;

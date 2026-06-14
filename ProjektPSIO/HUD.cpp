@@ -3,8 +3,8 @@
 void drawHUD(
     sf::RenderWindow& window,
     sf::Font& font,
-    Player* player1,
-    Player* player2
+    const Player& player1,
+    const Player& player2
 )
 {
     // PLAYER 1 HP
@@ -29,7 +29,7 @@ void drawHUD(
 
     window.draw(hpBack1);
     float hpPercent1 =
-        static_cast<float>(player1->getHp())/static_cast<float>(player1->getMaxHp());
+        static_cast<float>(player1.getHp())/static_cast<float>(player1.getMaxHp());
 
     sf::RectangleShape hpFront1;
 
@@ -81,7 +81,7 @@ void drawHUD(
     window.draw(hpBack2);
 
     float hpPercent2 =
-        static_cast<float>(player2->getHp())/static_cast<float>(player2->getMaxHp());
+        static_cast<float>(player2.getHp())/static_cast<float>(player2.getMaxHp());
 
     sf::RectangleShape hpFront2;
 
@@ -133,7 +133,7 @@ void drawHUD(
         )
         +
         std::to_string(
-            player1->getDeaths()
+            player1.getDeaths()
         )
         +
         "/5"
@@ -163,7 +163,7 @@ void drawHUD(
         )
         +
         std::to_string( 
-            player2->getDeaths()
+            player2.getDeaths()
         )
         +
         "/5"

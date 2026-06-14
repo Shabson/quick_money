@@ -13,6 +13,7 @@ Weapon::Weapon(
     this->attackCooldown = attackCooldown;
     this->knockback = knockback;
     this->hitboxSize = hitboxSize;
+    animationType = WeaponAnimationType::Swing;
 
     body.setSize(
         sf::Vector2f(80.f, 20.f)
@@ -26,7 +27,7 @@ Weapon::Weapon(
     );
 
     dropped = true;
-    lifeTimer = 0;
+    lifeTimer = 0.f;
 
 
 }
@@ -55,9 +56,14 @@ void Weapon::draw(
         );
     }
 
+    int blinkPhase =
+        static_cast<int>(
+            lifeTimer / 10.f
+            );
+
     if (shouldBlink())
     {
-        if ((lifeTimer / 10) % 2 == 0)
+        if (blinkPhase % 2 == 0)
         {
             return;
         }
