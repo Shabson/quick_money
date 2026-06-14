@@ -67,10 +67,17 @@ void Game::run()
         sf::Keyboard::isKeyPressed(sf::Keyboard::F);
 
     bool rCtrlJustPressed =
-        sf::Keyboard::isKeyPressed(sf::Keyboard::RControl)
+        (
+            sf::Keyboard::isKeyPressed(
+                sf::Keyboard::RControl
+            )
+            ||
+            sf::Keyboard::isKeyPressed(
+                sf::Keyboard::Numpad0
+            )
+            )
         &&
         !rCtrlPressedLastFrame;
-
     rCtrlPressedLastFrame =
         sf::Keyboard::isKeyPressed(sf::Keyboard::RControl);
 
