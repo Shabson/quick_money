@@ -27,6 +27,14 @@ Weapon::Weapon(
 
     dropped = true;
     lifeTimer = 0;
+
+
+}
+
+WeaponAnimationType
+Weapon::getAnimationType() const
+{
+    return animationType;
 }
 
 void Weapon::draw(
@@ -135,17 +143,12 @@ void Weapon::setFacingRight(
     if (facingRight)
     {
         sprite.setScale(2.f, 2.f);
-        sprite.setRotation(20.f);
     }
     else
     {
         sprite.setScale(
             -2.f,
             2.f
-        );
-
-        sprite.setRotation(
-            -20.f
         );
     }
 }
@@ -182,7 +185,7 @@ Sword::Sword(float x, float y)
         2.f,
         25.f,
         18.f,
-        sf::Vector2f(100.f, 40.f)
+        sf::Vector2f(60.f, 50.f)
     )
 {
     texture.loadFromFile(
@@ -199,9 +202,12 @@ Sword::Sword(float x, float y)
     );
 
     sprite.setOrigin(
-        6.f,
-        6.f
+        4.f,
+        30.f
     );
+
+    animationType =
+        WeaponAnimationType::Swing;
 
 }
 
@@ -222,7 +228,7 @@ Katana::Katana(float x, float y)
         1.f,
         10.f,
         12.f,
-        sf::Vector2f(140.f, 30.f)
+        sf::Vector2f(60.f, 40.f)
     )
 {
     texture.loadFromFile(
@@ -239,9 +245,12 @@ Katana::Katana(float x, float y)
     );
 
     sprite.setOrigin(
-        8.f,
-        4.f
+        5.f,
+        30.f
     );
+
+    animationType =
+        WeaponAnimationType::Swing;
 }
 
 std::unique_ptr<Weapon> Katana::clone() const
@@ -261,7 +270,7 @@ Club::Club(float x, float y)
         3.f,
         40.f,
         35.f,
-        sf::Vector2f(90.f, 50.f)
+        sf::Vector2f(60.f, 70.f)
     )
 {
     texture.loadFromFile(
@@ -278,9 +287,12 @@ Club::Club(float x, float y)
     );
 
     sprite.setOrigin(
-        4.f,
-        -2.f
+        1.f,
+        27.f
     );
+
+    animationType =
+        WeaponAnimationType::Swing;
 }
 
 std::unique_ptr<Weapon> Club::clone() const
@@ -300,7 +312,7 @@ Spear::Spear(float x, float y)
         2.f,
         30.f,
         20.f,
-        sf::Vector2f(180.f, 25.f)
+        sf::Vector2f(100.f, 25.f)
     )
 {
     texture.loadFromFile(
@@ -317,9 +329,13 @@ Spear::Spear(float x, float y)
     );
 
     sprite.setOrigin(
-        4.f,
-        -4.f
+        2.f,
+        30.f
     );
+
+    animationType =
+        WeaponAnimationType::Thrust;
+ 
 }
 
 std::unique_ptr<Weapon> Spear::clone() const
@@ -350,7 +366,7 @@ Pistol::Pistol(float x, float y)
     );
 
     sprite.setScale(
-        4.f,
+        2.f,
         2.f
     );
 
@@ -359,7 +375,10 @@ Pistol::Pistol(float x, float y)
         8.f
     );
 
-    ammo = 10;
+    ammo = 8;
+
+	animationType =
+		WeaponAnimationType::Recoil;
 }
 
 int Pistol::getAmmo() const
@@ -369,7 +388,10 @@ int Pistol::getAmmo() const
 
 void Pistol::useAmmo()
 {
-    ammo--;
+    if (ammo > 0)
+    {
+        ammo--;
+    }
 }
 
 std::unique_ptr<Weapon> Pistol::clone() const
@@ -382,3 +404,9 @@ std::string Pistol::getName() const
     return "Pistol";
 }
 
+void Weapon::setRotation(
+    float angle
+)
+{
+    sprite.setRotation(angle);
+}

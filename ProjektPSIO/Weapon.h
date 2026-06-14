@@ -3,7 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include <memory>
 #include <string>
-
+#include "WeaponAnimation.h"
 class Weapon
 {
 protected:
@@ -19,6 +19,8 @@ protected:
 
     sf::Vector2f hitboxSize;
 
+    WeaponAnimationType animationType;
+
     Weapon(
         float x,
         float y,
@@ -28,6 +30,7 @@ protected:
         sf::Vector2f hitboxSize
     );
 
+
 public:
     virtual ~Weapon() = default;
 
@@ -35,6 +38,9 @@ public:
     virtual std::string getName() const = 0;
 
     virtual void draw(sf::RenderWindow& window);
+
+    WeaponAnimationType
+        getAnimationType() const;
 
     sf::FloatRect getBounds() const;
 
@@ -44,6 +50,7 @@ public:
     sf::Vector2f getHitboxSize() const;
 
     void setPosition(float x, float y);
+
 
     sf::Vector2f getPosition() const;
 
@@ -64,6 +71,10 @@ public:
 
     void setFacingRight(
         bool facingRight
+    );
+
+    void setRotation(
+        float angle
     );
 };
 
@@ -129,3 +140,4 @@ public:
 	int getAmmo() const;
 	void useAmmo();
 };
+

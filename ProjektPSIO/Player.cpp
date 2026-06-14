@@ -32,6 +32,7 @@ Player::Player(float x, float y, CharacterClass chosenClass,
         jumpLeft = 2;
 
         attackCooldown = 0.f;
+        dropCooldown = 0;
 
         leftKey = left;
         rightKey = right;
@@ -47,6 +48,9 @@ Player::Player(float x, float y, CharacterClass chosenClass,
 
         animationFrame = 0;
         animationTimer = 0;
+
+        attackAnimationPlaying = false;
+        attackAnimationTimer = 0;
 
         weaponHitboxPreview.setFillColor(
             sf::Color(255, 0, 0, 70)
@@ -191,11 +195,9 @@ Player::Player(float x, float y, CharacterClass chosenClass,
                 window
             );
         }
-
-       // window.draw(body); //drawing hitboxa
     }
 
-    void Player::drawCooldownBar(sf::RenderWindow& window)
+    void Player::drawCooldownBar(sf::RenderWindow& window, sf::Font& font)
     {
         float width = 50.f;
         float height = 6.f;
@@ -209,7 +211,7 @@ Player::Player(float x, float y, CharacterClass chosenClass,
         }
         else
         {
-            maxCooldown = 15.f;
+            maxCooldown = 20.f;
         }
 
         float ratio = attackCooldown / maxCooldown;
@@ -258,6 +260,35 @@ Player::Player(float x, float y, CharacterClass chosenClass,
             + body.getSize().y
             + 10.f
         );
+
+        Pistol* pistol =
+            dynamic_cast<Pistol*>(
+                currentWeapon.get()
+                );
+
+        if (pistol)
+        {
+            sf::Text ammoText;
+
+            ammoText.setFont(font);
+            ammoText.setCharacterSize(40);
+
+            ammoText.setString(
+                std::to_string(
+                    pistol->getAmmo()
+                )
+            );
+
+            ammoText.setPosition(
+                body.getPosition().x +32.f,
+                body.getPosition().y + 120.f
+            );
+
+			ammoText.setOutlineColor(sf::Color::Black);
+            ammoText.setOutlineThickness(2.f);
+
+            window.draw(ammoText);
+        }
 
         window.draw(background);
         window.draw(bar);
@@ -343,6 +374,12 @@ Player::Player(float x, float y, CharacterClass chosenClass,
 
     void Player::update(std::vector<Platform>& platforms)
     {
+
+        if (dropCooldown > 0)
+        {
+            dropCooldown--;
+        }
+
         bool wasGrounded = isGrounded;
         isGrounded = false;
 
@@ -351,9 +388,25 @@ Player::Player(float x, float y, CharacterClass chosenClass,
             jumpLeft = 1;
         }
 
-        if (attackCooldown > 0.f)
+        if (attackCooldown > 0.f)   
         {
             attackCooldown -= 1.f;
+        }
+
+        if (attackAnimationPlaying)
+        {
+            float animationLength =
+                hasWeapon
+                ? currentWeapon->getAttackCooldown() * 0.4f
+                : 8.f;
+
+            attackAnimationTimer++;
+
+            if (attackAnimationTimer >= animationLength)
+            {
+                attackAnimationPlaying = false;
+                attackAnimationTimer = 0;
+            }
         }
 
         if (hasWeapon)
@@ -433,23 +486,139 @@ Player::Player(float x, float y, CharacterClass chosenClass,
         }
         velocityX *= 0.85f;
 
+
+        float animationLength =
+            hasWeapon
+            ? currentWeapon->getAttackCooldown() * 0.4f
+            : 8.f;
+
+        float half =
+            animationLength / 2.f;
+
         if (hasWeapon)
         {
             currentWeapon->setFacingRight(
                 facingRight
             );
 
+            float positionOffset = 0.f;
+
+            float YOffset = 0.f;
+
+            float weaponAngle =
+                facingRight
+                ? 20.f
+                : -20.f;
+
+            if (
+                attackAnimationPlaying
+                &&
+                currentWeapon->getAnimationType()
+                == WeaponAnimationType::Swing
+                )
+            {
+                if (attackAnimationTimer < half)
+                {
+                    float progress =
+                        attackAnimationTimer / half;
+
+                    if (facingRight)
+                    {
+                        weaponAngle =
+                            20.f + progress * 100.f;
+                    }
+                    else
+                    {
+                        weaponAngle =
+                            -20.f - progress * 100.f;
+                    }
+                }
+                else
+                {
+                    float progress =
+                        (attackAnimationTimer - half)
+                        / half;
+
+                    if (facingRight)
+                    {
+                        weaponAngle =
+                            120.f - progress * 100.f;
+                    }
+                    else
+                    {
+                        weaponAngle =
+                            -120.f + progress * 100.f;
+                    }
+                }
+            }
+            else if (
+                attackAnimationPlaying
+                &&
+                currentWeapon->getAnimationType()
+                == WeaponAnimationType::Thrust
+                )
+            {
+                weaponAngle =
+                    facingRight
+                    ? 45.f
+                    : -45.f;
+
+                YOffset = 25.f;
+
+                if (attackAnimationTimer < half)
+                {
+                    positionOffset =
+                        attackAnimationTimer
+                        / half
+                        * 40.f;
+                }
+                else
+                {
+                    positionOffset =
+                        (animationLength
+                            - attackAnimationTimer)
+                        / half
+                        * 40.f;
+                }
+            }
+            else if (
+                attackAnimationPlaying
+                &&
+                currentWeapon->getAnimationType()
+                == WeaponAnimationType::Recoil
+                )
+            {
+                weaponAngle = 0.f;
+
+                float progress =
+                    attackAnimationTimer
+                    / animationLength;
+
+                positionOffset =
+                    (1.f - progress)
+                    * 15.f;
+            }
+
+            currentWeapon->setRotation(
+                weaponAngle
+            );
+
             sf::Vector2f hitboxSize =
                 currentWeapon->getHitboxSize();
 
-            weaponHitboxPreview.setSize(hitboxSize);
+            weaponHitboxPreview.setSize(
+                hitboxSize
+            );
 
             if (facingRight)
             {
-
                 currentWeapon->setPosition(
-                    body.getPosition().x + 55.f,
-                    body.getPosition().y + 10.f
+                    body.getPosition().x
+                    + body.getSize().x
+                    - 4.f
+                    + positionOffset,
+
+                    body.getPosition().y + 65.f - YOffset
                 );
 
                 weaponHitboxPreview.setPosition(
@@ -462,12 +631,16 @@ Player::Player(float x, float y, CharacterClass chosenClass,
             else
             {
                 currentWeapon->setPosition(
-                    body.getPosition().x - 15.f,
-                    body.getPosition().y + 10.f
+                    body.getPosition().x
+                    + 4.f
+                    - positionOffset,
+
+					body.getPosition().y + 65.f - YOffset
                 );
 
                 weaponHitboxPreview.setPosition(
-                    body.getPosition().x - hitboxSize.x,
+                    body.getPosition().x
+                    - hitboxSize.x,
 
                     body.getPosition().y + 30.f
                 );
@@ -555,96 +728,59 @@ Player::Player(float x, float y, CharacterClass chosenClass,
             return;
         }
 
+        attackAnimationPlaying = true;
+        attackAnimationTimer = 0;
+
         sf::RectangleShape attackHitbox;
 
-        if (hasWeapon)
-        {
-            attackHitbox.setSize(
-                currentWeapon->getHitboxSize()
-            );
-        }
-        else
-        {
-            attackHitbox.setSize(
-                sf::Vector2f(60.f, 40.f)
-            );
-        }
+        attackHitbox.setSize(
+            hasWeapon
+            ? currentWeapon->getHitboxSize()
+            : sf::Vector2f(60.f, 40.f)
+        );
 
-        if (facingRight)
-        {
-            attackHitbox.setPosition(
-                body.getPosition().x
-                + body.getSize().x,
+        attackHitbox.setPosition(
+            facingRight
+            ? body.getPosition().x + body.getSize().x
+            : body.getPosition().x - attackHitbox.getSize().x,
 
-                body.getPosition().y + 30.f
-            );
-        }
-        else
-        {
-            attackHitbox.setPosition(
-                body.getPosition().x
-                - attackHitbox.getSize().x,
-
-                body.getPosition().y + 30.f
-            );
-        
-        }
+            body.getPosition().y + 30.f
+        );
 
         if (hasWeapon)
         {
-            attackCooldown =
-                currentWeapon->getAttackCooldown();
-        }
-        else
-        {
-            attackCooldown = 15.f;
-        }
+            attackCooldown = currentWeapon->getAttackCooldown();
+		}
+		else
+		{
+			attackCooldown = 20.f;
+		}
 
         if (
             attackHitbox.getGlobalBounds().intersects(
-                otherPlayer.getBounds())
+                otherPlayer.getBounds()
+            )
             )
         {
-            if (hasWeapon)
-            {
-                otherPlayer.hp -=
-                    currentWeapon->getDamage()
-                    * damageMultiplier;
-            }
-            else
-            {
-                otherPlayer.hp -= 1.0 * damageMultiplier;
-            }
+            otherPlayer.hp -=
+                (
+                    hasWeapon
+                    ? currentWeapon->getDamage()
+                    : 1.f
+                    )
+                * damageMultiplier;
 
-            if (facingRight)
-            {
-                if (hasWeapon)
-                {
-                    otherPlayer.velocityX =
-                        currentWeapon->getKnockback();
-                }
-                else
-                {
-                    otherPlayer.velocityX = 15.f;
-                }
+            float knockback =
+                hasWeapon
+                ? currentWeapon->getKnockback()
+                : 5.f;
 
-                otherPlayer.velocityY = -10.f;
-            }
-            else
-            {
-                if (hasWeapon)
-                {
-                    otherPlayer.velocityX =
-                        -currentWeapon->getKnockback();
-                }
-                else
-                {
-                    otherPlayer.velocityX = -15.f;
-                }
-                otherPlayer.velocityY = -10.f;
-            }
+            otherPlayer.velocityX =
+                facingRight
+                ? knockback
+                : -knockback;
 
-       
+            otherPlayer.velocityY = -10.f;
         }
     }
 
@@ -700,8 +836,44 @@ Player::Player(float x, float y, CharacterClass chosenClass,
                 currentWeapon.get()
                 );
 
+        if (!pistol)
+        {
+            return;
+        }
+
+        pistol->useAmmo();
+
+        attackAnimationPlaying = true;
+        attackAnimationTimer = 0;
+
+        if (pistol->getAmmo() <= 0)
+        {
+            currentWeapon.reset();
+            hasWeapon = false;
+        }
+    }
+
+    int Player::getAmmo() const
+    {
+        Pistol* pistol =
+            dynamic_cast<Pistol*>(
+                currentWeapon.get()
+                );
+
         if (pistol)
         {
-            pistol->useAmmo();
+            return pistol->getAmmo();
         }
+
+        return -1;
+    }
+
+    bool Player::canDropWeapon() const
+    {
+        return dropCooldown == 0;
+    }
+
+    void Player::startDropCooldown()
+    {
+        dropCooldown = 120.f;
     }

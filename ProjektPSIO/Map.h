@@ -22,6 +22,8 @@ private:
     float deathZoneY;
     float worldWidth;
 
+	int lastSpawnIndex;
+
     sf::Texture platformTexture;
 
     void loadPlatformTexture(
@@ -50,7 +52,7 @@ public:
     void addWeapon(std::unique_ptr<Weapon> weapon);
     void updateWeaponSpawner();
     void spawnRandomWeapon();
-    sf::Vector2f getPlayerSpawn(int playerIndex) const;
+    sf::Vector2f getPlayerSpawn(int playerIndex);
     float getDeathZoneY() const;
     float getWorldWidth() const;
 

@@ -229,7 +229,7 @@ void Game::run()
             player1->getCurrentWeapon()->getName() == "Pistol"
             )
         {
-            if (player1->canAttack())
+            if (player1->canAttack() && player1->getAmmo() > 0)
             {
                 pociski.push_back(
                     Pocisk(
@@ -244,6 +244,7 @@ void Game::run()
                 );
 
                 player1->useAmmo();
+				player1->startAttackCooldown();
             }
         }
         else
@@ -261,13 +262,13 @@ void Game::run()
             == "Pistol"
             )
         {
-            if (player2->canAttack())
+            if (player2->canAttack() && player2->getAmmo() > 0)
             {
                 pociski.push_back(
                     Pocisk(
                         player2->isFacingRight()
-                        ? player2->getPosition().x + 150.f
-                        : player2->getPosition().x - 150.f,
+                        ? player2->getPosition().x + 50.f
+                        : player2->getPosition().x - 50.f,
 
                         player2->getPosition().y + 40.f,
 
@@ -275,6 +276,7 @@ void Game::run()
                     )
                 );
 
+                player2->useAmmo();
                 player2->startAttackCooldown();
             }
         }
@@ -319,6 +321,7 @@ void Game::run()
         map->addWeapon(
             std::move(droppedWeapon)
         );
+        player1->startDropCooldown();
     }
 
     if (
@@ -355,6 +358,7 @@ void Game::run()
         map->addWeapon(
             std::move(droppedWeapon)
         );
+        player2->startDropCooldown();
     }
 
 
@@ -799,11 +803,13 @@ void Game::run()
     player2->draw(window);
 
     player1->drawCooldownBar(
-        window
+        window,
+        font
     );
 
     player2->drawCooldownBar(
-        window
+        window,
+        font
     );
 
     window.setView(

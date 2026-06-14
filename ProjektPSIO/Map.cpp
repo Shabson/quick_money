@@ -10,12 +10,10 @@ Map::Map(sf::Vector2u windowSize, int mapType)
     deathZoneY = 1400.f;
     worldWidth = 1920.f;
     randomGenerator.seed(
-        static_cast<unsigned int>(
-            mapType * 1009
-            + windowSize.x
-            + windowSize.y
-        )
+        std::random_device{}()
     );
+
+   lastSpawnIndex = -1;
 
     switch (mapType)
     {
@@ -508,8 +506,8 @@ void Map::updateWeaponSpawner()
             ++it;
         }
     }
-
-    if (weaponSpawnClock.getElapsedTime().asSeconds() < 10.f)
+        
+    if (weaponSpawnClock.getElapsedTime().asSeconds() < 5.f)
     {
         return;
     }
@@ -592,21 +590,33 @@ void Map::spawnRandomWeapon()
     }
 }
 
-sf::Vector2f Map::getPlayerSpawn(int playerIndex) const
+sf::Vector2f Map::getPlayerSpawn(int playerIndex)
 {
     if (playerSpawns.empty())
     {
         return sf::Vector2f(300.f, 500.f);
     }
 
-    int index =
-        std::clamp(
-            playerIndex,
-            0,
-            static_cast<int>(playerSpawns.size()) - 1
+    std::uniform_int_distribution<int> dist(
+        0,
+        static_cast<int>(playerSpawns.size()) - 1
+    );
+
+    int spawnIndex;
+
+    do
+    {
+        spawnIndex =
+            dist(randomGenerator);
+    } while (
+        playerSpawns.size() > 1
+        &&
+        spawnIndex == lastSpawnIndex
         );
 
-    return playerSpawns[index];
+    lastSpawnIndex = spawnIndex;
+
+    return playerSpawns[spawnIndex];
 }
 
 float Map::getDeathZoneY() const

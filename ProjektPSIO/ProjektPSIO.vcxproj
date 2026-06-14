@@ -46,6 +46,7 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="pocisk.h" />
     <ClInclude Include="Weapon.h" />
+    <ClInclude Include="WeaponAnimation.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>18.0</VCProjectVersion>

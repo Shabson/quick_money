@@ -31,6 +31,7 @@ private:
 
     std::unique_ptr<Weapon> currentWeapon;
     bool hasWeapon;
+    int dropCooldown;
 
     sf::Keyboard::Key leftKey;
     sf::Keyboard::Key rightKey;
@@ -51,6 +52,9 @@ private:
     CharacterSprites sprites;
     int animationFrame;
     int animationTimer;
+
+    bool attackAnimationPlaying;
+    int attackAnimationTimer;
 
 public:
     Player(
@@ -82,7 +86,7 @@ public:
 	int getMaxHp() const;
     bool getHasWeapon() const;
     void respawn(float x, float y);
-    void drawCooldownBar(sf::RenderWindow& window);
+    void drawCooldownBar(sf::RenderWindow& window, sf::Font& font);
     const Weapon* getCurrentWeapon() const;
     void setCurrentWeapon(std::unique_ptr<Weapon> weapon);
     std::unique_ptr<Weapon> takeCurrentWeapon();
@@ -91,6 +95,9 @@ public:
     void addDeath();
     bool canAttack() const;
     void startAttackCooldown();
+
+    bool canDropWeapon() const;
+    void startDropCooldown();
 
     //do pociskow:
     void takeDamage(
@@ -102,4 +109,5 @@ public:
     );
 
     void useAmmo();
+	int getAmmo() const;
 };
