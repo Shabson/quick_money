@@ -20,6 +20,12 @@ Weapon::Weapon(
     );
 
     body.setPosition(x, y);
+
+    sprite.setPosition(
+        x,
+        y
+    );
+
     body.setFillColor(color);
 
     dropped = false;
@@ -28,7 +34,14 @@ Weapon::Weapon(
 
 void Weapon::draw(sf::RenderWindow& window)
 {
-    window.draw(body);
+    if (texture.getSize().x > 0)
+    {
+        window.draw(sprite);
+    }
+    else
+    {
+        window.draw(body);
+    }
 }
 
 sf::FloatRect Weapon::getBounds() const
@@ -96,12 +109,41 @@ void Weapon::setPosition(
 )
 {
     body.setPosition(x, y);
+
+    sprite.setPosition(
+        x,
+        y
+    );
 }
+
 
 sf::Vector2f Weapon::getPosition() const
 {
     return body.getPosition();
 }
+
+void Weapon::setFacingRight(
+    bool facingRight
+)
+{
+    if (facingRight)
+    {
+        sprite.setScale(2.f, 2.f);
+        sprite.setRotation(20.f);
+    }
+    else
+    {
+        sprite.setScale(
+            -2.f,
+            2.f
+        );
+
+        sprite.setRotation(
+            -20.f
+        );
+    }
+}
+
 
 MeleeWeapon::MeleeWeapon(
     float x,
@@ -135,6 +177,24 @@ Sword::Sword(float x, float y)
         sf::Color::White
     )
 {
+    texture.loadFromFile(
+        "assets/sprites/sword.png"
+    );
+
+    sprite.setTexture(
+        texture
+    );
+
+    sprite.setScale(
+        2.f,
+        2.f
+    );
+
+    sprite.setOrigin(
+        2.f,
+        16.f
+    );
+
 }
 
 std::unique_ptr<Weapon> Sword::clone() const
@@ -158,6 +218,21 @@ Katana::Katana(float x, float y)
         sf::Color::Cyan
     )
 {
+    texture.loadFromFile(
+        "assets/sprites/katana.png"
+    );
+
+    sprite.setTexture(texture);
+
+    sprite.setScale(
+        2.f,
+        2.f
+    );
+
+    sprite.setOrigin(
+        8.f,
+        8.f
+    );
 }
 
 std::unique_ptr<Weapon> Katana::clone() const
@@ -181,6 +256,21 @@ Club::Club(float x, float y)
         sf::Color(139, 69, 19)
     )
 {
+    texture.loadFromFile(
+        "assets/sprites/club.png"
+    );
+
+    sprite.setTexture(texture);
+
+    sprite.setScale(
+        2.f,
+        2.f
+    );
+
+    sprite.setOrigin(
+        8.f,
+        8.f
+    );
 }
 
 std::unique_ptr<Weapon> Club::clone() const
@@ -204,6 +294,21 @@ Spear::Spear(float x, float y)
         sf::Color::Yellow
     )
 {
+    texture.loadFromFile(
+        "assets/sprites/spear.png"
+    );
+
+    sprite.setTexture(texture);
+
+    sprite.setScale(
+        2.f,
+        2.f
+    );
+
+    sprite.setOrigin(
+        8.f,
+        8.f
+    );
 }
 
 std::unique_ptr<Weapon> Spear::clone() const
@@ -227,6 +332,22 @@ Pistol::Pistol(float x, float y)
         sf::Color::Magenta
     )
 {
+    texture.loadFromFile(
+        "assets/sprites/pistol.png"
+    );
+
+    sprite.setTexture(texture);
+
+    sprite.setScale(
+        2.f,
+        2.f
+    );
+
+    sprite.setOrigin(
+        8.f,
+        8.f
+    );
+
 }
 
 std::unique_ptr<Weapon> Pistol::clone() const

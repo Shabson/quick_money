@@ -194,8 +194,12 @@ Player::Player(float x, float y, CharacterClass chosenClass,
         if (hasWeapon)
         {
             window.draw(weaponHitboxPreview);
-            window.draw(weaponVisual);
+
+            currentWeapon->draw(
+                window
+            );
         }
+
        // window.draw(body); //drawing hitboxa
     }
 
@@ -438,6 +442,10 @@ Player::Player(float x, float y, CharacterClass chosenClass,
 
         if (hasWeapon)
         {
+            currentWeapon->setFacingRight(
+                facingRight
+            );
+
             sf::Vector2f hitboxSize =
                 currentWeapon->getHitboxSize();
 
@@ -450,6 +458,11 @@ Player::Player(float x, float y, CharacterClass chosenClass,
                     + body.getSize().x,
 
                     body.getPosition().y + 40.f
+                );
+
+                currentWeapon->setPosition(
+                    body.getPosition().x + 30.f,
+                    body.getPosition().y + 10.f
                 );
 
                 weaponHitboxPreview.setPosition(
@@ -465,6 +478,11 @@ Player::Player(float x, float y, CharacterClass chosenClass,
                     body.getPosition().x - 60.f,
 
                     body.getPosition().y + 40.f
+                );
+
+                currentWeapon->setPosition(
+                    body.getPosition().x - 30.f,
+                    body.getPosition().y + 10.f
                 );
 
                 weaponHitboxPreview.setPosition(

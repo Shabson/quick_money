@@ -7,7 +7,11 @@
 class Weapon
 {
 protected:
+protected:
     sf::RectangleShape body;
+
+    sf::Texture texture;
+    sf::Sprite sprite;
 
     float damage;
     float attackCooldown;
@@ -56,6 +60,10 @@ public:
     void update();
 
     bool shouldDespawn() const;
+
+    void setFacingRight(
+        bool facingRight
+    );
 };
 
 class MeleeWeapon : public Weapon
