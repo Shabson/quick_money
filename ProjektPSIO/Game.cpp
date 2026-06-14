@@ -415,16 +415,18 @@ void Game::run()
                 player1->getBounds().left
                 )
             {
-                player1->addKnockback(
-                    8.f,
-                    -5.f
+                player1->applyKnockback(
+                    12.f,
+                    -5.f,
+                    false
                 );
             }
             else
             {
-                player1->addKnockback(
+                player1->applyKnockback(
                     -12.f,
-                    -5.f
+                    -5.f,
+                    true
                 );
             }
 
@@ -447,16 +449,18 @@ void Game::run()
                 player2->getBounds().left
                 )
             {
-                player2->addKnockback(
+                player2->applyKnockback(
                     12.f,
-                    -5.f
+                    -5.f,
+                    false
                 );
             }
             else
             {
-                player2->addKnockback(
+                player2->applyKnockback(
                     -8.f,
-                    -5.f
+                    -5.f,
+                    true
                 );
             }
 
@@ -476,109 +480,11 @@ void Game::run()
     player1->resolveCollision(
         *player2
     );
+    
+    // RESPAWN i KONIEC GRY
 
-
-
-    // RESPAWN
-
-    if (player1->getHp() <= 0)
-    {
-        player1->addDeath();
-
-        if (player1->getHasWeapon())
-        {
-            std::unique_ptr<Weapon> droppedWeapon =
-                player1->takeCurrentWeapon();
-
-            droppedWeapon->setDropped(
-                true
-            );
-
-            droppedWeapon->setPosition(
-                player1->getPosition().x,
-                player1->getPosition().y
-            );
-
-            map->addWeapon(
-                std::move(droppedWeapon)
-            );
-        }
-
-        sf::Vector2f player1Spawn =
-            map->getPlayerSpawn(0);
-
-        player1->respawn(
-            player1Spawn.x,
-            player1Spawn.y
-        );
-    }
-
-    if (player2->getHp() <= 0)
-    {
-        player2->addDeath();
-
-        if (player2->getHasWeapon())
-        {
-            std::unique_ptr<Weapon> droppedWeapon =
-                player2->takeCurrentWeapon();
-
-            droppedWeapon->setDropped(
-                true
-            );
-
-            droppedWeapon->setPosition(
-                player2->getPosition().x,
-                player2->getPosition().y
-            );
-
-            map->addWeapon(
-                std::move(droppedWeapon)
-            );
-        }
-
-        sf::Vector2f player2Spawn =
-            map->getPlayerSpawn(1);
-
-        player2->respawn(
-            player2Spawn.x,
-            player2Spawn.y
-        );
-    }
-
-    if (
-        player1->getPosition().y
-    > map->getDeathZoneY()
-        )
-    {
-        player1->addDeath();
-
-        if (player1->getHasWeapon())
-        {
-            std::unique_ptr<Weapon> droppedWeapon =
-                player1->takeCurrentWeapon();
-
-            droppedWeapon->setDropped(
-                true
-            );
-
-            droppedWeapon->setPosition(
-                player1->getPosition().x,
-                player1->getPosition().y
-            );
-
-            map->addWeapon(
-                std::move(droppedWeapon)
-            );
-        }
-
-        sf::Vector2f player1Spawn =
-            map->getPlayerSpawn(0);
-
-        player1->respawn(
-            player1Spawn.x,
-            player1Spawn.y
-        );
-    }
+    handleDeath(*player1);
+    handleDeath(*player2);
 
     if (player1->getDeaths() >= 5)
     {
@@ -592,41 +498,6 @@ void Game::run()
         gameState = GameState::GameOver;
     }
 
-    if (
-        player2->getPosition().y
-    > map->getDeathZoneY()
-        )
-    {
-        player2->addDeath();
-
-
-        if (player2->getHasWeapon())
-        {
-            std::unique_ptr<Weapon> droppedWeapon =
-                player2->takeCurrentWeapon();
-
-            droppedWeapon->setDropped(
-                true
-            );
-
-            droppedWeapon->setPosition(
-                player2->getPosition().x,
-                player2->getPosition().y
-            );
-
-            map->addWeapon(
-                std::move(droppedWeapon)
-            );
-        }
-
-        sf::Vector2f player2Spawn =
-            map->getPlayerSpawn(1);
-
-        player2->respawn(
-            player2Spawn.x,
-            player2Spawn.y
-        );
-    }
 
     // WEAPON PICKUP
 
@@ -843,5 +714,51 @@ void Game::resetCamera()
     camera.setCenter(
         960.f,
         540.f
+    );
+}
+
+void Game::handleDeath(Player& player)
+{
+    bool dead =
+        player.getPosition().y
+        > map->getDeathZoneY()
+        ||
+        player.getPosition().x < -1000.f
+        ||
+        player.getPosition().x >
+        map->getWorldWidth() + 1000.f;
+
+    if (!dead)
+    {
+        return;
+    }
+
+    player.addDeath();
+
+    if (player.getHasWeapon())
+    {
+        std::unique_ptr<Weapon> droppedWeapon =
+            player.takeCurrentWeapon();
+
+        droppedWeapon->setDropped(
+            true
+        );
+
+        droppedWeapon->setPosition(
+            player.getPosition().x,
+            player.getPosition().y
+        );
+
+        map->addWeapon(
+            std::move(droppedWeapon)
+        );
+    }
+
+    sf::Vector2f spawn =
+        map->getPlayerSpawn(0);
+
+    player.respawn(
+        spawn.x,
+        spawn.y
     );
 }

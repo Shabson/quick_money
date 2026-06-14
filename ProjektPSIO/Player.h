@@ -26,12 +26,12 @@ private:
     float attackCooldown;
 
     int deaths;
-    int hp;
-	int maxHp;
+    float hp;
+	float maxHp;
 
     std::unique_ptr<Weapon> currentWeapon;
     bool hasWeapon;
-    int dropCooldown;
+    float dropCooldown;
 
     sf::Keyboard::Key leftKey;
     sf::Keyboard::Key rightKey;
@@ -82,8 +82,8 @@ public:
     void draw(sf::RenderWindow& window);
     void resolveCollision(Player& otherPlayer);
     void attack(Player& otherPlayer);
-    int getHp() const;
-	int getMaxHp() const;
+    float getHp() const;
+	float getMaxHp() const;
     bool getHasWeapon() const;
     void respawn(float x, float y);
     void drawCooldownBar(sf::RenderWindow& window, sf::Font& font);
@@ -103,11 +103,13 @@ public:
     void takeDamage(
         float damage
     );
-    void addKnockback(
-        float knockbackX,
-        float knockbackY
-    );
 
     void useAmmo();
 	int getAmmo() const;
+
+    void applyKnockback(
+        float baseKnockbackX,
+        float baseKnockbackY,
+        bool fromRight
+    );
 };

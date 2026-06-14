@@ -47,4 +47,6 @@ public:
 
     void run();
     void resetCamera();
+    void handleDeath(Player& player);
+
 };
