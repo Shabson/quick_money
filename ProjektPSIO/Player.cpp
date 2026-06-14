@@ -23,7 +23,6 @@ Player::Player(float x, float y, CharacterClass chosenClass,
 
         velocityY = 0.f;
         velocityX = 0.f;
-        weaponTimer = 0;
      
         hasWeapon = false;
         playerClass = chosenClass;
@@ -48,14 +47,6 @@ Player::Player(float x, float y, CharacterClass chosenClass,
 
         animationFrame = 0;
         animationTimer = 0;
-
-        weaponVisual.setSize(
-            sf::Vector2f(60.f, 15.f)
-        );
-
-        weaponVisual.setFillColor(
-            sf::Color::Red
-        );
 
         weaponHitboxPreview.setFillColor(
             sf::Color(255, 0, 0, 70)
@@ -193,6 +184,7 @@ Player::Player(float x, float y, CharacterClass chosenClass,
 
         if (hasWeapon)
         {
+            currentWeapon->update();
             window.draw(weaponHitboxPreview);
 
             currentWeapon->draw(
@@ -307,16 +299,17 @@ Player::Player(float x, float y, CharacterClass chosenClass,
     {
         currentWeapon = std::move(weapon);
 
-        hasWeapon = currentWeapon != nullptr;
+        if (currentWeapon)
+        {
+            currentWeapon->setDropped(false);
+        }
 
-        weaponTimer = 0;
+        hasWeapon = currentWeapon != nullptr;
     }
 
     std::unique_ptr<Weapon> Player::takeCurrentWeapon()
     {
         hasWeapon = false;
-
-        weaponTimer = 0;
 
         return std::move(currentWeapon);
     }
@@ -365,7 +358,7 @@ Player::Player(float x, float y, CharacterClass chosenClass,
 
         if (hasWeapon)
         {
-            weaponTimer++;
+            currentWeapon->update();
         }
 
         previousY = body.getPosition().y;
@@ -453,15 +446,9 @@ Player::Player(float x, float y, CharacterClass chosenClass,
 
             if (facingRight)
             {
-                weaponVisual.setPosition(
-                    body.getPosition().x
-                    + body.getSize().x,
-
-                    body.getPosition().y + 40.f
-                );
 
                 currentWeapon->setPosition(
-                    body.getPosition().x + 30.f,
+                    body.getPosition().x + 55.f,
                     body.getPosition().y + 10.f
                 );
 
@@ -474,14 +461,8 @@ Player::Player(float x, float y, CharacterClass chosenClass,
             }
             else
             {
-                weaponVisual.setPosition(
-                    body.getPosition().x - 60.f,
-
-                    body.getPosition().y + 40.f
-                );
-
                 currentWeapon->setPosition(
-                    body.getPosition().x - 30.f,
+                    body.getPosition().x - 15.f,
                     body.getPosition().y + 10.f
                 );
 
@@ -513,7 +494,15 @@ Player::Player(float x, float y, CharacterClass chosenClass,
         {
             animationFrame = 0;
         }
-
+        if (
+            hasWeapon
+            &&
+            currentWeapon->shouldDespawn()
+            )
+        {
+            currentWeapon.reset();
+            hasWeapon = false;
+        }
     }
     void Player::resolveCollision(Player& otherPlayer)
     {
@@ -686,14 +675,6 @@ Player::Player(float x, float y, CharacterClass chosenClass,
         return maxHp;
     }
 
-    bool Player::shouldDropWeapon() const
-    {
-
-        return hasWeapon
-            &&
-            weaponTimer > 1200;
-    }
-
     bool Player::canAttack() const
     {
         return attackCooldown <= 0.f;
@@ -709,5 +690,18 @@ Player::Player(float x, float y, CharacterClass chosenClass,
         else
         {
             attackCooldown = 15.f;
+        }
+    }
+
+    void Player::useAmmo()
+    {
+        Pistol* pistol =
+            dynamic_cast<Pistol*>(
+                currentWeapon.get()
+                );
+
+        if (pistol)
+        {
+            pistol->useAmmo();
         }
     }

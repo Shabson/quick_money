@@ -29,8 +29,6 @@ private:
     int hp;
 	int maxHp;
 
-    int weaponTimer;
-
     std::unique_ptr<Weapon> currentWeapon;
     bool hasWeapon;
 
@@ -39,7 +37,6 @@ private:
     sf::Keyboard::Key upKey;
     sf::Keyboard::Key downKey;
 
-    sf::RectangleShape weaponVisual;
     sf::RectangleShape weaponHitboxPreview;
 
     CharacterClass playerClass;
@@ -92,7 +89,6 @@ public:
     void dropWeapon();
     int getDeaths() const;
     void addDeath();
-    bool shouldDropWeapon() const;
     bool canAttack() const;
     void startAttackCooldown();
 
@@ -105,5 +101,5 @@ public:
         float knockbackY
     );
 
-
+    void useAmmo();
 };

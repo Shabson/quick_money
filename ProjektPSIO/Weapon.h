@@ -7,10 +7,10 @@
 class Weapon
 {
 protected:
-protected:
     sf::RectangleShape body;
 
     sf::Texture texture;
+	sf::Texture pickupTexture;
     sf::Sprite sprite;
 
     float damage;
@@ -25,8 +25,7 @@ protected:
         float damage,
         float attackCooldown,
         float knockback,
-        sf::Vector2f hitboxSize,
-        sf::Color color
+        sf::Vector2f hitboxSize
     );
 
 public:
@@ -49,7 +48,9 @@ public:
     sf::Vector2f getPosition() const;
 
     bool dropped;
-    int droppedTimer;
+    int lifeTimer;
+
+    bool shouldBlink() const;
 
     void setDropped(
         bool value
@@ -75,8 +76,7 @@ protected:
         float damage,
         float attackCooldown,
         float knockback,
-        sf::Vector2f hitboxSize,
-        sf::Color color
+        sf::Vector2f hitboxSize
     );
 };
 
@@ -118,9 +118,14 @@ public:
 
 class Pistol : public Weapon
 {
+private:
+    int ammo;
 public:
     Pistol(float x, float y);
 
     std::unique_ptr<Weapon> clone() const override;
     std::string getName() const override;
+
+	int getAmmo() const;
+	void useAmmo();
 };

@@ -234,8 +234,8 @@ void Game::run()
                 pociski.push_back(
                     Pocisk(
                         player1->isFacingRight()
-                        ? player1->getPosition().x + 150.f
-                        : player1->getPosition().x - 150.f,
+                        ? player1->getPosition().x + 50.f
+                        : player1->getPosition().x - 50.f,
 
                         player1->getPosition().y + 40.f,
 
@@ -243,7 +243,7 @@ void Game::run()
                     )
                 );
 
-                player1->startAttackCooldown();
+                player1->useAmmo();
             }
         }
         else
@@ -370,66 +370,7 @@ void Game::run()
         map->getPlatforms()
     );
 
-    if (player1->shouldDropWeapon())
-    {
-
-        std::unique_ptr<Weapon> droppedWeapon =
-            player1->takeCurrentWeapon();
-
-
-        droppedWeapon->setDropped(
-            true
-        );
-
-        if (player1->isFacingRight())
-        {
-            droppedWeapon->setPosition(
-                player1->getPosition().x + 150.f,
-                player1->getPosition().y
-            );
-        }
-        else
-        {
-            droppedWeapon->setPosition(
-                player1->getPosition().x - 150.f,
-                player1->getPosition().y
-            );
-        }
-
-        map->addWeapon(
-            std::move(droppedWeapon)
-        );
-    }
-
-    if (player2->shouldDropWeapon())
-    {
-
-        std::unique_ptr<Weapon> droppedWeapon =
-            player2->takeCurrentWeapon();
-
-        droppedWeapon->setDropped(
-            true
-        );
-
-        if (player2->isFacingRight())
-        {
-            droppedWeapon->setPosition(
-                player2->getPosition().x + 150.f,
-                player2->getPosition().y
-            );
-        }
-        else
-        {
-            droppedWeapon->setPosition(
-                player2->getPosition().x - 150.f,
-                player2->getPosition().y
-            );
-        }
-
-        map->addWeapon(
-            std::move(droppedWeapon)
-        );
-    }
+    
 
     for (
         auto it = pociski.begin();

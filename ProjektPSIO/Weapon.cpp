@@ -6,8 +6,7 @@ Weapon::Weapon(
     float damage,
     float attackCooldown,
     float knockback,
-    sf::Vector2f hitboxSize,
-    sf::Color color
+    sf::Vector2f hitboxSize
 )
 {
     this->damage = damage;
@@ -26,22 +25,39 @@ Weapon::Weapon(
         y
     );
 
-    body.setFillColor(color);
-
-    dropped = false;
-    droppedTimer = 0;
+    dropped = true;
+    lifeTimer = 0;
 }
 
-void Weapon::draw(sf::RenderWindow& window)
+void Weapon::draw(
+    sf::RenderWindow& window
+)
 {
-    if (texture.getSize().x > 0)
+
+    if (dropped)
     {
-        window.draw(sprite);
+        sprite.setTexture(
+            pickupTexture
+        );
     }
     else
     {
-        window.draw(body);
+        sprite.setTexture(
+            texture
+        );
     }
+
+    if (shouldBlink())
+    {
+        if ((lifeTimer / 10) % 2 == 0)
+        {
+            return;
+        }
+    }
+
+    window.draw(
+        sprite
+    );
 }
 
 sf::FloatRect Weapon::getBounds() const
@@ -74,11 +90,6 @@ void Weapon::setDropped(
 )
 {
     dropped = value;
-
-    if (value)
-    {
-        droppedTimer = 0;
-    }
 }
 
 bool Weapon::isDropped() const
@@ -88,17 +99,12 @@ bool Weapon::isDropped() const
 
 void Weapon::update()
 {
-    if (dropped)
-    {
-        droppedTimer++;
-    }
+    lifeTimer++;
 }
 
 bool Weapon::shouldDespawn() const
 {
-    return dropped
-        &&
-        droppedTimer > 900;
+    return lifeTimer > 15.f*60.f;
 }
 
 
@@ -144,6 +150,11 @@ void Weapon::setFacingRight(
     }
 }
 
+bool Weapon::shouldBlink() const
+{
+    return lifeTimer > 12.f*60.f;
+}
+
 
 MeleeWeapon::MeleeWeapon(
     float x,
@@ -151,8 +162,7 @@ MeleeWeapon::MeleeWeapon(
     float damage,
     float attackCooldown,
     float knockback,
-    sf::Vector2f hitboxSize,
-    sf::Color color
+    sf::Vector2f hitboxSize
 )
     : Weapon(
         x,
@@ -160,8 +170,7 @@ MeleeWeapon::MeleeWeapon(
         damage,
         attackCooldown,
         knockback,
-        hitboxSize,
-        color
+        hitboxSize
     )
 {
 }
@@ -173,16 +182,15 @@ Sword::Sword(float x, float y)
         2.f,
         25.f,
         18.f,
-        sf::Vector2f(100.f, 40.f),
-        sf::Color::White
+        sf::Vector2f(100.f, 40.f)
     )
 {
     texture.loadFromFile(
         "assets/sprites/sword.png"
     );
 
-    sprite.setTexture(
-        texture
+    pickupTexture.loadFromFile(
+        "assets/sprites/sword_pickup.png"
     );
 
     sprite.setScale(
@@ -191,8 +199,8 @@ Sword::Sword(float x, float y)
     );
 
     sprite.setOrigin(
-        2.f,
-        16.f
+        6.f,
+        6.f
     );
 
 }
@@ -214,15 +222,16 @@ Katana::Katana(float x, float y)
         1.f,
         10.f,
         12.f,
-        sf::Vector2f(140.f, 30.f),
-        sf::Color::Cyan
+        sf::Vector2f(140.f, 30.f)
     )
 {
     texture.loadFromFile(
         "assets/sprites/katana.png"
     );
 
-    sprite.setTexture(texture);
+    pickupTexture.loadFromFile(
+        "assets/sprites/katana_pickup.png"
+    );
 
     sprite.setScale(
         2.f,
@@ -231,7 +240,7 @@ Katana::Katana(float x, float y)
 
     sprite.setOrigin(
         8.f,
-        8.f
+        4.f
     );
 }
 
@@ -252,15 +261,16 @@ Club::Club(float x, float y)
         3.f,
         40.f,
         35.f,
-        sf::Vector2f(90.f, 50.f),
-        sf::Color(139, 69, 19)
+        sf::Vector2f(90.f, 50.f)
     )
 {
     texture.loadFromFile(
         "assets/sprites/club.png"
     );
 
-    sprite.setTexture(texture);
+    pickupTexture.loadFromFile(
+        "assets/sprites/club_pickup.png"
+    );
 
     sprite.setScale(
         2.f,
@@ -268,8 +278,8 @@ Club::Club(float x, float y)
     );
 
     sprite.setOrigin(
-        8.f,
-        8.f
+        4.f,
+        -2.f
     );
 }
 
@@ -290,15 +300,16 @@ Spear::Spear(float x, float y)
         2.f,
         30.f,
         20.f,
-        sf::Vector2f(180.f, 25.f),
-        sf::Color::Yellow
+        sf::Vector2f(180.f, 25.f)
     )
 {
     texture.loadFromFile(
         "assets/sprites/spear.png"
     );
 
-    sprite.setTexture(texture);
+    pickupTexture.loadFromFile(
+        "assets/sprites/spear_pickup.png"
+    );
 
     sprite.setScale(
         2.f,
@@ -306,8 +317,8 @@ Spear::Spear(float x, float y)
     );
 
     sprite.setOrigin(
-        8.f,
-        8.f
+        4.f,
+        -4.f
     );
 }
 
@@ -328,18 +339,18 @@ Pistol::Pistol(float x, float y)
         2.f,
         20.f,
         5.f,
-        sf::Vector2f(0.f, 0.f),
-        sf::Color::Magenta
+        sf::Vector2f(0.f, 0.f)
     )
 {
     texture.loadFromFile(
         "assets/sprites/pistol.png"
     );
-
-    sprite.setTexture(texture);
+    pickupTexture.loadFromFile(
+        "assets/sprites/pistol_pickup.png"
+    );
 
     sprite.setScale(
-        2.f,
+        4.f,
         2.f
     );
 
@@ -348,6 +359,17 @@ Pistol::Pistol(float x, float y)
         8.f
     );
 
+    ammo = 10;
+}
+
+int Pistol::getAmmo() const
+{
+    return ammo;
+}
+
+void Pistol::useAmmo()
+{
+    ammo--;
 }
 
 std::unique_ptr<Weapon> Pistol::clone() const
